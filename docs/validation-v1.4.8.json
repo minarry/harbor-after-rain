@@ -1,0 +1,183 @@
+{
+  "version": "1.4.8",
+  "validatedAt": "2026-11-13T10:37:30.515Z",
+  "artifact": {
+    "file": "dist/index.html",
+    "bytes": 1189129,
+    "sha256": "2c19e8c362ccdcc8c94c34108b09c205c32a709ae90eac4cdbc00e6505ceeb3a"
+  },
+  "nodeTests": {
+    "passed": 127,
+    "failed": 0,
+    "report": "artifacts/v148/node-tests.tap",
+    "targetedFinalTouchAndLifecycle": {
+      "passed": 21,
+      "failed": 0,
+      "report": "artifacts/v148/touch-lifecycle-tests.tap"
+    }
+  },
+  "mobile": {
+    "report": "artifacts/v148/mobile-controls-report.json",
+    "transport": "Chrome CDP Input.dispatchTouchEvent",
+    "commands": 284,
+    "cases": [
+      {
+        "name": "wide-tdm",
+        "viewport": [
+          844,
+          390
+        ],
+        "mode": "tdm",
+        "touchCommands": 97,
+        "passed": true,
+        "ammoBefore": 29,
+        "ammoAfter": 25,
+        "lookChangeRadians": 0.32384,
+        "layoutsChecked": true,
+        "deepLifecycleChecked": true
+      },
+      {
+        "name": "wide-relay",
+        "viewport": [
+          844,
+          390
+        ],
+        "mode": "relay",
+        "touchCommands": 97,
+        "passed": true,
+        "ammoBefore": 29,
+        "ammoAfter": 25,
+        "lookChangeRadians": 0.32384,
+        "layoutsChecked": true,
+        "deepLifecycleChecked": true
+      },
+      {
+        "name": "compact-tdm",
+        "viewport": [
+          667,
+          375
+        ],
+        "mode": "tdm",
+        "touchCommands": 15,
+        "passed": true,
+        "ammoBefore": 29,
+        "ammoAfter": 25,
+        "lookChangeRadians": 0.32384,
+        "layoutsChecked": true,
+        "deepLifecycleChecked": false
+      },
+      {
+        "name": "compact-relay",
+        "viewport": [
+          667,
+          375
+        ],
+        "mode": "relay",
+        "touchCommands": 15,
+        "passed": true,
+        "ammoBefore": 29,
+        "ammoAfter": 25,
+        "lookChangeRadians": 0.32384,
+        "layoutsChecked": true,
+        "deepLifecycleChecked": false
+      },
+      {
+        "name": "portrait-tdm",
+        "viewport": [
+          390,
+          844
+        ],
+        "mode": "tdm",
+        "touchCommands": 15,
+        "passed": true,
+        "ammoBefore": 29,
+        "ammoAfter": 25,
+        "lookChangeRadians": 0.32384,
+        "layoutsChecked": true,
+        "deepLifecycleChecked": false
+      },
+      {
+        "name": "portrait-relay",
+        "viewport": [
+          390,
+          844
+        ],
+        "mode": "relay",
+        "touchCommands": 15,
+        "passed": true,
+        "ammoBefore": 29,
+        "ammoAfter": 25,
+        "lookChangeRadians": 0.32384,
+        "layoutsChecked": true,
+        "deepLifecycleChecked": false
+      },
+      {
+        "name": "tablet-tdm",
+        "viewport": [
+          1024,
+          768
+        ],
+        "mode": "tdm",
+        "touchCommands": 15,
+        "passed": true,
+        "ammoBefore": 29,
+        "ammoAfter": 25,
+        "lookChangeRadians": 0.32384,
+        "layoutsChecked": true,
+        "deepLifecycleChecked": false
+      },
+      {
+        "name": "tablet-relay",
+        "viewport": [
+          1024,
+          768
+        ],
+        "mode": "relay",
+        "touchCommands": 15,
+        "passed": true,
+        "ammoBefore": 29,
+        "ammoAfter": 25,
+        "lookChangeRadians": 0.32384,
+        "layoutsChecked": true,
+        "deepLifecycleChecked": false
+      }
+    ],
+    "checks": [
+      "simultaneous movement, held-fire drag aiming and actual ammo use",
+      "independent fire contacts and release orders",
+      "look ownership handoff without camera jumps",
+      "floating joystick dead zone and no initial motion",
+      "pointer cancellation and drag outside buttons",
+      "pause menu secondary touch, drag-off cancellation and resume with old fingers still down",
+      "death/respawn, orientation resize and trusted browser blur release stale gestures",
+      "all visible controls at least 44px, dynamic stick separate from action buttons",
+      "touch weapon cycling to secondary and knife"
+    ],
+    "errors": []
+  },
+  "menuAndMatch": {
+    "report": "artifacts/v148/menu-match-check.json",
+    "rounds": 2,
+    "mobile": {
+      "noOverflow": true,
+      "tdm": true,
+      "relay": true
+    },
+    "offline": {
+      "playing": true,
+      "seconds": 180
+    },
+    "errors": []
+  },
+  "visualInspection": [
+    "844×390 landscape",
+    "667×375 compact landscape",
+    "390×844 portrait with secondary fire hidden",
+    "1024×768 tablet"
+  ],
+  "notes": [
+    "Mobile results use Chromium device emulation and trusted CDP multi-touch. Physical iOS/Android hardware was not available in this run.",
+    "Browser fixtures keep bots stationary to isolate input while actual player movement, yaw, firing, collisions and death/respawn code remain active.",
+    "The final CSS adjustment only relocates the auxiliary landscape fire button and hides it in portrait; all eight touch scenarios were rerun against the exact final HTML hash."
+  ]
+}

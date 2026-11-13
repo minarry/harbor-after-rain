@@ -402,6 +402,24 @@ const PRIM_CARDS = PRIMARIES.map((id) => {
 }).join('');
 
 const TEMPLATE = `
+<div id="landscapeGate" class="hidden" hidden role="dialog" aria-modal="true" aria-labelledby="landscapeTitle" aria-describedby="landscapeCopy landscapeHint">
+  <div class="landscape-panel">
+    <div class="dialog-eyebrow">HARBOR / AFTER RAIN</div>
+    <svg class="landscape-phone" viewBox="0 0 200 124" aria-hidden="true" focusable="false">
+      <rect class="phone-portrait" x="73" y="9" width="54" height="98" rx="9"/>
+      <path class="phone-turn" d="M137 19A55 55 0 0 1 164 58M155 51L164 58 171 49"/>
+      <rect class="phone-landscape" x="32" y="37" width="136" height="74" rx="11"/>
+      <path class="phone-speaker" d="M44 63V85"/>
+      <circle class="phone-stick" cx="70" cy="83" r="10"/>
+      <circle class="phone-stick" cx="137" cy="77" r="10"/>
+      <path class="phone-cross" d="M100 65V79M93 72H107"/>
+    </svg>
+    <h2 id="landscapeTitle">横屏游玩</h2>
+    <p id="landscapeCopy">移动端仅支持横屏。请将手机横放后开始行动。</p>
+    <button type="button" class="go" id="btnLandscape">进入横屏</button>
+    <p id="landscapeHint" aria-live="polite">浏览器未自动旋转时，请手动横放手机。对局中转回横屏后，点击「继续」。</p>
+  </div>
+</div>
 <div id="hud" class="hidden">
   <div id="score">
     <div class="team bl" id="tBL"><span class="nm">潜伏者</span><span class="pts" id="sBL">0</span></div>
@@ -442,7 +460,7 @@ const TEMPLATE = `
       <div class="brand-line"><h1>运输船</h1><div class="en">暮雨行动</div></div>
       <p class="premise">穿行雨后甲板，与小队一起推进。选择玩法，即刻开始一场三分钟的行动。</p>
     </div>
-    <div class="note touch-instructions hidden" id="touchNote"><b>双拇指操作</b> 左侧拖动移动，右侧滑动转向；按住开火并拖动瞄准。<span>建议横屏，竖屏也可游玩。</span></div>
+    <div class="note touch-instructions hidden" id="touchNote"><b>双拇指操作</b> 左侧拖动移动，右侧滑动转向；按住开火并拖动瞄准。<span>移动端仅支持横屏。</span></div>
     <div class="mode-grid" aria-label="选择玩法并开始行动">
       <article class="mode-card mode-tdm" aria-labelledby="tdmTitle">
         <div class="mode-meta"><span>01 / TEAM DEATHMATCH</span><b>3 分钟</b></div>
@@ -513,7 +531,7 @@ const TEMPLATE = `
 </div>
 
 <div id="pause" class="screen hidden"><div class="pauseBox"><div class="dialog-eyebrow">OPERATION PAUSED</div><h2>行动暂停</h2>
-  <div class="note touch-instructions hidden" id="touchPauseNote"><b>左手移动，右手瞄准</b> 左侧按下定位摇杆，松手停止；右侧滑动转向，按住开火可同时拖动瞄准。<span>「瞄准」「蹲」点按切换状态；建议横屏，竖屏也可游玩。</span></div>
+  <div class="note touch-instructions hidden" id="touchPauseNote"><b>左手移动，右手瞄准</b> 左侧按下定位摇杆，松手停止；右侧滑动转向，按住开火可同时拖动瞄准。<span>「瞄准」「蹲」点按切换状态；移动端仅支持横屏。</span></div>
   <div class="opt"><div class="lab">视角灵敏度</div><div class="slider" data-k="sens"><input aria-label="视角灵敏度" type="range" min="0.2" max="3" step="0.05"><span></span></div></div>
   <div class="opt"><div class="lab">视野 FOV</div><div class="slider" data-k="fov"><input type="range" min="65" max="100" step="1"><span></span></div></div>
   <div class="opt"><div class="lab">音量</div><div class="slider" data-k="vol"><input type="range" min="0" max="1" step="0.05"><span></span></div></div>

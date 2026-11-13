@@ -7,13 +7,14 @@ import {createHash} from 'node:crypto';
 import assert from 'node:assert/strict';
 
 const args=process.argv.slice(2),arg=(key,fallback)=>args.includes(key)?args[args.indexOf(key)+1]:fallback;
-const out=resolve(arg('--out','artifacts/v148'));
+const out=resolve(arg('--out','artifacts/v149'));
 const base=arg('--url','http://127.0.0.1:4173/');
 const only=arg('--only','');
 await mkdir(out,{recursive:true});
 const report={version:1,transport:'Chrome CDP Input.dispatchTouchEvent',cases:[],errors:[],failures:[]};
 const browser=await chromium.launch({executablePath:'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',headless:true});
-const sizes=[['wide',844,390],['compact',667,375],['portrait',390,844],['tablet',1024,768]];
+// Portrait is an orientation gate, exercised separately by landscape-check.
+const sizes=[['wide',844,390],['compact',667,375],['tablet',1024,768]];
 const modes=[['tdm','#btnStartTdm'],['relay','#btnStartRelay']];
 const read=page=>page.evaluate(()=>{
   const g=__game,p=g.player;
@@ -189,10 +190,16 @@ async function deep(page,f,result){
   await f.down(14,move);await f.move(14,{x:move.x-40,y:move.y},2);await f.down(15,fire);
   const original=page.viewportSize();await page.setViewportSize({width:original.height,height:original.width});await wait(page,160);
   result.rotation=await assertReset(page,'orientation resize');
+  assert.ok(result.rotation.paused,'rotating to portrait pauses the match');
+  assert.ok(await page.locator('#landscapeGate').isVisible(),'portrait shows the orientation gate');
+  assert.equal(await page.locator('#touch').isVisible(),false,'portrait hides playable touch controls');
   await f.move(14,{x:Math.min(move.x,original.height-15),y:Math.min(move.y,original.width-15)},2);
   await f.move(15,{x:Math.min(fire.x,original.height-15),y:Math.min(fire.y,original.width-15)},2);
   assert.ok(quiet(await read(page)),'resized old contacts remain disarmed');await f.cancel();
   await page.setViewportSize(original);await wait(page,160);
+  assert.ok((await read(page)).paused,'returning to landscape does not resume automatically');
+  assert.equal(await page.locator('#landscapeGate').isVisible(),false,'landscape removes the orientation gate');
+  await f.tap('#btnResume');await page.waitForFunction(()=>!__game.paused);
 
   await refill(page);await f.down(16,fire);
   await f.cdp.send('Emulation.setFocusEmulationEnabled',{enabled:false});

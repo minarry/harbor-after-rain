@@ -505,32 +505,26 @@ button{color:var(--hud)}
   #hud:has(#touch:not(.hidden)) #badge{top:61%}
 }
 @media(orientation:portrait){
-  #touch .touch-pad,#touch .touch-knob{left:clamp(68px,21vw,118px)}
-  #touch [data-touch-action=fire]{width:72px;height:72px;bottom:calc(var(--touch-bottom) + 128px)}
-  #touch [data-touch-action=aim]{width:60px;height:60px;right:calc(var(--touch-right) + 6px);bottom:calc(var(--touch-bottom) + 52px)}
-  #touch [data-touch-action=jump]{right:calc(var(--touch-right) + 80px);bottom:calc(var(--touch-bottom) + 56px);width:48px;height:48px}
-  #touch [data-touch-action=reload]{right:calc(var(--touch-right) + 80px);bottom:calc(var(--touch-bottom) + 128px)}
-  #touch [data-touch-action=crouch],#touch [data-touch-action=switch]{right:calc(var(--touch-right) + 136px);width:44px;height:44px}
-  #touch [data-touch-action=crouch]{bottom:calc(var(--touch-bottom) + 56px)}
-  #touch [data-touch-action=switch]{bottom:calc(var(--touch-bottom) + 128px)}
-  #touch [data-touch-action=fire-left]{display:none}
-  #hud:has(#touch:not(.hidden)) #radarWrap{width:76px;height:76px}
-  #hud:has(#touch:not(.hidden)) #vitals{top:calc(max(12px,env(safe-area-inset-top)) + 87px);gap:12px}
-  #hud:has(#touch:not(.hidden)) #score{left:calc(50% + 8px)}
-  #hud:has(#touch:not(.hidden)) #score .team{min-width:36px;padding:5px 6px}
-  #hud:has(#touch:not(.hidden)) #score .mid{min-width:76px;padding:4px 5px}
-  #hud:has(#touch:not(.hidden)) #objective{top:calc(max(12px,env(safe-area-inset-top)) + 152px);width:min(270px,calc(100vw - 32px))}
-  #hud:has(#touch:not(.hidden)) #feed{top:calc(max(12px,env(safe-area-inset-top)) + 92px);right:max(12px,env(safe-area-inset-right));max-width:calc(100vw - 154px);max-height:52px}
-  #hud:has(#touch:not(.hidden)) #toast{top:calc(max(12px,env(safe-area-inset-top)) + 218px);max-width:calc(100vw - 36px)}
-  #hud:has(#touch:not(.hidden)) #protect{bottom:auto;top:calc(max(12px,env(safe-area-inset-top)) + 120px)}
-  #hud:has(#touch:not(.hidden)) #badge{top:56%;max-width:80vw}
+  #touch{display:none!important}
 }
-@media(orientation:portrait) and (max-width:370px){
-  #touch .touch-pad{width:104px;height:104px}
-  #touch [data-touch-action=jump],#touch [data-touch-action=reload]{right:calc(var(--touch-right) + 74px);width:44px;height:44px}
-  #touch [data-touch-action=crouch],#touch [data-touch-action=switch]{right:calc(var(--touch-right) + 128px)}
-  #touch [data-touch-action=fire]{width:68px;height:68px}
-}
+
+/* The orientation controller alone shows this gate; it stays outside #hud so
+   menu, loading, pause and loadout screens cannot reveal portrait gameplay. */
+#landscapeGate{position:fixed;inset:0;z-index:50;display:grid;place-items:center;overflow-y:auto;padding:max(24px,env(safe-area-inset-top)) max(20px,env(safe-area-inset-right)) max(24px,env(safe-area-inset-bottom)) max(20px,env(safe-area-inset-left));background:radial-gradient(ellipse at 50% 25%,rgba(111,84,54,.18),transparent 65%),rgba(8,20,26,.97);pointer-events:auto;touch-action:pan-y;overscroll-behavior:contain}
+#landscapeGate[hidden]{display:none}
+.landscape-panel{width:min(340px,100%);text-align:center;margin:auto;padding:28px 22px 22px;border:1px solid rgba(238,232,220,.18);border-top:2px solid var(--accent);background:rgba(16,31,37,.82);box-shadow:0 18px 60px rgba(0,0,0,.24)}
+.landscape-panel .dialog-eyebrow{font-size:8px;letter-spacing:.18em;color:var(--hudDim)}
+.landscape-phone{display:block;width:180px;max-width:100%;height:112px;margin:22px auto 18px;fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.phone-portrait{stroke:rgba(238,232,220,.2);stroke-dasharray:4 5}
+.phone-turn{stroke:var(--accent)}
+.phone-landscape{stroke:#ecc28c;fill:#142a33}
+.phone-speaker{stroke:rgba(238,232,220,.6)}
+.phone-stick{stroke:rgba(238,232,220,.7);fill:rgba(238,232,220,.06)}
+.phone-cross{stroke:var(--accent)}
+#landscapeTitle{font:600 27px/1.3 var(--cn);letter-spacing:.16em;margin:0 0 13px}
+#landscapeCopy{font:400 12px/1.85 var(--cn);color:rgba(238,232,220,.78);margin:0 0 23px}
+#btnLandscape{min-height:48px;width:100%;touch-action:manipulation}
+#landscapeHint{min-height:3.4em;font:400 11px/1.7 var(--cn);color:var(--hudDim);margin:16px 0 0}
 
 /* Two direct operation entries share one deployment panel. */
 #menu .menuBox{max-width:1440px;margin:0 auto;grid-template-columns:minmax(0,1fr) 318px;gap:38px;padding:96px max(4.5vw,30px) 82px;align-items:center}

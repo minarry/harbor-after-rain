@@ -14,6 +14,7 @@ import { buildGunMerged } from './guns.js';
 import { Player } from './player.js';
 import { Bot, BOT_NAMES } from './bots.js';
 import { TouchControls } from './touch.js';
+import { MobileLandscape } from './mobile-landscape.js';
 import { RelayObjective } from './objective.js';
 import { lowHealthAmount } from './combat-feedback.js';
 
@@ -87,6 +88,7 @@ export class Game {
     document.addEventListener('pointerlockchange', () => this.onLockChange());
     this.touch = new TouchControls(this);
     this.touchMode = this.touch.enabled;
+    this.landscape = new MobileLandscape(this);
     document.addEventListener('keydown', (event) => {
       if (event.code !== 'Escape' || !this.playing || this.ended) return;
       if (this.inLoadout) { this.closeLoadout(); return; }
@@ -150,7 +152,13 @@ export class Game {
   }
 
   // ================= 流程 =================
+  prepareMobileScreen(request = true) {
+    // Autostart and debug calls must not request fullscreen without a gesture.
+    if (request && globalThis.navigator?.userActivation?.isActive) this.landscape?.requestPreferred();
+    return this.landscape?.ensureLandscape() ?? true;
+  }
   startMatch() {
+    if (!this.prepareMobileScreen()) return;
     const o = this.opts;
     audio.init(); audio.setVolumes({ master: o.vol }); audio.startAmbient(); audio.playUI('start');
     this.clearMatchObjects();
@@ -311,6 +319,7 @@ export class Game {
     if (document.pointerLockElement) document.exitPointerLock();
   }
   resume(fromLock) {
+    if (!this.prepareMobileScreen(!fromLock)) return;
     this.clearInput();
     this.paused = false; this.hud.show(null);
     this.touch?.sync();
@@ -353,6 +362,7 @@ export class Game {
     if (document.pointerLockElement) document.exitPointerLock();
   }
   closeLoadout() {
+    if (!this.prepareMobileScreen()) return;
     this.clearInput();
     this.inLoadout = false; this.paused = false; this.hud.show(null); this.lock();
     this.touch?.sync();
@@ -699,6 +709,7 @@ export class Game {
   // ================= 主循环 =================
   loop(now) {
     requestAnimationFrame(this.loop);
+    this.landscape?.sync();
     let dt = (now - this.last) / 1000; this.last = now;
     if (dt > 0.1) dt = 0.1;
     if (dt <= 0) return;
@@ -727,6 +738,7 @@ export class Game {
     return { score: this.score, time: this.time.toFixed(1), kills: this.actors.map((a) => a.name + ':' + a.stats.k + '/' + a.stats.d).join(' ') };
   }
   simulate(dt) {
+    this.landscape?.sync();
     if (this.ended || !this.playing || this.paused || !Number.isFinite(dt) || dt <= 0) return;
     const nextTime = this.time + dt;
     // The deadline wins before events at or beyond it. Snap away the tiny
@@ -776,6 +788,7 @@ export class Game {
     }
   }
   renderFrame(dt) {
+    this.landscape?.sync();
     this.touch?.sync();
     const R = this.renderer, cam = R.camera;
     this.updateTags();

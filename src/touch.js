@@ -40,7 +40,7 @@ export class TouchControls {
   }
   listen(target,type,handler) {target.addEventListener(type,handler,{passive:false});this.listeners.push([target,type,handler]);}
   consume(event) {if(event.cancelable)event.preventDefault();event.stopPropagation();}
-  inMatch() {const g=this.g;return this.enabled&&g.playing&&!g.ended&&!g.paused&&!g.inLoadout&&g.player&&!document.hidden;}
+  inMatch() {const g=this.g;return this.enabled&&!g.landscape?.blocked&&g.playing&&!g.ended&&!g.paused&&!g.inLoadout&&g.player&&!document.hidden;}
   playable() {return this.inMatch()&&this.g.player.alive?this.g.player:null;}
   sync() {
     const next=this.playable();

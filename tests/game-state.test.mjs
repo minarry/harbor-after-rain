@@ -18,6 +18,19 @@ test('pointer ownership is released even between player instances',()=>{
   const g=Object.create(Game.prototype);let resets=0;g.touch={reset(){resets++;}};
   g.clearInput();assert.equal(resets,1);
 });
+test('portrait gate blocks starting, resuming and leaving loadout before state changes',()=>{
+  const g=Object.create(Game.prototype);let checks=0;
+  g.landscape={ensureLandscape(){checks++;return false;},requestPreferred(){}};
+  Object.assign(g,{playing:false,paused:true,inLoadout:true});
+  g.startMatch();g.resume();g.closeLoadout();
+  assert.equal(checks,3);assert.equal(g.playing,false);assert.equal(g.paused,true);assert.equal(g.inLoadout,true);
+});
+test('portrait sync runs before simulation and freezes queued actions immediately',()=>{
+  const {g,calls}=runningMatch('relay',42);let timers=0;
+  g.landscape={sync(){g.paused=true;}};g.timers.push({t:42,fn(){timers++;}});
+  g.simulate(1/60);
+  assert.equal(g.time,42);assert.equal(g.timeLeft,138);assert.equal(timers,0);assert.equal(calls.player,0);
+});
 test('immediate loadout change exits previous sniper scope', () => {
   const g=Object.create(Game.prototype);
   g.time=1;g.opts={};g.hud={saveOpts(){},slots(){},toast(){}};g.vm={equip(){}};

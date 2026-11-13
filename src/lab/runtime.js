@@ -84,7 +84,7 @@ export async function startLab(){
     action(id){if(!(definition.actions||[]).some(a=>a.id===id))throw new RangeError('未知动作');seeded(()=>definition.action?.(id));if(paused){stepOne();stepOne();}renderFrame();updatePanel();return this.snapshot();},
     camera(id){if(!definition.cameras.some(c=>c.id===id))throw new RangeError('未知视角');setCamera(id);renderFrame();updatePanel();return r.camera.position.toArray();},
     step(frames=1){if(!Number.isInteger(frames)||frames<1||frames>1800)throw new RangeError('步数应为 1–1800');paused=true;for(let i=0;i<frames;i++)stepOne();renderFrame();updatePanel();return this.snapshot();},
-    snapshot(){return {schemaVersion:1,build:'1.4.8',module:config.id,seed:config.seed,time,frame,paused,quality:config.quality,controls:{...values},camera:{preset:currentCamera,position:r.camera.position.toArray(),target:orbit.target.toArray(),fov:r.camera.fov},renderer:r.getFeatures(),weather:ctx.env.atmosphere.getWeather(),metrics:metrics(),checks:definition.checks?.()||[],errors:[...errors],details:definition.report?.()||{},url:url().href,urlTimeClamped:time>30};},
+    snapshot(){return {schemaVersion:1,build:'1.4.9',module:config.id,seed:config.seed,time,frame,paused,quality:config.quality,controls:{...values},camera:{preset:currentCamera,position:r.camera.position.toArray(),target:orbit.target.toArray(),fov:r.camera.fov},renderer:r.getFeatures(),weather:ctx.env.atmosphere.getWeather(),metrics:metrics(),checks:definition.checks?.()||[],errors:[...errors],details:definition.report?.()||{},url:url().href,urlTimeClamped:time>30};},
     debug:ctx,
   };
   for(const d of definition.controls)api.control(d.key,d.value);

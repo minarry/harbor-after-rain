@@ -5,7 +5,8 @@ import { pathToFileURL } from 'node:url';
 import assert from 'node:assert/strict';
 
 // Exercise the actual menu, actors, clock and result screen in the built game.
-await mkdir('artifacts/v141', { recursive: true });
+const out = process.argv.includes('--out') ? process.argv[process.argv.indexOf('--out') + 1] : 'artifacts/v149';
+await mkdir(out, { recursive: true });
 const browser = await chromium.launch({ executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome', headless: true });
 const report = { rounds: [], outcomes: [], errors: [], desktop: {}, mobile: {}, offline: {} };
 const watch = page => {
@@ -31,7 +32,7 @@ try {
     labLink: await page.locator('#menu a[href="?lab=render"]').isVisible() };
   assert.ok(report.desktop.sideBySide && report.desktop.inView && report.desktop.noDropdown && report.desktop.noOverflow && report.desktop.labLink);
   assert.ok(report.desktop.diagrams >= 2);
-  await page.screenshot({ path: 'artifacts/v141/menu-desktop.png' });
+  await page.screenshot({ path: `${out}/menu-desktop.png` });
 
   for (const [mode, id] of [['tdm', 'btnStartTdm'], ['relay', 'btnStartRelay']]) {
     await page.locator('#' + id).click();
@@ -95,15 +96,15 @@ try {
   assert.equal(report.persistedMode, 'relay');
   await page.close();
 
-  const context = await browser.newContext({ viewport: { width: 390, height: 844 }, isMobile: true, hasTouch: true, deviceScaleFactor: 1 });
+  const context = await browser.newContext({ viewport: { width: 844, height: 390 }, isMobile: true, hasTouch: true, deviceScaleFactor: 1 });
   const mobile = await context.newPage(); watch(mobile);
   await mobile.goto('http://127.0.0.1:4173/?touch=1&q=low'); await ready(mobile);
   report.mobile.noOverflow = await mobile.evaluate(() => document.documentElement.scrollWidth <= innerWidth);
   assert.equal(report.mobile.noOverflow, true);
-  await mobile.screenshot({ path: 'artifacts/v141/menu-mobile.png', fullPage: true });
+  await mobile.screenshot({ path: `${out}/menu-mobile.png`, fullPage: true });
   for (const [id, mode] of [['btnStartTdm', 'tdm'], ['btnStartRelay', 'relay']]) {
     await mobile.locator('#' + id).scrollIntoViewIfNeeded();
-    await mobile.screenshot({ path: `artifacts/v141/menu-mobile-${mode}.png` });
+    await mobile.screenshot({ path: `${out}/menu-mobile-${mode}.png` });
     await mobile.locator('#' + id).tap();
     assert.equal(await mobile.evaluate(() => __game.mode), mode);
     assert.equal(await mobile.evaluate(() => __game.touchMode && __game.playing && __game.timeLeft === 180), true);
@@ -120,6 +121,6 @@ try {
   assert.equal(report.offline.playing, true); assert.equal(report.offline.seconds, 180);
   await offline.close();
   assert.deepEqual(report.errors, []);
-  await writeFile('artifacts/v141/menu-match-check.json', JSON.stringify(report, null, 2));
+  await writeFile(`${out}/menu-match-check.json`, JSON.stringify(report, null, 2));
   console.log(JSON.stringify(report, null, 2));
 } finally { await browser.close(); }
