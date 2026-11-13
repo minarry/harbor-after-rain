@@ -15,7 +15,7 @@ export class Player extends Actor {
     this.deathCam = null;
     this.damageResponse = new DamageResponse();
     this.explosionOffset = new THREE.Vector2();
-    this.touch = { mx: 0, mz: 0, fire: false, jump: false, crouch: false, aim: false };
+    this.touch = { mx: 0, mz: 0, fire: false, firePressed: false, jump: false, crouch: false, aim: false };
   }
   forward(out) {
     // Match the camera's recoil pose so the aimed sight and bullet direction agree.
@@ -44,6 +44,7 @@ export class Player extends Actor {
     window.addEventListener('keyup', (e) => { const p = g.player; if (p) p.keys.delete(e.code); });
     window.addEventListener('blur', () => { const p = g.player; if (p) { p.keys.clear(); p.mouse.l = p.mouse.r = false; } });
     canvas.addEventListener('mousedown', (e) => {
+      if (e.sourceCapabilities?.firesTouchEvents) return;
       const p = P(); if (!p || g.paused || g.inLoadout) return;
       if (!g.locked && !g.touchMode) { g.lock(); return; }
       if (e.button === 0) { p.mouse.l = true; p.mouse.lp = true; }
@@ -52,6 +53,7 @@ export class Player extends Actor {
     window.addEventListener('mouseup', (e) => { const p = g.player; if (!p) return; if (e.button === 0) p.mouse.l = false; if (e.button === 2) p.mouse.r = false; });
     window.addEventListener('contextmenu', (e) => e.preventDefault());
     window.addEventListener('mousemove', (e) => {
+      if (e.sourceCapabilities?.firesTouchEvents) return;
       const p = P(); if (!p || !g.locked || g.paused || g.inLoadout || (g.dragMode && !e.buttons)) return;
       // 过滤浏览器偶发的异常大位移
       if (Math.abs(e.movementX) > 400 || Math.abs(e.movementY) > 400) return;

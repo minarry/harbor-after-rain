@@ -5,11 +5,18 @@ import { WeaponState } from '../src/weapons.js';
 
 test('clearing input releases mouse edges and held touch controls', () => {
   const g=Object.create(Game.prototype);
-  g.player={ keys:new Set(['KeyW']),pressed:new Set(['KeyR']),mouse:{l:true,lp:true,dx:20},touch:{fire:true,mx:1,mz:1},touchLook:{x:10,y:10} };
+  let resets=0;g.touch={reset(){resets++;}};
+  g.player={ keys:new Set(['KeyW']),pressed:new Set(['KeyR']),mouse:{l:true,lp:true,dx:20},touch:{fire:true,firePressed:true,crouch:true,aim:true,mx:1,mz:1},touchLook:{x:10,y:10} };
   g.clearInput();
   assert.equal(g.player.keys.size,0);assert.equal(g.player.pressed.size,0);
   assert.equal(g.player.mouse.lp,false);assert.equal(g.player.touch.fire,false);
   assert.equal(g.player.touch.mx,0);assert.equal(g.player.touchLook.x,0);
+  assert.equal(g.player.touch.firePressed,false);assert.equal(g.player.touch.crouch,false);assert.equal(g.player.touch.aim,false);
+  assert.equal(resets,1);
+});
+test('pointer ownership is released even between player instances',()=>{
+  const g=Object.create(Game.prototype);let resets=0;g.touch={reset(){resets++;}};
+  g.clearInput();assert.equal(resets,1);
 });
 test('immediate loadout change exits previous sniper scope', () => {
   const g=Object.create(Game.prototype);

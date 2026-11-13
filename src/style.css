@@ -175,9 +175,6 @@ body.lk #clinks{opacity:.22}
 .card img{width:100%;height:56px;object-fit:contain}
 .card b{display:block;font-family:var(--num);letter-spacing:2px;margin-top:4px}
 .card small{color:var(--hudDim);font-size:11px}
-#touch{position:absolute;inset:0;pointer-events:none}
-#touch .pad{position:absolute;pointer-events:auto;border-radius:50%;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.25)}
-#touch .btn{position:absolute;pointer-events:auto;border-radius:50%;background:rgba(0,0,0,.35);border:1px solid rgba(255,255,255,.35);display:grid;place-items:center;font-size:13px;color:#fff}
 @media (max-width:760px){
   .menuBox{grid-template-columns:1fr;padding:18px}
   .title h1{font-size:40px}
@@ -333,7 +330,6 @@ button{color:var(--hud)}
 #objective[data-owner=BL]{border-top-color:var(--bl2)}
 #objective[data-owner=GR]{border-top-color:var(--gr2)}
 #objective.contested .obj-top b{color:var(--accent)}
-#touch .btn{backdrop-filter:blur(3px);background:rgba(12,23,28,.28);border-color:rgba(238,232,220,.35)}
 
 @media(min-width:1050px) and (max-height:800px){
   .menuBox{padding-top:81px;padding-bottom:62px}
@@ -433,40 +429,107 @@ button{color:var(--hud)}
   .mode-hint{font-size:10px}
   .seg button{min-height:37px}
 }
-/* Landscape touch play: keep the radar, vitals and fire controls in separate zones. */
-@media(max-height:500px) and (min-width:620px){
-  #hud:has(#touch:not(.hidden)) #radarWrap{width:104px;height:104px;top:max(12px,env(safe-area-inset-top));left:max(16px,env(safe-area-inset-left))}
-  #hud:has(#touch:not(.hidden)) #vitals{left:max(18px,env(safe-area-inset-left));top:132px;bottom:auto;gap:14px}
-  #hud:has(#touch:not(.hidden)) .vbox .val{font-size:29px}
-  #hud:has(#touch:not(.hidden)) #arBox .val{font-size:21px}
-  #hud:has(#touch:not(.hidden)) #score{left:50%;right:auto;transform:translateX(-50%);top:12px}
-  #hud:has(#touch:not(.hidden)) #score .team{min-width:73px;padding:5px 10px}
-  #hud:has(#touch:not(.hidden)) #score .team .nm{display:none}
-  #hud:has(#touch:not(.hidden)) #score .team .pts{font-size:24px}
-  #hud:has(#touch:not(.hidden)) #score .mid{min-width:104px}
-  #hud:has(#touch:not(.hidden)) #objective{top:73px;width:238px;padding:7px 10px}
-  #hud:has(#touch:not(.hidden)) #objHint{font-size:8px;margin-top:5px}
-  #hud:has(#touch:not(.hidden)) #feed{right:max(14px,env(safe-area-inset-right));top:60px;max-width:230px;max-height:78px;overflow:hidden}
-  #hud:has(#touch:not(.hidden)) .kf{font-size:9px}
-  #hud:has(#touch:not(.hidden)) #ammo{bottom:15px;right:50%;transform:translateX(50%);text-align:center}
-  #hud:has(#touch:not(.hidden)) #ammo .wname{font-size:8px}
-  #hud:has(#touch:not(.hidden)) #ammo .row{justify-content:center;gap:7px}
-  #hud:has(#touch:not(.hidden)) #ammo .wicon{display:none}
-  #hud:has(#touch:not(.hidden)) #ammo .mag{font-size:31px}
-  #hud:has(#touch:not(.hidden)) #ammo .res{font-size:16px}
-  #hud:has(#touch:not(.hidden)) #ammo .hint{font-size:8px;height:10px;margin-top:4px}
-  #hud:has(#touch:not(.hidden)) #protect{left:18px;bottom:14px;transform:none;max-width:175px;font-size:8px;letter-spacing:0}
-  #hud:has(#touch:not(.hidden)) #toast{top:141px;font-size:10px;max-width:45vw}
-  #hud:has(#touch:not(.hidden)) #badge{top:67%}
-  #hud:has(#touch:not(.hidden)) #slots{right:25px;bottom:180px}
-  /* touch.js appends pad, knob, fire, auxiliary fire, jump, crouch, reload, switch, scope. */
-  #touch>.btn:nth-child(3){right:max(28px,env(safe-area-inset-right))!important;bottom:105px!important;width:68px!important;height:68px!important}
-  #touch>.btn:nth-child(4){display:none}
-  #touch>.btn:nth-child(5){right:110px!important;bottom:40px!important;width:52px!important;height:52px!important}
-  #touch>.btn:nth-child(6){right:176px!important;bottom:36px!important;width:48px!important;height:48px!important}
-  #touch>.btn:nth-child(7){right:112px!important;bottom:115px!important;width:44px!important;height:44px!important}
-  #touch>.btn:nth-child(8){right:174px!important;bottom:109px!important;width:44px!important;height:44px!important}
-  #touch>.btn:nth-child(9){right:max(31px,env(safe-area-inset-right))!important;bottom:31px!important;width:58px!important;height:58px!important}
+/* Two thumbs: named action slots, a floating left stick, and a clear sightline.
+   touch.js owns only the stick's live center; CSS owns dimensions and idle center. */
+.touch-hint{display:none}
+.touch-ui .touch-hint{display:inline}
+.touch-ui .desktop-hint{display:none}
+.touch-instructions{font-size:11px;line-height:1.65;color:rgba(238,232,220,.76);max-width:620px;margin:0 0 16px}
+.touch-instructions b{color:#f4c995;font-weight:600;margin-right:7px}
+.touch-instructions span{display:block;color:var(--hudDim)}
+.touch-ui .seg button,.touch-ui summary,.touch-ui .lab-entry{min-height:44px}
+.touch-ui .slider input{height:44px}
+.touch-ui .go,.touch-ui .mode-start{min-height:48px}
+.touch-ui .pauseBox{padding:22px;max-height:calc(100dvh - max(24px,env(safe-area-inset-top)) - max(24px,env(safe-area-inset-bottom)));overscroll-behavior:contain;touch-action:pan-y}
+.touch-ui .pauseBox h2{margin-bottom:14px}
+#touch{--touch-left:max(12px,env(safe-area-inset-left));--touch-right:max(12px,env(safe-area-inset-right));--touch-bottom:max(12px,env(safe-area-inset-bottom));--touch-top:max(12px,env(safe-area-inset-top));position:absolute;inset:0;pointer-events:none;isolation:isolate;user-select:none;-webkit-user-select:none}
+#touch-move-zone,#touch-look-zone{position:absolute;pointer-events:auto;touch-action:none;z-index:0}
+#touch-move-zone{left:var(--touch-left);top:32%;bottom:var(--touch-bottom);width:calc(42% - var(--touch-left))}
+#touch-look-zone{left:42%;right:0;top:0;bottom:0}
+#touch .touch-pad,#touch .touch-knob{position:absolute;left:clamp(76px,14vw,118px);top:calc(100% - 100px - env(safe-area-inset-bottom));transform:translate(-50%,-50%);pointer-events:none;border-radius:50%;z-index:1}
+#touch .touch-pad{width:120px;height:120px;border:1px solid rgba(238,232,220,.25);background:radial-gradient(circle,rgba(238,232,220,.025) 0 40%,rgba(238,232,220,.065) 41% 100%);box-shadow:inset 0 0 0 8px rgba(12,23,28,.12)}
+#touch .touch-knob{width:44px;height:44px;border:1px solid rgba(238,232,220,.55);background:rgba(238,232,220,.2);box-shadow:0 2px 10px rgba(0,0,0,.18)}
+#touch .touch-pad.is-active{border-color:rgba(230,172,102,.65)}
+#touch .btn{position:absolute;z-index:2;display:grid;place-items:center;padding:0;width:48px;height:48px;min-width:44px;min-height:44px;border:1px solid rgba(238,232,220,.36);border-radius:50%;background:rgba(12,23,28,.32);color:#eee8dc;font:500 12px/1 var(--cn);text-shadow:0 1px 3px #000;pointer-events:auto;touch-action:none;-webkit-touch-callout:none;backdrop-filter:blur(2px);transition:background .1s,border-color .1s,color .1s}
+#touch .btn:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+#touch .btn:disabled{opacity:.32;box-shadow:none}
+#touch .btn.is-active,#touch .btn[aria-pressed=true]{background:rgba(230,172,102,.3);border-color:#f4c995;color:#ffe0b6;box-shadow:inset 0 0 0 1px rgba(244,201,149,.3)}
+#touch [data-touch-action=fire]{right:var(--touch-right);bottom:calc(var(--touch-bottom) + 116px);width:76px;height:76px;border:2px solid rgba(244,201,149,.8);background:rgba(94,63,36,.38);font-size:15px;font-weight:600;letter-spacing:.07em}
+#touch [data-touch-action=fire].is-active{background:rgba(230,172,102,.48);border-color:#ffe0b6}
+#touch [data-touch-action=aim]{right:calc(var(--touch-right) + 5px);bottom:calc(var(--touch-bottom) + 24px);width:64px;height:64px;font-size:13px}
+#touch [data-touch-action=jump]{right:calc(var(--touch-right) + 94px);bottom:calc(var(--touch-bottom) + 28px);width:52px;height:52px}
+#touch [data-touch-action=crouch]{right:calc(var(--touch-right) + 158px);bottom:calc(var(--touch-bottom) + 28px)}
+#touch [data-touch-action=reload]{right:calc(var(--touch-right) + 96px);bottom:calc(var(--touch-bottom) + 110px)}
+#touch [data-touch-action=switch]{right:calc(var(--touch-right) + 158px);bottom:calc(var(--touch-bottom) + 108px)}
+#touch [data-touch-action=fire-left]{left:calc(var(--touch-left) + 110px);top:max(var(--touch-top),calc(32% - 56px));bottom:auto;font-size:11px;background:rgba(12,23,28,.22)}
+#touch [data-touch-action=pause]{right:var(--touch-right);top:var(--touch-top);width:48px;height:48px;border-radius:13px;font-size:10px;background:rgba(12,23,28,.6)}
+#hud:has(#touch:not(.hidden)) #clinks,#hud:has(#touch:not(.hidden)) #slots{display:none}
+#hud:has(#touch:not(.hidden)) #radarWrap{width:96px;height:96px;top:max(12px,env(safe-area-inset-top));left:max(12px,env(safe-area-inset-left))}
+#hud:has(#touch:not(.hidden)) #radarWrap .lbl{font-size:7px;left:5px;bottom:4px}
+#hud:has(#touch:not(.hidden)) #vitals{left:max(14px,env(safe-area-inset-left));top:calc(max(12px,env(safe-area-inset-top)) + 106px);bottom:auto;gap:14px}
+#hud:has(#touch:not(.hidden)) .vbox{gap:5px}
+#hud:has(#touch:not(.hidden)) .vbox .val{font-size:27px}
+#hud:has(#touch:not(.hidden)) .vbox .ic{font-size:8px}
+#hud:has(#touch:not(.hidden)) #arBox .val{font-size:20px}
+#hud:has(#touch:not(.hidden)) #score{left:50%;right:auto;transform:translateX(-50%);top:max(12px,env(safe-area-inset-top))}
+#hud:has(#touch:not(.hidden)) #score .team{min-width:58px;padding:5px 9px;gap:0}
+#hud:has(#touch:not(.hidden)) #score .team .nm{display:none}
+#hud:has(#touch:not(.hidden)) #score .team .pts{font-size:24px}
+#hud:has(#touch:not(.hidden)) #score .mid{min-width:96px;padding:4px 8px}
+#hud:has(#touch:not(.hidden)) #score .mid .time{font-size:21px}
+#hud:has(#touch:not(.hidden)) #score .mid .goal{font-size:7px}
+#hud:has(#touch:not(.hidden)) #objective{top:calc(max(12px,env(safe-area-inset-top)) + 60px);width:238px;padding:7px 10px}
+#hud:has(#touch:not(.hidden)) #objHint{font-size:8px;margin-top:5px}
+#hud:has(#touch:not(.hidden)) #feed{right:max(12px,env(safe-area-inset-right));top:calc(max(12px,env(safe-area-inset-top)) + 60px);width:auto;max-width:min(180px,calc((100vw - 270px)/2 - 24px));max-height:65px;overflow:hidden}
+#hud:has(#touch:not(.hidden)) .kf{font-size:9px;gap:5px;padding:4px 6px}
+#hud:has(#touch:not(.hidden)) .kf img{height:12px}
+#hud:has(#touch:not(.hidden)) #ammo{bottom:max(12px,env(safe-area-inset-bottom));right:50%;transform:translateX(50%);text-align:center}
+#hud:has(#touch:not(.hidden)) #ammo .wname{font-size:8px}
+#hud:has(#touch:not(.hidden)) #ammo .row{justify-content:center;gap:6px}
+#hud:has(#touch:not(.hidden)) #ammo .wicon{display:none}
+#hud:has(#touch:not(.hidden)) #ammo .mag{font-size:28px}
+#hud:has(#touch:not(.hidden)) #ammo .res{font-size:15px}
+#hud:has(#touch:not(.hidden)) #ammo .hint{font-size:8px;height:10px;margin-top:2px}
+#hud:has(#touch:not(.hidden)) #protect{left:max(14px,env(safe-area-inset-left));bottom:max(12px,env(safe-area-inset-bottom));transform:none;max-width:160px;font-size:8px;letter-spacing:0}
+#hud:has(#touch:not(.hidden)) #toast{top:calc(max(12px,env(safe-area-inset-top)) + 128px);font-size:10px;line-height:1.7;max-width:45vw;width:max-content}
+#hud:has(#touch:not(.hidden)) #badge{top:62%;max-width:38vw}
+#hud:has(#touch:not(.hidden)) #badge .txt{font-size:12px}
+#hud:has(#touch:not(.hidden)) #badge .ico{width:28px;height:28px}
+@media(orientation:landscape) and (max-height:560px){
+  #touch .touch-pad{width:112px;height:112px}
+  #touch .touch-pad,#touch .touch-knob{top:calc(100% - 88px - env(safe-area-inset-bottom))}
+  #touch [data-touch-action=fire]{width:72px;height:72px;bottom:calc(var(--touch-bottom) + 96px)}
+  #touch [data-touch-action=aim]{width:60px;height:60px;bottom:calc(var(--touch-bottom) + 16px)}
+  #touch [data-touch-action=jump],#touch [data-touch-action=crouch]{bottom:calc(var(--touch-bottom) + 20px)}
+  #touch [data-touch-action=reload],#touch [data-touch-action=switch]{bottom:calc(var(--touch-bottom) + 96px)}
+  #hud:has(#touch:not(.hidden)) #badge{top:61%}
+}
+@media(orientation:portrait){
+  #touch .touch-pad,#touch .touch-knob{left:clamp(68px,21vw,118px)}
+  #touch [data-touch-action=fire]{width:72px;height:72px;bottom:calc(var(--touch-bottom) + 128px)}
+  #touch [data-touch-action=aim]{width:60px;height:60px;right:calc(var(--touch-right) + 6px);bottom:calc(var(--touch-bottom) + 52px)}
+  #touch [data-touch-action=jump]{right:calc(var(--touch-right) + 80px);bottom:calc(var(--touch-bottom) + 56px);width:48px;height:48px}
+  #touch [data-touch-action=reload]{right:calc(var(--touch-right) + 80px);bottom:calc(var(--touch-bottom) + 128px)}
+  #touch [data-touch-action=crouch],#touch [data-touch-action=switch]{right:calc(var(--touch-right) + 136px);width:44px;height:44px}
+  #touch [data-touch-action=crouch]{bottom:calc(var(--touch-bottom) + 56px)}
+  #touch [data-touch-action=switch]{bottom:calc(var(--touch-bottom) + 128px)}
+  #touch [data-touch-action=fire-left]{display:none}
+  #hud:has(#touch:not(.hidden)) #radarWrap{width:76px;height:76px}
+  #hud:has(#touch:not(.hidden)) #vitals{top:calc(max(12px,env(safe-area-inset-top)) + 87px);gap:12px}
+  #hud:has(#touch:not(.hidden)) #score{left:calc(50% + 8px)}
+  #hud:has(#touch:not(.hidden)) #score .team{min-width:36px;padding:5px 6px}
+  #hud:has(#touch:not(.hidden)) #score .mid{min-width:76px;padding:4px 5px}
+  #hud:has(#touch:not(.hidden)) #objective{top:calc(max(12px,env(safe-area-inset-top)) + 152px);width:min(270px,calc(100vw - 32px))}
+  #hud:has(#touch:not(.hidden)) #feed{top:calc(max(12px,env(safe-area-inset-top)) + 92px);right:max(12px,env(safe-area-inset-right));max-width:calc(100vw - 154px);max-height:52px}
+  #hud:has(#touch:not(.hidden)) #toast{top:calc(max(12px,env(safe-area-inset-top)) + 218px);max-width:calc(100vw - 36px)}
+  #hud:has(#touch:not(.hidden)) #protect{bottom:auto;top:calc(max(12px,env(safe-area-inset-top)) + 120px)}
+  #hud:has(#touch:not(.hidden)) #badge{top:56%;max-width:80vw}
+}
+@media(orientation:portrait) and (max-width:370px){
+  #touch .touch-pad{width:104px;height:104px}
+  #touch [data-touch-action=jump],#touch [data-touch-action=reload]{right:calc(var(--touch-right) + 74px);width:44px;height:44px}
+  #touch [data-touch-action=crouch],#touch [data-touch-action=switch]{right:calc(var(--touch-right) + 128px)}
+  #touch [data-touch-action=fire]{width:68px;height:68px}
 }
 
 /* Two direct operation entries share one deployment panel. */

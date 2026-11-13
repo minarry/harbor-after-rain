@@ -1,6 +1,6 @@
 {
   "name": "harbor-after-rain",
-  "version": "1.4.7",
+  "version": "1.4.8",
   "private": true,
   "type": "module",
   "scripts": {
@@ -24,7 +24,8 @@
     "compare:hands": "node scripts/hand-compare.mjs --phase after",
     "report:hands": "node scripts/hand-review.mjs",
     "compare:arms": "node scripts/arm-compare.mjs --phase after",
-    "report:arms": "node scripts/arm-review.mjs"
+    "report:arms": "node scripts/arm-review.mjs",
+    "test:mobile": "node scripts/mobile-controls-check.mjs"
   },
   "dependencies": {
     "esbuild": "^0.28.2",

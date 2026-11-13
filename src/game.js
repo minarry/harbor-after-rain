@@ -93,6 +93,11 @@ export class Game {
       if (this.paused) this.resume(); else this.pause();
     });
     window.addEventListener('blur', () => { if (this.playing && !this.paused) this.pause(); });
+    document.addEventListener('visibilitychange', () => {
+      if (!document.hidden) return;
+      if (this.playing && !this.paused && !this.ended) this.pause();
+      else this.clearInput();
+    });
     this.last = performance.now();
     this.loop = this.loop.bind(this);
     requestAnimationFrame(this.loop);
@@ -188,6 +193,7 @@ export class Game {
     this.hud.slots(this.player.inv, 0);
     this.playing = true; this.paused = false; this.ended = false;
     this.hud.show(null);
+    this.touch?.sync();
     this.lock();
     setTimeout(() => audio.announce('Go go go!'), 400);
     this.hud.toast(this.mode === 'relay'
@@ -195,6 +201,7 @@ export class Game {
       : `团队竞技 · 率先达到 <b style="color:#f5b321">${this.goal}</b> 击杀的队伍获胜`, 4.5);
   }
   clearMatchObjects() {
+    this.clearInput();
     this.fx.resetTransient();
     for (const a of this.actors) {
       this.renderer.scene.remove(a.soldier.root);
@@ -263,6 +270,7 @@ export class Game {
     a.spawn(best);
     if (a instanceof Bot) a.onSpawn();
     if (a.isPlayer) {
+      this.clearInput();
       a.deathCam = null;
       a.damageResponse.reset(); this.dmgFlash = 0; this.lowHealthFX = 0;
       a.explosionOffset.set(0, 0);
@@ -303,16 +311,21 @@ export class Game {
     if (document.pointerLockElement) document.exitPointerLock();
   }
   resume(fromLock) {
+    this.clearInput();
     this.paused = false; this.hud.show(null);
+    this.touch?.sync();
     audio.setLowHealth(lowHealthAmount(this.player.hp, this.player.alive));
     if (!fromLock) this.lock();
   }
   clearInput() {
+    // Release pointer ownership as well as its current value, so an old held
+    // finger cannot resume moving/shooting after a modal, death or rotation.
+    this.touch?.reset();
     const p = this.player;
     if (!p) return;
     p.keys.clear(); p.pressed.clear();
     Object.assign(p.mouse, { l: false, r: false, lp: false, rp: false, dx: 0, dy: 0, wheel: 0 });
-    Object.assign(p.touch, { fire: false, firePressed: false, mx: 0, mz: 0, jump: false, aim: false });
+    Object.assign(p.touch, { fire: false, firePressed: false, mx: 0, mz: 0, jump: false, aim: false, crouch: false });
     p.ads = 0;
     if (p.touchLook) p.touchLook.x = p.touchLook.y = 0;
     p.lookDX = p.lookDY = 0;
@@ -328,6 +341,7 @@ export class Game {
     this.vm.setVisible(false);
     if (document.pointerLockElement) document.exitPointerLock();
     this.hud.show('menu');
+    this.touch?.sync();
   }
   toggleLoadout() {
     if (!this.playing) return;
@@ -339,7 +353,9 @@ export class Game {
     if (document.pointerLockElement) document.exitPointerLock();
   }
   closeLoadout() {
+    this.clearInput();
     this.inLoadout = false; this.paused = false; this.hud.show(null); this.lock();
+    this.touch?.sync();
     audio.setLowHealth(lowHealthAmount(this.player.hp, this.player.alive));
   }
   chooseLoadout(id) {
@@ -367,6 +383,8 @@ export class Game {
   endMatch() {
     if (this.ended) return;
     this.ended = true; this.playing = false;
+    this.clearInput();
+    this.touch?.sync();
     const my = this.player.team, other = my === 'BL' ? 'GR' : 'BL';
     const win = this.score[my] === this.score[other] ? null : this.score[my] > this.score[other];
     this.hud.endScreen(win, this.score, this.actors, this.player.id);
@@ -635,6 +653,8 @@ export class Game {
       audio.playKillConfirm(hs, m);
     }
     if (v === p) {
+      this.clearInput();
+      this.touch?.sync();
       p.startDeathCam(att);
       this.vm.setVisible(false);
       audio.setLowHealth(false);
@@ -756,6 +776,7 @@ export class Game {
     }
   }
   renderFrame(dt) {
+    this.touch?.sync();
     const R = this.renderer, cam = R.camera;
     this.updateTags();
     // Keep close-up equipment detail; distant soldiers share a lighter mesh with

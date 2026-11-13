@@ -6,6 +6,35 @@ const $ = (s, r = document) => r.querySelector(s);
 export const NAME_COLORS = Object.freeze({ ally: '#8cc8ff', enemy: '#ff6262' });
 export const nameClass = (team, myTeam) => team === myTeam ? 'name-ally' : 'name-enemy';
 
+// A second thumb may not produce a compatibility click while the first stays
+// on the game surface. Only these modal buttons need the touch-up fallback.
+function bindModalButton(button, action) {
+  const pressed = new Set();
+  let fallback = null;
+  button.addEventListener('pointerdown', event => {
+    if (event.pointerType === 'touch' && !event.isPrimary) pressed.add(event.pointerId);
+  });
+  button.addEventListener('pointerup', event => {
+    if (!pressed.delete(event.pointerId) || event.pointerType !== 'touch' || event.isPrimary) return;
+    const box = button.getBoundingClientRect();
+    if (!box.width || !box.height || button.disabled || event.clientX < box.left || event.clientX > box.right || event.clientY < box.top || event.clientY > box.bottom) return;
+    if (event.cancelable) event.preventDefault();
+    fallback = { id: event.pointerId, time: performance.now() };
+    action();
+  });
+  for (const type of ['pointercancel', 'lostpointercapture']) button.addEventListener(type, event => pressed.delete(event.pointerId));
+  button.addEventListener('click', event => {
+    // Some browsers also dispatch click after non-primary touch. Suppress only
+    // that gesture; keyboard activation and other primary clicks still work.
+    const age = fallback ? performance.now() - fallback.time : Infinity;
+    if (event.detail !== 0 && age < 600 && (event.pointerId === fallback?.id || (event.pointerId === undefined && age < 50))) {
+      fallback = null; return;
+    }
+    fallback = null; action();
+  });
+  window.addEventListener('blur', () => pressed.clear());
+}
+
 const HS_ICON = 'data:image/svg+xml;utf8,' + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><g fill="none" stroke="#ff4030" stroke-width="3"><circle cx="20" cy="20" r="11"/><path d="M20 2v10M20 28v10M2 20h10M28 20h10"/></g><circle cx="20" cy="20" r="3.5" fill="#ff4030"/></svg>`);
 const WB_ICON = 'data:image/svg+xml;utf8,' + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 40 40"><rect x="15" y="4" width="10" height="32" fill="#bbb"/><path d="M2 20h36" stroke="#ffd24a" stroke-width="3"/></svg>`);
 const BADGE_SVG = (color, inner) => `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="bg" cx="50%" cy="45%"><stop offset="0" stop-color="${color}" stop-opacity=".95"/><stop offset="1" stop-color="#1a0a00" stop-opacity=".9"/></radialGradient></defs><polygon points="50,3 93,27 93,73 50,97 7,73 7,27" fill="url(#bg)" stroke="#ffd24a" stroke-width="3"/>${inner}</svg>`;
@@ -26,7 +55,9 @@ export class HUD {
     this.hitT = 0; this.toastT = 0;
     this.slotsT = 0;
     this.radarCtx = this.el.radar.getContext('2d');
-    const touch = matchMedia('(pointer:coarse)').matches;
+    const touch = matchMedia('(pointer:coarse)').matches || new URLSearchParams(location.search).has('touch');
+    this.touchUI = touch;
+    this.root.classList.toggle('touch-ui', touch);
     this.opts = { mode: 'tdm', team: 'BL', primary: 'm4a1', size: 5, diff: 'normal', goal: 50, tod: 'dusk', quality: touch ? 'low' : 'high', sens: 1.0, fov: 78, vol: 0.8 };
     try { Object.assign(this.opts, JSON.parse(localStorage.getItem('harbor_after_rain_opts_v1') || '{}')); } catch (e) { /* 忽略 */ }
     if (!['tdm', 'relay'].includes(this.opts.mode)) this.opts.mode = 'tdm';
@@ -66,20 +97,21 @@ export class HUD {
       o.mode = button.dataset.startMode; this.saveOpts(); this.syncMode();
       this.g.onOption?.('mode', o.mode); this.g.audio?.playUI('click');
       this.g.startMatch();
+      if (this.touchUI) this.toast('左拇指拖动移动 · 右拇指滑动转向<br>按住开火并拖动，可边射击边瞄准', 4.5);
     });
     this.syncMode();
-    $('#btnResume').addEventListener('click', () => this.g.resume());
-    $('#btnQuit').addEventListener('click', () => this.g.quitToMenu());
-    $('#btnAgain').addEventListener('click', () => this.g.startMatch());
-    $('#btnMenu').addEventListener('click', () => this.g.quitToMenu());
+    bindModalButton($('#btnResume'), () => this.g.resume());
+    bindModalButton($('#btnQuit'), () => this.g.quitToMenu());
+    bindModalButton($('#btnAgain'), () => this.g.startMatch());
+    bindModalButton($('#btnMenu'), () => this.g.quitToMenu());
     for (const c of this.root.querySelectorAll('#loadCards .card')) {
       c.addEventListener('click', () => {
         this.g.chooseLoadout(c.dataset.w);
         for (const x of this.root.querySelectorAll('#loadCards .card')) x.classList.toggle('on', x === c);
       });
     }
-    $('#btnLoadClose').addEventListener('click', () => this.g.closeLoadout());
-    if (matchMedia('(pointer:coarse)').matches) $('#touchNote').classList.remove('hidden');
+    bindModalButton($('#btnLoadClose'), () => this.g.closeLoadout());
+    if (this.touchUI) for (const note of this.root.querySelectorAll('.touch-instructions')) note.classList.remove('hidden');
     for (const a of this.root.querySelectorAll('#clinks a, .mlinks a'))
       a.addEventListener('touchstart', (e) => e.stopPropagation(), { passive: true });
   }
@@ -410,6 +442,7 @@ const TEMPLATE = `
       <div class="brand-line"><h1>运输船</h1><div class="en">暮雨行动</div></div>
       <p class="premise">穿行雨后甲板，与小队一起推进。选择玩法，即刻开始一场三分钟的行动。</p>
     </div>
+    <div class="note touch-instructions hidden" id="touchNote"><b>双拇指操作</b> 左侧拖动移动，右侧滑动转向；按住开火并拖动瞄准。<span>建议横屏，竖屏也可游玩。</span></div>
     <div class="mode-grid" aria-label="选择玩法并开始行动">
       <article class="mode-card mode-tdm" aria-labelledby="tdmTitle">
         <div class="mode-meta"><span>01 / TEAM DEATHMATCH</span><b>3 分钟</b></div>
@@ -451,7 +484,6 @@ const TEMPLATE = `
       </div></details>
       <a class="lab-entry" href="?lab=render">九模块展示场 <span aria-hidden="true">↗</span></a>
     </div>
-    <div class="note hidden" id="touchNote">触屏：左侧摇杆移动，右侧滑动转向。横屏体验更好。</div>
     </div>
     <div class="opts">
       <div class="deploy-heading"><span>共享部署</span><b>LOADOUT / BOTH MODES</b></div>
@@ -469,19 +501,20 @@ const TEMPLATE = `
           <div class="opt"><div class="lab">画质</div><div class="seg" data-k="quality"><button data-v="low">流畅</button><button data-v="medium">均衡</button><button data-v="high">精细</button></div></div>
         </div>
         <div class="row3">
-          <div class="opt"><div class="lab">灵敏度</div><div class="slider" data-k="sens"><input aria-label="鼠标灵敏度" type="range" min="0.2" max="3" step="0.05"><span></span></div></div>
+          <div class="opt"><div class="lab">视角灵敏度</div><div class="slider" data-k="sens"><input aria-label="视角灵敏度" type="range" min="0.2" max="3" step="0.05"><span></span></div></div>
           <div class="opt"><div class="lab">视野</div><div class="slider" data-k="fov"><input aria-label="视野范围" type="range" min="65" max="100" step="1"><span></span></div></div>
           <div class="opt"><div class="lab">音量</div><div class="slider" data-k="vol"><input aria-label="音量" type="range" min="0" max="1" step="0.05"><span></span></div></div>
         </div>
       </div></details>
-      <div class="start-note">两种玩法共用以上设置。进入后按 <kbd>Esc</kbd> 暂停。</div>
+      <div class="start-note">两种玩法共用以上设置。<span class="desktop-hint">进入后按 <kbd>Esc</kbd> 暂停。</span><span class="touch-hint">进入后点右上角「暂停」。</span></div>
     </div>
   </div>
   <div class="menu-bottom"><span>TRANSPORT SHIP · TACTICAL COMBAT</span><a href="https://github.com/riba2534/claude-opus-5-5-demo" target="_blank" rel="noopener noreferrer">基于公开演示改编 · 非官方致敬作品 ↗</a></div>
 </div>
 
 <div id="pause" class="screen hidden"><div class="pauseBox"><div class="dialog-eyebrow">OPERATION PAUSED</div><h2>行动暂停</h2>
-  <div class="opt"><div class="lab">鼠标灵敏度</div><div class="slider" data-k="sens"><input type="range" min="0.2" max="3" step="0.05"><span></span></div></div>
+  <div class="note touch-instructions hidden" id="touchPauseNote"><b>左手移动，右手瞄准</b> 左侧按下定位摇杆，松手停止；右侧滑动转向，按住开火可同时拖动瞄准。<span>「瞄准」「蹲」点按切换状态；建议横屏，竖屏也可游玩。</span></div>
+  <div class="opt"><div class="lab">视角灵敏度</div><div class="slider" data-k="sens"><input aria-label="视角灵敏度" type="range" min="0.2" max="3" step="0.05"><span></span></div></div>
   <div class="opt"><div class="lab">视野 FOV</div><div class="slider" data-k="fov"><input type="range" min="65" max="100" step="1"><span></span></div></div>
   <div class="opt"><div class="lab">音量</div><div class="slider" data-k="vol"><input type="range" min="0" max="1" step="0.05"><span></span></div></div>
   <div class="opt"><div class="lab">时间</div><div class="seg" data-k="tod"><button data-v="day">阴晴</button><button data-v="dusk">暮光</button></div></div>
