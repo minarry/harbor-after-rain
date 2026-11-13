@@ -1,5 +1,5 @@
 // Two-thumb controls: each pointer keeps the role chosen at pointerdown.
-import { TouchInputState, nextTouchSlot } from './touch-state.js';
+import { TouchInputState, nextTouchSlot, isLookTap } from './touch-state.js';
 
 const BUTTONS=[['fire','开火'],['fire-left','开火'],['jump','跳'],['crouch','蹲'],['reload','换弹'],['switch','切枪'],['aim','瞄准'],['pause','暂停']];
 const clamp=(value,min,max)=>max>=min?Math.max(min,Math.min(max,value)):(min+max)/2;
@@ -66,7 +66,7 @@ export class TouchControls {
     if(action==='pause'&&this.inMatch()){this.g.pause();this.sync();return;}
     if(!this.active)return;
     const p=this.player,radius=Math.max(1,(this.pad.getBoundingClientRect().width||120)/2);
-    if(!this.state.start(event.pointerId,action,event.clientX,event.clientY,{radius}))return;
+    if(!this.state.start(event.pointerId,action,event.clientX,event.clientY,{radius,time:event.timeStamp}))return;
     const target=event.currentTarget;this.captures.set(event.pointerId,target);
     try{target.setPointerCapture?.(event.pointerId);}catch{/* Window events remain a fallback. */}
     if(action==='move') {
@@ -97,11 +97,20 @@ export class TouchControls {
   }
   end(event) {
     if(!this.state.pointers.has(event.pointerId))return;
-    this.consume(event);const pointer=this.state.end(event.pointerId);this.meleeIds.delete(event.pointerId);
+    this.consume(event);
+    // Rotation/pause/death may happen before their browser event is delivered.
+    // Verify the current player before allowing a pending tap to shoot.
+    if(!this.sync())return;
+    const pointer=this.state.end(event.pointerId);if(!pointer)return;
+    this.meleeIds.delete(event.pointerId);
     const target=this.captures.get(event.pointerId);this.captures.delete(event.pointerId);
     try{if(target?.hasPointerCapture?.(event.pointerId))target.releasePointerCapture(event.pointerId);}catch{}
     if(this.player) {
       this.applyHeld(this.player);
+      if(event.type==='pointerup'&&isLookTap(pointer,event.clientX,event.clientY,event.timeStamp)) {
+        const hit=document.elementFromPoint?.(event.clientX,event.clientY);
+        if(!document.elementFromPoint||hit===this.lookZone)this.player.touch.firePressed=true;
+      }
       if(event.type==='pointercancel'||event.type==='lostpointercapture') {
         if(!this.state.fireIds.size&&(pointer.action==='fire'||pointer.action==='fire-left'))this.player.touch.firePressed=false;
         if(pointer.action==='jump'&&!this.state.count('jump'))this.player.touch.jump=false;

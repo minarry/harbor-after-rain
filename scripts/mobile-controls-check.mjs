@@ -7,7 +7,7 @@ import {createHash} from 'node:crypto';
 import assert from 'node:assert/strict';
 
 const args=process.argv.slice(2),arg=(key,fallback)=>args.includes(key)?args[args.indexOf(key)+1]:fallback;
-const out=resolve(arg('--out','artifacts/v149'));
+const out=resolve(arg('--out','artifacts/v150'));
 const base=arg('--url','http://127.0.0.1:4173/');
 const only=arg('--only','');
 await mkdir(out,{recursive:true});

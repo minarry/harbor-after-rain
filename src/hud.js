@@ -7,7 +7,7 @@ export const NAME_COLORS = Object.freeze({ ally: '#8cc8ff', enemy: '#ff6262' });
 export const nameClass = (team, myTeam) => team === myTeam ? 'name-ally' : 'name-enemy';
 
 // A second thumb may not produce a compatibility click while the first stays
-// on the game surface. Only these modal buttons need the touch-up fallback.
+// on the game surface. Modal and mobile settings buttons need this fallback.
 function bindModalButton(button, action) {
   const pressed = new Set();
   let fallback = null;
@@ -58,8 +58,20 @@ export class HUD {
     const touch = matchMedia('(pointer:coarse)').matches || new URLSearchParams(location.search).has('touch');
     this.touchUI = touch;
     this.root.classList.toggle('touch-ui', touch);
-    this.opts = { mode: 'tdm', team: 'BL', primary: 'm4a1', size: 5, diff: 'normal', goal: 50, tod: 'dusk', quality: touch ? 'low' : 'high', sens: 1.0, fov: 78, vol: 0.8 };
-    try { Object.assign(this.opts, JSON.parse(localStorage.getItem('harbor_after_rain_opts_v1') || '{}')); } catch (e) { /* 忽略 */ }
+    this.opts = { mode: 'tdm', team: 'BL', primary: 'm4a1', size: 5, diff: 'normal', goal: 50, tod: 'dusk', quality: touch ? 'low' : 'high', sens: 1.0, touchSens: 1.0, gyroSens: 1.0, fov: 78, vol: 0.8 };
+    try {
+      const saved = JSON.parse(localStorage.getItem('harbor_after_rain_opts_v1') || '{}');
+      Object.assign(this.opts, saved);
+      // Older mobile saves used the mouse sensitivity for sliding as well.
+      // Migrate only once; an explicitly saved touch value stays independent.
+      if (saved && !Object.prototype.hasOwnProperty.call(saved, 'touchSens') && typeof saved.sens === 'number' && Number.isFinite(saved.sens)) {
+        this.opts.touchSens = Math.max(.2, Math.min(3, saved.sens));
+      }
+    } catch (e) { /* 忽略 */ }
+    for (const key of ['touchSens', 'gyroSens']) {
+      const value = Number(this.opts[key]);
+      this.opts[key] = Number.isFinite(value) ? Math.max(.2, Math.min(3, value)) : 1;
+    }
     if (!['tdm', 'relay'].includes(this.opts.mode)) this.opts.mode = 'tdm';
     this.buildMenu();
   }
@@ -97,7 +109,7 @@ export class HUD {
       o.mode = button.dataset.startMode; this.saveOpts(); this.syncMode();
       this.g.onOption?.('mode', o.mode); this.g.audio?.playUI('click');
       this.g.startMatch();
-      if (this.touchUI) this.toast('左拇指拖动移动 · 右拇指滑动转向<br>按住开火并拖动，可边射击边瞄准', 4.5);
+      if (this.touchUI) this.toast('右侧空白处轻点开火 · 拖动转向<br>按住开火键可连射并拖动 · 左侧移动', 4.5);
     });
     this.syncMode();
     bindModalButton($('#btnResume'), () => this.g.resume());
@@ -111,6 +123,13 @@ export class HUD {
       });
     }
     bindModalButton($('#btnLoadClose'), () => this.g.closeLoadout());
+    for (const button of this.root.querySelectorAll('[data-gyro-toggle]')) bindModalButton(button, () => {
+      const gyro = this.g.gyro;
+      if (!gyro) return;
+      if (this.gyroState?.enabled) gyro.disable(); else void gyro.enable();
+    });
+    for (const button of this.root.querySelectorAll('[data-gyro-recenter]')) bindModalButton(button, () => this.g.gyro?.recenter());
+    this.updateGyro({ enabled: false, pending: false, supported: true, canRecenter: false, status: 'off', message: '陀螺仪未开启；滑动与陀螺仪可同时使用。' });
     if (this.touchUI) for (const note of this.root.querySelectorAll('.touch-instructions')) note.classList.remove('hidden');
     for (const a of this.root.querySelectorAll('#clinks a, .mlinks a'))
       a.addEventListener('touchstart', (e) => e.stopPropagation(), { passive: true });
@@ -118,6 +137,23 @@ export class HUD {
   setIcons(icons) {
     this.icons = icons;
     for (const c of this.root.querySelectorAll('#loadCards .card')) c.querySelector('img').src = icons[c.dataset.w] || '';
+  }
+  updateGyro(state) {
+    // Permission and enabled state stay in memory, separate from saved options.
+    this.gyroState = { ...this.gyroState, ...state };
+    const { enabled, pending, supported, canRecenter, status, message } = this.gyroState;
+    const label = pending ? '正在请求…' : supported === false ? '陀螺仪不可用' : enabled ? '关闭陀螺仪' : '开启陀螺仪';
+    for (const button of this.root.querySelectorAll('[data-gyro-toggle]')) {
+      button.textContent = label;
+      button.disabled = !!pending || supported === false;
+      button.classList.toggle('is-active', !!enabled);
+      button.setAttribute('aria-pressed', String(!!enabled));
+    }
+    for (const button of this.root.querySelectorAll('[data-gyro-recenter]')) button.disabled = !enabled || !!pending || !canRecenter;
+    for (const element of this.root.querySelectorAll('[data-gyro-status]')) {
+      element.textContent = message || '';
+      element.dataset.status = status || (enabled ? 'ready' : 'off');
+    }
   }
   syncMode() {
     const goal = Number(this.opts.goal) || 50;
@@ -401,6 +437,16 @@ const PRIM_CARDS = PRIMARIES.map((id) => {
   return `<button type="button" class="card" data-w="${id}"><img alt="${d.name}"><b>${d.name}</b><small>${sub}</small></button>`;
 }).join('');
 
+const MOBILE_SETTINGS = `
+<section class="mobile-settings" aria-label="触控与陀螺仪设置">
+  <div class="mobile-settings-heading"><b>触控与陀螺仪</b><span>可同时使用</span></div>
+  <div class="opt"><div class="lab">滑动灵敏度</div><div class="slider" data-k="touchSens"><input aria-label="滑动灵敏度" type="range" min="0.2" max="3" step="0.05"><span></span></div></div>
+  <div class="gyro-actions"><button type="button" data-gyro-toggle aria-pressed="false">开启陀螺仪</button><button type="button" data-gyro-recenter disabled>重新校准</button></div>
+  <p data-gyro-status role="status" aria-live="polite">陀螺仪未开启；滑动与陀螺仪可同时使用。</p>
+  <div class="opt"><div class="lab">陀螺仪灵敏度</div><div class="slider" data-k="gyroSens"><input aria-label="陀螺仪灵敏度" type="range" min="0.2" max="3" step="0.05"><span></span></div></div>
+  <p class="mobile-settings-note">横放并握稳手机后重新校准。是否可用取决于设备与浏览器；关闭陀螺仪仍可滑动瞄准。</p>
+</section>`;
+
 const TEMPLATE = `
 <div id="landscapeGate" class="hidden" hidden role="dialog" aria-modal="true" aria-labelledby="landscapeTitle" aria-describedby="landscapeCopy landscapeHint">
   <div class="landscape-panel">
@@ -460,7 +506,7 @@ const TEMPLATE = `
       <div class="brand-line"><h1>运输船</h1><div class="en">暮雨行动</div></div>
       <p class="premise">穿行雨后甲板，与小队一起推进。选择玩法，即刻开始一场三分钟的行动。</p>
     </div>
-    <div class="note touch-instructions hidden" id="touchNote"><b>双拇指操作</b> 左侧拖动移动，右侧滑动转向；按住开火并拖动瞄准。<span>移动端仅支持横屏。</span></div>
+    <div class="note touch-instructions hidden" id="touchNote"><b>双拇指操作</b> 左侧拖动移动；右侧空白处轻点开火，拖动转向。<span>按住开火键可连射并拖动瞄准。移动端仅支持横屏。</span></div>
     <div class="mode-grid" aria-label="选择玩法并开始行动">
       <article class="mode-card mode-tdm" aria-labelledby="tdmTitle">
         <div class="mode-meta"><span>01 / TEAM DEATHMATCH</span><b>3 分钟</b></div>
@@ -513,13 +559,14 @@ const TEMPLATE = `
       </div>
       <p id="modeHint" class="mode-hint"></p>
       <div class="opt"><div class="lab">对手难度</div><div class="seg" data-k="diff"><button data-v="easy">新兵</button><button data-v="normal">常规</button><button data-v="hard">老练</button><button data-v="hell">精锐</button></div></div>
+      ${MOBILE_SETTINGS}
       <details class="advanced"><summary>画面与操作设置 <span>＋</span></summary><div class="advanced-body">
         <div class="row2">
           <div class="opt"><div class="lab">光照</div><div class="seg" data-k="tod"><button data-v="day">阴晴</button><button data-v="dusk">暮光</button></div></div>
           <div class="opt"><div class="lab">画质</div><div class="seg" data-k="quality"><button data-v="low">流畅</button><button data-v="medium">均衡</button><button data-v="high">精细</button></div></div>
         </div>
         <div class="row3">
-          <div class="opt"><div class="lab">视角灵敏度</div><div class="slider" data-k="sens"><input aria-label="视角灵敏度" type="range" min="0.2" max="3" step="0.05"><span></span></div></div>
+          <div class="opt desktop-settings"><div class="lab">鼠标灵敏度</div><div class="slider" data-k="sens"><input aria-label="鼠标灵敏度" type="range" min="0.2" max="3" step="0.05"><span></span></div></div>
           <div class="opt"><div class="lab">视野</div><div class="slider" data-k="fov"><input aria-label="视野范围" type="range" min="65" max="100" step="1"><span></span></div></div>
           <div class="opt"><div class="lab">音量</div><div class="slider" data-k="vol"><input aria-label="音量" type="range" min="0" max="1" step="0.05"><span></span></div></div>
         </div>
@@ -530,13 +577,15 @@ const TEMPLATE = `
   <div class="menu-bottom"><span>TRANSPORT SHIP · TACTICAL COMBAT</span><a href="https://github.com/riba2534/claude-opus-5-5-demo" target="_blank" rel="noopener noreferrer">基于公开演示改编 · 非官方致敬作品 ↗</a></div>
 </div>
 
-<div id="pause" class="screen hidden"><div class="pauseBox"><div class="dialog-eyebrow">OPERATION PAUSED</div><h2>行动暂停</h2>
-  <div class="note touch-instructions hidden" id="touchPauseNote"><b>左手移动，右手瞄准</b> 左侧按下定位摇杆，松手停止；右侧滑动转向，按住开火可同时拖动瞄准。<span>「瞄准」「蹲」点按切换状态；移动端仅支持横屏。</span></div>
-  <div class="opt"><div class="lab">视角灵敏度</div><div class="slider" data-k="sens"><input aria-label="视角灵敏度" type="range" min="0.2" max="3" step="0.05"><span></span></div></div>
+<div id="pause" class="screen hidden"><div class="pauseBox"><div class="pause-content"><div class="dialog-eyebrow">OPERATION PAUSED</div><h2>行动暂停</h2>
+  <div class="note touch-instructions hidden" id="touchPauseNote"><b>左手移动，右手瞄准</b> 左侧拖动移动；右侧空白处轻点开火，拖动转向。<span>按住开火键可连射并拖动瞄准；「瞄准」「蹲」点按切换。移动端仅支持横屏。</span></div>
+  ${MOBILE_SETTINGS}
+  <div class="opt desktop-settings"><div class="lab">鼠标灵敏度</div><div class="slider" data-k="sens"><input aria-label="鼠标灵敏度" type="range" min="0.2" max="3" step="0.05"><span></span></div></div>
   <div class="opt"><div class="lab">视野 FOV</div><div class="slider" data-k="fov"><input type="range" min="65" max="100" step="1"><span></span></div></div>
   <div class="opt"><div class="lab">音量</div><div class="slider" data-k="vol"><input type="range" min="0" max="1" step="0.05"><span></span></div></div>
   <div class="opt"><div class="lab">时间</div><div class="seg" data-k="tod"><button data-v="day">阴晴</button><button data-v="dusk">暮光</button></div></div>
-  <button class="go" id="btnResume">继 续</button><button class="go sec" id="btnQuit" style="margin-top:10px">退出到主菜单</button>
+  </div>
+  <div class="pause-actions"><button class="go" id="btnResume">继 续</button><button class="go sec" id="btnQuit">退出到主菜单</button></div>
 </div></div>
 
 <div id="loadout" class="screen hidden"><div class="loadBox"><h2>更换主武器</h2><div class="sub">复活时生效；在出生点内立即生效。副武器沙漠之鹰、军刀、手雷自动配备。</div>

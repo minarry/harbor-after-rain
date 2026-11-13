@@ -1,0 +1,195 @@
+{
+  "version": "1.4.9",
+  "validatedAt": "2026-11-13T10:55:02.739Z",
+  "artifact": {
+    "file": "dist/index.html",
+    "bytes": 1193790,
+    "sha256": "672eb9cac49e8f5ede39b87ff80f2203d4e59c3779ec0fc2127c2c91a0ad13e2"
+  },
+  "nodeTests": {
+    "passed": 142,
+    "failed": 0,
+    "report": "artifacts/v149/node-tests.tap"
+  },
+  "mobile": {
+    "report": "artifacts/v149/mobile-controls-report.json",
+    "transport": "Chrome CDP Input.dispatchTouchEvent",
+    "commands": 258,
+    "cases": [
+      {
+        "name": "wide-tdm",
+        "viewport": [
+          844,
+          390
+        ],
+        "mode": "tdm",
+        "touchCommands": 99,
+        "passed": true,
+        "ammoBefore": 29,
+        "ammoAfter": 25,
+        "lookChangeRadians": 0.32384,
+        "layoutsChecked": true,
+        "deepLifecycleChecked": true
+      },
+      {
+        "name": "wide-relay",
+        "viewport": [
+          844,
+          390
+        ],
+        "mode": "relay",
+        "touchCommands": 99,
+        "passed": true,
+        "ammoBefore": 29,
+        "ammoAfter": 25,
+        "lookChangeRadians": 0.32384,
+        "layoutsChecked": true,
+        "deepLifecycleChecked": true
+      },
+      {
+        "name": "compact-tdm",
+        "viewport": [
+          667,
+          375
+        ],
+        "mode": "tdm",
+        "touchCommands": 15,
+        "passed": true,
+        "ammoBefore": 29,
+        "ammoAfter": 25,
+        "lookChangeRadians": 0.32384,
+        "layoutsChecked": true,
+        "deepLifecycleChecked": false
+      },
+      {
+        "name": "compact-relay",
+        "viewport": [
+          667,
+          375
+        ],
+        "mode": "relay",
+        "touchCommands": 15,
+        "passed": true,
+        "ammoBefore": 29,
+        "ammoAfter": 25,
+        "lookChangeRadians": 0.32384,
+        "layoutsChecked": true,
+        "deepLifecycleChecked": false
+      },
+      {
+        "name": "tablet-tdm",
+        "viewport": [
+          1024,
+          768
+        ],
+        "mode": "tdm",
+        "touchCommands": 15,
+        "passed": true,
+        "ammoBefore": 29,
+        "ammoAfter": 25,
+        "lookChangeRadians": 0.32384,
+        "layoutsChecked": true,
+        "deepLifecycleChecked": false
+      },
+      {
+        "name": "tablet-relay",
+        "viewport": [
+          1024,
+          768
+        ],
+        "mode": "relay",
+        "touchCommands": 15,
+        "passed": true,
+        "ammoBefore": 29,
+        "ammoAfter": 25,
+        "lookChangeRadians": 0.32384,
+        "layoutsChecked": true,
+        "deepLifecycleChecked": false
+      }
+    ],
+    "checks": [
+      "simultaneous movement, held-fire drag aiming and actual ammo use",
+      "independent fire contacts and release orders",
+      "look ownership handoff without camera jumps",
+      "floating joystick dead zone and no initial motion",
+      "pointer cancellation and drag outside buttons",
+      "pause menu secondary touch, drag-off cancellation and resume with old fingers still down",
+      "death/respawn, orientation resize and trusted browser blur release stale gestures",
+      "all visible controls at least 44px, dynamic stick separate from action buttons",
+      "touch weapon cycling to secondary and knife"
+    ],
+    "errors": []
+  },
+  "landscape": {
+    "report": "artifacts/v149/mobile-landscape-report.json",
+    "nativeOrientationLockVerified": false,
+    "apiTests": "explicitly mocked call routing and failure handling",
+    "cases": [
+      {
+        "name": "manual-tdm",
+        "apiSimulation": "missing",
+        "passed": true,
+        "touchCommands": 31
+      },
+      {
+        "name": "manual-relay",
+        "apiSimulation": "missing",
+        "passed": true,
+        "touchCommands": 31
+      },
+      {
+        "name": "api-reject",
+        "apiSimulation": "reject",
+        "passed": true,
+        "touchCommands": 6
+      },
+      {
+        "name": "api-resolve",
+        "apiSimulation": "resolve",
+        "passed": true,
+        "touchCommands": 6
+      },
+      {
+        "name": "desktop-portrait",
+        "apiSimulation": "resolve",
+        "passed": true,
+        "touchCommands": 0
+      }
+    ],
+    "checks": [
+      "portrait gate intercepts menu and guards programmatic start",
+      "real two-thumb contacts are cleared on portrait rotation",
+      "match clock and ammo freeze while portrait",
+      "landscape retains pause until explicit Continue",
+      "old fingers remain disarmed; fresh input works",
+      "missing, rejected and resolved orientation APIs are explicitly simulated",
+      "desktop narrow portrait window has no gate or fullscreen/lock requests"
+    ],
+    "errors": []
+  },
+  "menuAndMatch": {
+    "report": "artifacts/v149/menu-match-check.json",
+    "rounds": 2,
+    "mobile": {
+      "noOverflow": true,
+      "tdm": true,
+      "relay": true
+    },
+    "offline": {
+      "playing": true,
+      "seconds": 180
+    },
+    "errors": []
+  },
+  "visualInspection": [
+    "390×844 portrait orientation gate",
+    "844×390 landscape and resumed gameplay",
+    "667×375 compact landscape",
+    "1024×768 tablet landscape"
+  ],
+  "notes": [
+    "Mobile results use Chromium device emulation and trusted CDP multi-touch. Physical iOS/Android hardware was not available.",
+    "Fullscreen and orientation lock success/rejection are isolated API simulations, not proof of native OS rotation. Manual viewport rotation and pause/input recovery are exercised in the real game.",
+    "Both mobile reports bind to the exact final HTML SHA-256. Menu, both three-minute modes and offline launch passed against the same unchanged build."
+  ]
+}

@@ -3,6 +3,8 @@ import * as THREE from 'three';
 import { Actor } from './actor.js';
 import { DamageResponse } from './combat-feedback.js';
 
+const inputSensitivity = value => Number.isFinite(value) ? THREE.MathUtils.clamp(value, .2, 3) : 1;
+
 export class Player extends Actor {
   constructor(game, o) {
     super(game, { ...o, isPlayer: true });
@@ -64,15 +66,22 @@ export class Player extends Actor {
   consumePressed(code) { const p = this.pressed.has(code); this.pressed.delete(code); return p; }
   update(dt) {
     const g = this.game, K = this.keys;
-    const sens = g.opts.sens * 0.0022;
-    let dx = this.mouse.dx, dy = this.mouse.dy;
+    const mouseSens=inputSensitivity(g.opts.sens),touchSens=inputSensitivity(g.opts.touchSens),gyroSens=inputSensitivity(g.opts.gyroSens);
+    const dx = this.mouse.dx, dy = this.mouse.dy;
     this.mouse.dx = this.mouse.dy = 0;
-    if (this.touchLook) { dx += this.touchLook.x; dy += this.touchLook.y; this.touchLook.x = this.touchLook.y = 0; }
-    this.lookDX = dx; this.lookDY = dy;
+    const tx=this.touchLook?.x||0,ty=this.touchLook?.y||0;
+    if(this.touchLook)this.touchLook.x=this.touchLook.y=0;
+    const gyro=g.gyro?.takeLook()||{yaw:0,pitch:0};
+    const gy=gyro.yaw*gyroSens,gp=gyro.pitch*gyroSens;
+    // Independent inputs are added in angular space. Touch never overwrites
+    // sensor motion and changing mouse sensitivity cannot affect mobile aim.
+    const yawDelta=-(dx*mouseSens+tx*touchSens)*.0022+gy;
+    const pitchDelta=-(dy*mouseSens+ty*touchSens)*.0022+gp;
+    this.lookDX=dx+tx*touchSens-gy/.0022;this.lookDY=dy+ty*touchSens-gp/.0022;
     const fovK = this.scoped || this.ads > 0.01 ? g.renderer.camera.fov / g.opts.fov : 1;
     if (this.alive) {
-      this.yaw -= dx * sens * fovK;
-      this.pitch = THREE.MathUtils.clamp(this.pitch - dy * sens * fovK, -1.5, 1.5);
+      this.yaw += yawDelta * fovK;
+      this.pitch = THREE.MathUtils.clamp(this.pitch + pitchDelta * fovK, -1.5, 1.5);
       // 移动
       let f = 0, s = 0;
       if (K.has('KeyW') || K.has('ArrowUp')) f += 1;
@@ -101,7 +110,7 @@ export class Player extends Actor {
       if (sw !== null && this.inv[sw] && this.inv[sw].def.type === 'grenade' && this.inv[sw].mag <= 0) { g.hud.toast('没有手雷了', 1.2); sw = null; }
       const lp = this.mouse.lp || this.touch.firePressed, rp = this.mouse.rp;
       this.mouse.lp = this.mouse.rp = false; this.touch.firePressed = false;
-      this.weaponUpdate(dt, { fire: this.mouse.l || this.touch.fire, firePressed: lp, alt: this.mouse.r || this.touch.aim, altPressed: rp, reload: this.consumePressed('KeyR'), sw });
+      this.weaponUpdate(dt, { fire: this.mouse.l || this.touch.fire || lp, firePressed: lp, alt: this.mouse.r || this.touch.aim, altPressed: rp, reload: this.consumePressed('KeyR'), sw });
       if (this.consumePressed('KeyF')) g.vm.inspect();
     } else {
       this.pressed.delete('KeyR'); this.mouse.lp = this.mouse.rp = false;

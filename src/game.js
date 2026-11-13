@@ -15,6 +15,7 @@ import { Player } from './player.js';
 import { Bot, BOT_NAMES } from './bots.js';
 import { TouchControls } from './touch.js';
 import { MobileLandscape } from './mobile-landscape.js';
+import { GyroControls } from './gyro.js';
 import { RelayObjective } from './objective.js';
 import { lowHealthAmount } from './combat-feedback.js';
 
@@ -89,6 +90,7 @@ export class Game {
     this.touch = new TouchControls(this);
     this.touchMode = this.touch.enabled;
     this.landscape = new MobileLandscape(this);
+    this.gyro = new GyroControls(this);
     document.addEventListener('keydown', (event) => {
       if (event.code !== 'Escape' || !this.playing || this.ended) return;
       if (this.inLoadout) { this.closeLoadout(); return; }
@@ -330,6 +332,7 @@ export class Game {
     // Release pointer ownership as well as its current value, so an old held
     // finger cannot resume moving/shooting after a modal, death or rotation.
     this.touch?.reset();
+    this.gyro?.reset();
     const p = this.player;
     if (!p) return;
     p.keys.clear(); p.pressed.clear();
@@ -710,6 +713,7 @@ export class Game {
   loop(now) {
     requestAnimationFrame(this.loop);
     this.landscape?.sync();
+    this.gyro?.sync();
     let dt = (now - this.last) / 1000; this.last = now;
     if (dt > 0.1) dt = 0.1;
     if (dt <= 0) return;
@@ -789,6 +793,7 @@ export class Game {
   }
   renderFrame(dt) {
     this.landscape?.sync();
+    this.gyro?.sync();
     this.touch?.sync();
     const R = this.renderer, cam = R.camera;
     this.updateTags();

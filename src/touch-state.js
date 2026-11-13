@@ -3,6 +3,13 @@ const ACTIONS=new Set(['move','look','fire','fire-left','jump','crouch','reload'
 const looks=action=>action==='look'||action==='fire';
 const fires=action=>action==='fire'||action==='fire-left';
 
+// A tap fires on release; the entire path counts, not just its final position.
+export function isLookTap(pointer,x,y,time) {
+  if(!pointer||pointer.action!=='look'||![x,y,time].every(Number.isFinite))return false;
+  const elapsed=time-pointer.startedAt;
+  return elapsed>=0&&elapsed<=260&&Math.max(pointer.travel,Math.hypot(x-pointer.originX,y-pointer.originY))<=10;
+}
+
 export function nextTouchSlot(inventory=[],slot=0) {
   for(let step=1;step<inventory.length;step++) {
     const next=(slot+step)%inventory.length,weapon=inventory[next];
@@ -16,10 +23,10 @@ export class TouchInputState {
     this.deadZone=Math.max(0,Math.min(.9,deadZone));this.lookScale=lookScale;
     this.pointers=new Map();this.fireIds=new Set();this.reset();
   }
-  start(id,action,x,y,{radius=60}={}) {
+  start(id,action,x,y,{radius=60,time=0}={}) {
     if(!ACTIONS.has(action)||this.pointers.has(id)||!Number.isFinite(x)||!Number.isFinite(y))return false;
     if(action==='move'&&this.moveId!==null)return false;
-    this.pointers.set(id,{action,x,y,originX:x,originY:y,radius:Math.max(1,radius)});
+    this.pointers.set(id,{action,x,y,originX:x,originY:y,radius:Math.max(1,radius),startedAt:time,travel:0});
     if(action==='move')this.moveId=id;
     if(looks(action)&&this.lookId===null)this.lookId=id;
     if(fires(action))this.fireIds.add(id);
@@ -29,6 +36,7 @@ export class TouchInputState {
     const pointer=this.pointers.get(id);
     if(!pointer||!Number.isFinite(x)||!Number.isFinite(y))return false;
     const dx=x-pointer.x,dy=y-pointer.y;pointer.x=x;pointer.y=y;
+    pointer.travel=Math.max(pointer.travel,Math.hypot(x-pointer.originX,y-pointer.originY));
     if(id===this.moveId) {
       const mx=x-pointer.originX,my=y-pointer.originY,length=Math.hypot(mx,my),limited=Math.min(length,pointer.radius);
       this.knobX=length?mx/length*limited:0;this.knobY=length?my/length*limited:0;

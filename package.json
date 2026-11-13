@@ -1,6 +1,6 @@
 {
   "name": "harbor-after-rain",
-  "version": "1.4.9",
+  "version": "1.5.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -26,7 +26,8 @@
     "compare:arms": "node scripts/arm-compare.mjs --phase after",
     "report:arms": "node scripts/arm-review.mjs",
     "test:mobile": "node scripts/mobile-controls-check.mjs",
-    "test:landscape": "node scripts/mobile-landscape-check.mjs"
+    "test:landscape": "node scripts/mobile-landscape-check.mjs",
+    "test:gyro": "node scripts/mobile-gyro-check.mjs"
   },
   "dependencies": {
     "esbuild": "^0.28.2",

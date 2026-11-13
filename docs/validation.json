@@ -1,18 +1,18 @@
 {
-  "version": "1.4.9",
-  "validatedAt": "2026-11-13T10:55:02.739Z",
+  "version": "1.5.0",
+  "validatedAt": "2026-11-13T11:20:39.357Z",
   "artifact": {
     "file": "dist/index.html",
-    "bytes": 1193790,
-    "sha256": "672eb9cac49e8f5ede39b87ff80f2203d4e59c3779ec0fc2127c2c91a0ad13e2"
+    "bytes": 1207894,
+    "sha256": "2abbef673d100f2ca0782c2da45cd4412f11b74ec48fab29cbfd25393394eaa3"
   },
   "nodeTests": {
-    "passed": 142,
+    "passed": 163,
     "failed": 0,
-    "report": "artifacts/v149/node-tests.tap"
+    "report": "artifacts/v150/node-tests.tap"
   },
   "mobile": {
-    "report": "artifacts/v149/mobile-controls-report.json",
+    "report": "artifacts/v150/mobile-controls-report.json",
     "transport": "Chrome CDP Input.dispatchTouchEvent",
     "commands": 258,
     "cases": [
@@ -120,8 +120,84 @@
     ],
     "errors": []
   },
+  "gyro": {
+    "report": "artifacts/v150/mobile-gyro-report.json",
+    "physicalSensorVerified": false,
+    "sensorTransport": "explicit-dom-deviceorientation-fallback",
+    "sensorNotice": "Simulated orientation samples; native phone permission, sensor calibration and mounting are not verified.",
+    "touchTransport": "Chrome CDP Input.dispatchTouchEvent",
+    "commands": 174,
+    "cases": [
+      {
+        "name": "tap-tdm",
+        "passed": true,
+        "permissionFixture": "native",
+        "touchCommands": 49
+      },
+      {
+        "name": "tap-relay",
+        "passed": true,
+        "permissionFixture": "native",
+        "touchCommands": 49
+      },
+      {
+        "name": "gyro-axes-mix-recovery",
+        "passed": true,
+        "permissionFixture": "granted",
+        "touchCommands": 42
+      },
+      {
+        "name": "gyro-denied",
+        "passed": true,
+        "permissionFixture": "denied",
+        "touchCommands": 6
+      },
+      {
+        "name": "gyro-missing",
+        "passed": true,
+        "permissionFixture": "missing",
+        "touchCommands": 4
+      },
+      {
+        "name": "gyro-no-data",
+        "passed": true,
+        "permissionFixture": "no-data",
+        "touchCommands": 6
+      },
+      {
+        "name": "compact-settings",
+        "passed": true,
+        "permissionFixture": "native",
+        "touchCommands": 18
+      }
+    ],
+    "axes": [
+      {
+        "landscapeAngle": 90,
+        "leftYaw": 0.0342999619388198,
+        "upPitch": 0.034299922719398204
+      },
+      {
+        "landscapeAngle": 270,
+        "leftYaw": 0.03429970881021949,
+        "upPitch": 0.034299929789172554
+      }
+    ],
+    "checks": [
+      "one blank-area tap consumes one round, no fire on pointerdown or held automatic fire",
+      "small jitter can tap; drag, out-and-back, hold, cancellation and action buttons do not fire",
+      "left-thumb movement and right blank-area tap coexist",
+      "stale contacts cannot fire after pause, rotation or respawn",
+      "two landscape directions map left/up correctly without cross-axis leakage",
+      "real Player update adds touch and sensor in one frame",
+      "touch and sensor sensitivities are independent of mouse sensitivity",
+      "permission denied, missing API and no-data preserve touch gameplay",
+      "compact settings migrate legacy sensitivity, persist separate values and keep Continue reachable"
+    ],
+    "errors": []
+  },
   "landscape": {
-    "report": "artifacts/v149/mobile-landscape-report.json",
+    "report": "artifacts/v150/mobile-landscape-report.json",
     "nativeOrientationLockVerified": false,
     "apiTests": "explicitly mocked call routing and failure handling",
     "cases": [
@@ -168,7 +244,7 @@
     "errors": []
   },
   "menuAndMatch": {
-    "report": "artifacts/v149/menu-match-check.json",
+    "report": "artifacts/v150/menu-match-check.json",
     "rounds": 2,
     "mobile": {
       "noOverflow": true,
@@ -182,14 +258,15 @@
     "errors": []
   },
   "visualInspection": [
-    "390×844 portrait orientation gate",
-    "844×390 landscape and resumed gameplay",
-    "667×375 compact landscape",
-    "1024×768 tablet landscape"
+    "844×390 gyro settings with fixed pause actions",
+    "667×375 pause before and after scrolling to the last setting",
+    "both modes with trusted two-thumb movement and tap shooting",
+    "three landscape sizes from mobile-controls"
   ],
   "notes": [
-    "Mobile results use Chromium device emulation and trusted CDP multi-touch. Physical iOS/Android hardware was not available.",
-    "Fullscreen and orientation lock success/rejection are isolated API simulations, not proof of native OS rotation. Manual viewport rotation and pause/input recovery are exercised in the real game.",
-    "Both mobile reports bind to the exact final HTML SHA-256. Menu, both three-minute modes and offline launch passed against the same unchanged build."
+    "Chrome device emulation and trusted CDP touch contacts were used; physical iOS/Android hardware was not available.",
+    "Chrome CDP orientation override did not produce samples in this environment. The sensor scenario explicitly fell back to synthetic DeviceOrientationEvent samples; this validates the production listener, mapping and Player integration, not native phone sensor delivery.",
+    "Fullscreen/orientation-lock outcomes are explicitly mocked in the landscape suite.",
+    "All three browser reports bind to the exact final HTML hash. Menu, three-minute matches and offline launch ran against the same unchanged build."
   ]
 }

@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { TouchInputState, nextTouchSlot } from '../src/touch-state.js';
+import { TouchInputState, nextTouchSlot, isLookTap } from '../src/touch-state.js';
 import { TouchControls } from '../src/touch.js';
 
 test('floating movement begins at zero, ignores jitter and clamps diagonal speed',()=>{
@@ -36,6 +36,16 @@ test('touch weapon cycling reaches every available slot and skips spent grenades
   assert.deepEqual([0,1,2,3].map(slot=>nextTouchSlot(inv,slot)),[1,2,3,0]);
   inv[3].mag=0;assert.equal(nextTouchSlot(inv,2),0);
   assert.equal(nextTouchSlot([inv[0],null,null,null],0),null);
+});
+
+test('right-side tap uses the whole gesture path and duration, not only release position',()=>{
+  const s=new TouchInputState();s.start(1,'look',500,150,{time:100});
+  s.move(1,503,154);assert.equal(isLookTap(s.end(1),503,154,230),true);
+  s.start(2,'look',500,150,{time:100});s.move(2,520,150);s.move(2,500,150);
+  assert.equal(isLookTap(s.end(2),500,150,230),false,'dragging out and back is never a tap');
+  s.start(3,'look',500,150,{time:100});assert.equal(isLookTap(s.end(3),500,150,361),false,'a long hold does not become a release shot');
+  s.start(4,'look',500,150,{time:100});assert.equal(isLookTap(s.end(4),520,150,200),false,'final movement is checked even without pointermove');
+  s.start(5,'reload',500,150,{time:100});assert.equal(isLookTap(s.end(5),500,150,200),false);
 });
 
 class FakeElement extends EventTarget {
@@ -91,6 +101,22 @@ test('adapter does not steal a look finger and promotion uses the waiting fire f
     assert.deepEqual(f.game.player.touchLook,{x:16,y:8});f.up(1);f.move(2,651,250);
     assert.deepEqual(f.game.player.touchLook,{x:17.6,y:8});
     f.down('reload',3);f.move(3,400,100);assert.equal(f.controls.debugState().lookId,2);
+  }finally{f.dispose();}
+});
+
+test('blank-area tap queues one shot while the left thumb keeps moving; drag, cancellation and buttons do not',()=>{
+  const f=fixture();try{
+    const p=f.game.player;
+    const release=(id,x=500,y=150,type='pointerup')=>f.window.dispatchEvent(pointer(type,id,x,y));
+    f.down('move',1,100,400);f.move(1,150,350);
+    f.down('look',2,500,150);assert.equal(p.touch.firePressed,false,'never shoot on contact');
+    release(2);assert.equal(p.touch.firePressed,true);assert.equal(p.touch.fire,false);assert.ok(p.touch.mx>0);
+    p.touch.firePressed=false;f.down('look',3,500,150);f.move(3,520,150);f.move(3,500,150);release(3);assert.equal(p.touch.firePressed,false);
+    f.down('look',4,500,150);release(4,500,150,'pointercancel');assert.equal(p.touch.firePressed,false);
+    f.down('reload',5,500,150);release(5);assert.equal(p.touch.firePressed,false);
+    f.down('look',6,500,150);f.document.elementFromPoint=()=>f.controls.buttons.get('reload');release(6);assert.equal(p.touch.firePressed,false,'release over a button cannot shoot');
+    delete f.document.elementFromPoint;
+    f.down('look',7,500,150);f.game.paused=true;release(7);assert.equal(p.touch.firePressed,false,'pause before pointerup cancels the tap');
   }finally{f.dispose();}
 });
 

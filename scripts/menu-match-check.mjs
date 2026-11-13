@@ -5,7 +5,7 @@ import { pathToFileURL } from 'node:url';
 import assert from 'node:assert/strict';
 
 // Exercise the actual menu, actors, clock and result screen in the built game.
-const out = process.argv.includes('--out') ? process.argv[process.argv.indexOf('--out') + 1] : 'artifacts/v149';
+const out = process.argv.includes('--out') ? process.argv[process.argv.indexOf('--out') + 1] : 'artifacts/v150';
 await mkdir(out, { recursive: true });
 const browser = await chromium.launch({ executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome', headless: true });
 const report = { rounds: [], outcomes: [], errors: [], desktop: {}, mobile: {}, offline: {} };
