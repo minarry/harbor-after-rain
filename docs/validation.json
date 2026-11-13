@@ -1,0 +1,185 @@
+{
+  "version": "1.4.7",
+  "validatedAt": "2026-11-13T09:36:45.259Z",
+  "artifact": {
+    "file": "dist/index.html",
+    "bytes": 1174781,
+    "sha256": "769547ca1a9246bb7c81b4bb0f87be6a162b798ea2d2d67f398a7cc90707d2a4"
+  },
+  "nodeTests": {
+    "passed": 115,
+    "failed": 0,
+    "report": "artifacts/v147/node-tests.tap"
+  },
+  "names": {
+    "report": "artifacts/v147/names-check.json",
+    "cases": [
+      {
+        "mode": "tdm",
+        "team": "BL",
+        "renderedPixels": {
+          "friend": {
+            "blue": 615,
+            "red": 0
+          },
+          "enemy": {
+            "blue": 0,
+            "red": 1315
+          }
+        },
+        "lifecycle": {
+          "deadHidden": true,
+          "beyond45Hidden": true,
+          "respawnVisible": true
+        },
+        "enemyHiddenBehindOccluder": true,
+        "occluder": "container"
+      },
+      {
+        "mode": "tdm",
+        "team": "GR",
+        "renderedPixels": {
+          "friend": {
+            "blue": 1399,
+            "red": 0
+          },
+          "enemy": {
+            "blue": 0,
+            "red": 782
+          }
+        },
+        "lifecycle": {
+          "deadHidden": true,
+          "beyond45Hidden": true,
+          "respawnVisible": true
+        },
+        "enemyHiddenBehindOccluder": true,
+        "occluder": "container"
+      },
+      {
+        "mode": "relay",
+        "team": "BL",
+        "renderedPixels": {
+          "friend": {
+            "blue": 813,
+            "red": 0
+          },
+          "enemy": {
+            "blue": 0,
+            "red": 609
+          }
+        },
+        "lifecycle": {
+          "deadHidden": true,
+          "beyond45Hidden": true,
+          "respawnVisible": true
+        },
+        "enemyHiddenBehindOccluder": true,
+        "occluder": "container"
+      },
+      {
+        "mode": "relay",
+        "team": "GR",
+        "renderedPixels": {
+          "friend": {
+            "blue": 1397,
+            "red": 0
+          },
+          "enemy": {
+            "blue": 0,
+            "red": 1249
+          }
+        },
+        "lifecycle": {
+          "deadHidden": true,
+          "beyond45Hidden": true,
+          "respawnVisible": true
+        },
+        "enemyHiddenBehindOccluder": true,
+        "occluder": "container"
+      }
+    ],
+    "surfaces": [
+      "overhead",
+      "aim target",
+      "kill feed",
+      "death source",
+      "scoreboard",
+      "results"
+    ],
+    "finalDisposal": {
+      "count": 9,
+      "textures": 9,
+      "materials": 9,
+      "removed": true
+    },
+    "errors": []
+  },
+  "magazines": {
+    "report": "artifacts/v147/magazine-after.json",
+    "review": "artifacts/v147/magazine-review.html",
+    "weapons": [
+      {
+        "weapon": "m4a1",
+        "samples": 9,
+        "exactRestoredTransform": true
+      },
+      {
+        "weapon": "ak47",
+        "samples": 9,
+        "exactRestoredTransform": true
+      },
+      {
+        "weapon": "mp5",
+        "samples": 9,
+        "exactRestoredTransform": true
+      },
+      {
+        "weapon": "awm",
+        "samples": 9,
+        "exactRestoredTransform": true
+      },
+      {
+        "weapon": "deagle",
+        "samples": 9,
+        "exactRestoredTransform": true
+      }
+    ],
+    "checks": [
+      "actual moving magazine hand contact",
+      "no lateral motion before throat clearance",
+      "alignment before straight insertion",
+      "AK front-hook rock and lock",
+      "angled pistol extraction",
+      "original one-shot sound markers",
+      "exact final magazine position and orientation"
+    ],
+    "errors": []
+  },
+  "geometry": {
+    "tests": "tests/prop-geometry.test.mjs",
+    "checks": [
+      "real four-wall continuous magazine wells",
+      "empty throat after magazine removal",
+      "M4 upper/lower receiver and barrel nut continuity",
+      "MP5 grip neck and front sight support continuity",
+      "Desert Eagle real angled cavity clearance and floorplate seating"
+    ]
+  },
+  "preserved": {
+    "approvedHandAnatomy": true,
+    "reloadRecovery": true,
+    "reloadDurations": true,
+    "matchRules": true
+  },
+  "visualInspection": [
+    "blue friend and red enemy labels in actual map",
+    "M4 native reload keyframes",
+    "five-gun seated and extracted geometry diagnostic views"
+  ],
+  "notes": [
+    "Screenshots labelled geometry diagnostics move the camera and hide arms solely to inspect joints; native screenshots retain the weapon-lab camera and arms.",
+    "Animation checks use the public reload action followed by actual 60 Hz steps, not pose scrubbing.",
+    "No external images, audio or model assets added."
+  ]
+}

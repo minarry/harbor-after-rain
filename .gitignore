@@ -1,0 +1,11 @@
+node_modules/
+dist/
+.sites-runtime/
+artifacts/
+*.tar.gz
+*.tgz
+.DS_Store
+
+# Local deployment and machine configuration
+.openai/
+.npmrc

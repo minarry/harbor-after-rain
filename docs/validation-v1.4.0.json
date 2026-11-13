@@ -1,0 +1,455 @@
+{
+  "version": "1.4.0",
+  "validatedAt": "2026-11-13T03:44:15.613Z",
+  "artifact": {
+    "file": "dist/index.html",
+    "bytes": 1143331,
+    "sha256": "7e11f9fc03130d58e84140f61e68562184e76a0ea61035722d505fd2c346541b"
+  },
+  "nodeTests": {
+    "passed": 81,
+    "failed": 0
+  },
+  "lab": {
+    "modules": [
+      {
+        "id": "render",
+        "checks": [
+          {
+            "name": "使用正式游戏后期链",
+            "pass": true,
+            "detail": ""
+          },
+          {
+            "name": "场景深度可用于接触遮蔽",
+            "pass": true,
+            "detail": ""
+          }
+        ],
+        "probes": {
+          "postOff": true,
+          "aoOff": true,
+          "stableResources": true
+        }
+      },
+      {
+        "id": "mats",
+        "checks": [
+          {
+            "name": "与地图共用材质工厂",
+            "pass": true,
+            "detail": ""
+          },
+          {
+            "name": "数据贴图使用线性色彩空间",
+            "pass": true,
+            "detail": ""
+          }
+        ],
+        "probes": {
+          "dry": true
+        }
+      },
+      {
+        "id": "props",
+        "checks": [
+          {
+            "name": "真实地图预制件",
+            "pass": true,
+            "detail": ""
+          },
+          {
+            "name": "几何按材质合批",
+            "pass": true,
+            "detail": ""
+          },
+          {
+            "name": "碰撞体已生成",
+            "pass": true,
+            "detail": ""
+          }
+        ],
+        "probes": {
+          "wire": true
+        }
+      },
+      {
+        "id": "level",
+        "checks": [
+          {
+            "name": "双方可到达关键区域",
+            "pass": true,
+            "detail": "36/36 条规划路线；实走另由自动测试验证"
+          },
+          {
+            "name": "出生点有站立空间",
+            "pass": true,
+            "detail": ""
+          }
+        ],
+        "probes": {
+          "routes": true
+        }
+      },
+      {
+        "id": "backdrop",
+        "checks": [
+          {
+            "name": "天空生成环境反射",
+            "pass": true,
+            "detail": ""
+          },
+          {
+            "name": "海面顶点使用真实波浪",
+            "pass": true,
+            "detail": ""
+          }
+        ],
+        "probes": {
+          "stopped": true
+        }
+      },
+      {
+        "id": "ground",
+        "checks": [
+          {
+            "name": "雨棚阻挡雨滴",
+            "pass": true,
+            "detail": ""
+          },
+          {
+            "name": "露天地面接收落雨",
+            "pass": true,
+            "detail": ""
+          }
+        ],
+        "probes": {
+          "afterRain": true,
+          "reflectionOff": true
+        }
+      },
+      {
+        "id": "fx",
+        "checks": [
+          {
+            "name": "对象池容量受限",
+            "pass": true,
+            "detail": ""
+          },
+          {
+            "name": "命中反馈来自正式游戏",
+            "pass": true,
+            "detail": ""
+          }
+        ],
+        "probes": {
+          "materials": {
+            "metal": true,
+            "wood": true,
+            "deck": true,
+            "armor": true,
+            "flesh": true,
+            "water": true
+          },
+          "bounded": true,
+          "cleared": true
+        }
+      },
+      {
+        "id": "weapon",
+        "checks": [
+          {
+            "name": "双手使用独立骨骼",
+            "pass": true,
+            "detail": ""
+          },
+          {
+            "name": "握点位置有效",
+            "pass": true,
+            "detail": ""
+          },
+          {
+            "name": "枪口挂点存在",
+            "pass": true,
+            "detail": ""
+          }
+        ],
+        "probes": {
+          "weapons": {
+            "m4a1": true,
+            "ak47": true,
+            "mp5": true,
+            "awm": true,
+            "deagle": true,
+            "knife": true,
+            "he": true
+          }
+        }
+      },
+      {
+        "id": "enemies",
+        "checks": [
+          {
+            "name": "模型共用真实骨骼动画",
+            "pass": true,
+            "detail": ""
+          },
+          {
+            "name": "倒地与材质状态有效",
+            "pass": true,
+            "detail": ""
+          },
+          {
+            "name": "掩体实际阻断直线",
+            "pass": true,
+            "detail": "两个真实碰撞体强制改变路线",
+            "status": "pass"
+          },
+          {
+            "name": "真实 Bot 已绕障抵达",
+            "pass": true,
+            "detail": "已抵达；实际移动 18.4 m；终点最近 1.00 m",
+            "status": "pass"
+          },
+          {
+            "name": "绕行未穿入障碍",
+            "pass": true,
+            "detail": "210 次实际物理更新；0 次障碍重叠",
+            "status": "pass"
+          },
+          {
+            "name": "遮挡不可见 / 移出后可见",
+            "pass": true,
+            "detail": "墙后 不可见；无遮挡 可见",
+            "status": "pass"
+          }
+        ],
+        "probes": {
+          "lowHP": true,
+          "dead": true,
+          "reset": true,
+          "botArrived": true,
+          "sight": true
+        }
+      }
+    ],
+    "errors": [],
+    "externalRequests": 0,
+    "configurationReplay": true,
+    "offline": true,
+    "mobile": true
+  },
+  "surfaces": {
+    "sharedLayerSamples": 15,
+    "sampleCount": 18,
+    "channels": [
+      "color",
+      "normal",
+      "roughness",
+      "metalness",
+      "occlusion",
+      "oxide",
+      "shaded"
+    ],
+    "resources": {
+      "before": {
+        "geometries": 66,
+        "textures": 72
+      },
+      "after": {
+        "geometries": 66,
+        "textures": 72
+      },
+      "programsBefore": 36,
+      "programsAfter": 36,
+      "scalars": [
+        0.65,
+        0.65,
+        0.65,
+        0.65,
+        0.65,
+        0.65,
+        0.65,
+        0.65,
+        0.65,
+        0.65,
+        0.65,
+        0.65,
+        0.65,
+        0.65,
+        0.65,
+        0.65,
+        0.65,
+        0.65,
+        0.65,
+        0.65,
+        0.65,
+        0.65,
+        0.65,
+        0.65,
+        0.65,
+        0.65,
+        0.22749999999999998,
+        0.22749999999999998,
+        0.52,
+        0.52,
+        0.65,
+        0.65,
+        0.65,
+        0.65,
+        0.195,
+        0.195
+      ]
+    },
+    "geometry": {
+      "flatTriangles": 2662,
+      "detailedTriangles": 6726,
+      "collidersUnchanged": true
+    }
+  },
+  "rendering": {
+    "qualityTiers": [
+      "high",
+      "medium",
+      "low"
+    ],
+    "checksPassed": 39,
+    "errors": [],
+    "warnings": [],
+    "lowBudget": {
+      "defaults": {
+        "post": true,
+        "bloom": false,
+        "haze": false,
+        "ao": false,
+        "grade": true,
+        "lens": false,
+        "grain": true,
+        "vignette": true,
+        "feedback": true,
+        "autoExposure": true,
+        "exposure": null,
+        "toneMapping": "hybrid",
+        "aoStrength": 0.55,
+        "bloomStrength": 0.2,
+        "aa": true,
+        "sharpen": true,
+        "sharpness": 0.08,
+        "bloomStable": true,
+        "softShadows": true,
+        "shadowSoftness": 1,
+        "hazeDistribution": "near"
+      },
+      "passes": 6,
+      "aa": 1,
+      "ao": false,
+      "haze": false,
+      "bloom": false,
+      "pixels": 762432
+    },
+    "resourcesStable": true,
+    "shadowMethod": "Three.js r186 hardware PCF, world-scaled filter; not PCSS"
+  },
+  "game": {
+    "modes": [
+      "tdm",
+      "relay"
+    ],
+    "runtimeErrors": [],
+    "shaderWarnings": [],
+    "feedback": {
+      "ads": {
+        "ads": 1,
+        "fov": 57.03171832445424,
+        "cross": "none"
+      },
+      "reload": {
+        "mag": 30,
+        "reserve": 60,
+        "reloading": false
+      },
+      "surfaces": [
+        "water",
+        "metal",
+        "wood",
+        "deck",
+        "armor",
+        "flesh"
+      ],
+      "errors": []
+    },
+    "m4": {
+      "nativeCarrierMoved": true,
+      "nativeCarrierReturned": true,
+      "closeupConditions": "M4 model-structure close-up; arms hidden and camera placed in gun-local coordinates",
+      "finalSupportsAddedTriangles": 36
+    }
+  },
+  "reference": {
+    "sha256": "9e55b5200b088adaf8e1152da04efc0d3b25e236e6baf2dee96f81e23e084966",
+    "unchanged": true,
+    "groups": 12,
+    "fragments": 449
+  },
+  "visualReview": {
+    "comparisons": [
+      {
+        "id": "cargo",
+        "before": "artifacts/v14/cargo-before.png",
+        "after": "artifacts/v14/cargo-after.png"
+      },
+      {
+        "id": "barrel",
+        "before": "artifacts/v14/barrel-before.png",
+        "after": "artifacts/v14/barrel-after.png"
+      },
+      {
+        "id": "material",
+        "before": "artifacts/v14/material-before.png",
+        "after": "artifacts/v14/material-after.png"
+      },
+      {
+        "id": "contact-light",
+        "before": "artifacts/v14/contact-light-before.png",
+        "after": "artifacts/v14/contact-light-after.png"
+      },
+      {
+        "id": "weapon",
+        "before": "artifacts/v14/weapon-before.png",
+        "after": "artifacts/v14/weapon-after.png"
+      },
+      {
+        "id": "wet-deck",
+        "before": "artifacts/v14/wet-deck-before.png",
+        "after": "artifacts/v14/wet-deck-after.png"
+      },
+      {
+        "id": "battlefield",
+        "before": "artifacts/v14/battlefield-before.png",
+        "after": "artifacts/v14/battlefield-after.png"
+      }
+    ],
+    "review": "artifacts/v14/review.html",
+    "inspected": true
+  },
+  "geometryBudget": {
+    "mapFlatTriangles": 61800,
+    "mapDetailedTriangles": 108888,
+    "mapFlatBatches": 57,
+    "mapDetailedBatches": 65,
+    "colliders": 447,
+    "collidersUnchanged": true
+  },
+  "validationSequence": "Full browser suites passed. The final M4 support-only geometry patch was rechecked with the complete Node suite, real weapon input regression and native reload close-up frames; other rendering paths were unchanged.",
+  "deployment": {
+    "status": "local-ready",
+    "privateSiteUpdated": false,
+    "reason": "Sites Git is not enabled for this client."
+  },
+  "limits": [
+    "GPU pixels and timing vary by hardware/browser; these runs are not a controlled FPS benchmark.",
+    "Screenshots and signal tests do not replace subjective listening or gameplay balance review.",
+    "Lab links pre-roll up to 30 seconds; longer event histories require explicit action/step replay.",
+    "Structural visual details retain simplified gameplay collision bounds."
+  ]
+}

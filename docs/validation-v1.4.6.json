@@ -1,0 +1,88 @@
+{
+  "version": "1.4.6",
+  "validatedAt": "2026-11-13T09:17:24.993Z",
+  "artifact": {
+    "file": "dist/index.html",
+    "bytes": 1170724,
+    "sha256": "70d3368b0f03a16044bc8783976b6078874d0f276e7b99986e6f70ae477c6fbe"
+  },
+  "nodeTests": {
+    "passed": 109,
+    "failed": 0,
+    "report": "artifacts/v146/node-tests.tap"
+  },
+  "rightHand": {
+    "report": "artifacts/v146/right-hand-after.json",
+    "review": "artifacts/v146/right-hand-review.html",
+    "leftUnchanged": [
+      {
+        "weapon": "m4a1",
+        "exactTransformsAndGeometry": true
+      },
+      {
+        "weapon": "deagle",
+        "exactTransformsAndGeometry": true
+      }
+    ],
+    "elbowComparedToWristMm": [
+      {
+        "weapon": "m4a1",
+        "before": 129.50928422400122,
+        "after": -222.34892988931514
+      },
+      {
+        "weapon": "deagle",
+        "before": 102.41876062622005,
+        "after": -44.2661322635583
+      }
+    ],
+    "errors": []
+  },
+  "anatomyChecks": {
+    "weapons": [
+      "m4a1",
+      "ak47",
+      "mp5",
+      "awm",
+      "deagle"
+    ],
+    "ads": [
+      0,
+      0.5,
+      1
+    ],
+    "checks": [
+      "real index and thumb skin above little finger",
+      "palmar surface inward",
+      "real wrist/cuff axis leads down",
+      "actual forearm elbow ring below wrist ring",
+      "actual wrist connection less than 35 degrees",
+      "held-fire index pad within 6 mm of trigger region"
+    ]
+  },
+  "motionChecks": {
+    "reloads": 5,
+    "awmBolt": 1,
+    "invalidForearmFrames": 0,
+    "awmIndexLargestFrameStepMm": 7.95,
+    "adsReloadRecovery": {
+      "ads": [
+        0.5,
+        1
+      ],
+      "settleSeconds": 0.6,
+      "maxGeometryResidualMm": 0.001,
+      "maxForearmOrientationDegrees": 0.0002
+    }
+  },
+  "visualInspection": [
+    "M4 native first-person view",
+    "M4 right-side diagnostic before and after",
+    "Deagle right-side diagnostic after"
+  ],
+  "notes": [
+    "Left poses and complete fore/upper position and normal buffers match the prior build exactly for the two deterministic native game captures.",
+    "The corrected hand remains anatomically right-handed; the fix changes the approach of the wrist and elbow, not a 180-degree hand flip.",
+    "Weapon timings and match rules unchanged."
+  ]
+}

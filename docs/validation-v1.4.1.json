@@ -1,0 +1,187 @@
+{
+  "version": "1.4.1",
+  "validatedAt": "2026-11-13T04:01:32.175Z",
+  "artifact": {
+    "file": "dist/index.html",
+    "bytes": 1153160,
+    "sha256": "a367198b26d770c4e474a96f369afee81d91fe01c0bdf0cfd6c398b1db55fcbe"
+  },
+  "nodeTests": {
+    "passed": 86,
+    "failed": 0
+  },
+  "menuAndMatch": {
+    "rounds": [
+      {
+        "mode": "tdm",
+        "initial": {
+          "mode": "tdm",
+          "time": 0,
+          "remaining": 180,
+          "text": "3:00",
+          "active": false,
+          "persisted": "tdm"
+        },
+        "pause": {
+          "paused": true,
+          "unchanged": true
+        },
+        "before": {
+          "ended": false,
+          "time": 179.03333333332574,
+          "text": "0:01",
+          "remaining": 0.9666666666742572
+        },
+        "end": {
+          "ended": true,
+          "playing": false,
+          "time": 180,
+          "remaining": 0,
+          "score": {
+            "BL": 28,
+            "GR": 28
+          },
+          "result": "平局",
+          "relayRotations": 0
+        },
+        "frozenAfterEnd": true
+      },
+      {
+        "mode": "relay",
+        "initial": {
+          "mode": "relay",
+          "time": 0,
+          "remaining": 180,
+          "text": "3:00",
+          "active": true,
+          "persisted": "relay"
+        },
+        "pause": {
+          "paused": true,
+          "unchanged": true
+        },
+        "before": {
+          "ended": false,
+          "time": 179.03333333332574,
+          "text": "0:01",
+          "remaining": 0.9666666666742572
+        },
+        "end": {
+          "ended": true,
+          "playing": false,
+          "time": 180,
+          "remaining": 0,
+          "score": {
+            "BL": 0,
+            "GR": 92
+          },
+          "result": "失败",
+          "relayRotations": 2
+        },
+        "frozenAfterEnd": true
+      }
+    ],
+    "outcomes": [
+      {
+        "mode": "tdm",
+        "outcome": "win",
+        "time": 180,
+        "remaining": 0,
+        "label": "胜利"
+      },
+      {
+        "mode": "tdm",
+        "outcome": "lose",
+        "time": 180,
+        "remaining": 0,
+        "label": "失败"
+      },
+      {
+        "mode": "tdm",
+        "outcome": "draw",
+        "time": 180,
+        "remaining": 0,
+        "label": "平局"
+      },
+      {
+        "mode": "relay",
+        "outcome": "win",
+        "time": 180,
+        "remaining": 0,
+        "label": "胜利"
+      },
+      {
+        "mode": "relay",
+        "outcome": "lose",
+        "time": 180,
+        "remaining": 0,
+        "label": "失败"
+      },
+      {
+        "mode": "relay",
+        "outcome": "draw",
+        "time": 180,
+        "remaining": 0,
+        "label": "平局"
+      }
+    ],
+    "errors": [],
+    "desktop": {
+      "sideBySide": true,
+      "inView": true,
+      "diagrams": 2,
+      "noDropdown": true,
+      "noOverflow": true,
+      "labLink": true
+    },
+    "mobile": {
+      "noOverflow": true,
+      "tdm": true,
+      "relay": true
+    },
+    "offline": {
+      "playing": true,
+      "seconds": 180
+    },
+    "early": {
+      "tdm": {
+        "ended": true,
+        "time": 1.2000000000000004,
+        "score": 30
+      },
+      "relay": {
+        "ended": true,
+        "time": 0.03333333333333333,
+        "score": 30
+      }
+    },
+    "persistedMode": "relay"
+  },
+  "browser": {
+    "modes": [
+      "tdm",
+      "relay"
+    ],
+    "wasd": true,
+    "pauseResume": true,
+    "botsFiring": true,
+    "relayRotated": true,
+    "runtimeErrors": [],
+    "shaderWarnings": []
+  },
+  "visualReview": {
+    "desktop": "artifacts/v141/menu-desktop.png",
+    "mobile": "artifacts/v141/menu-mobile.png",
+    "inspected": true
+  },
+  "previousRenderingValidation": "validation-v1.4.0.json",
+  "deployment": {
+    "status": "local-ready",
+    "privateSiteUpdated": false,
+    "reason": "Source credential now returns codex_auth, unsupported by installed Sites 1.1.6 helper. Ordinary Git to the supplied source URL also returns HTTP 400. No source was pushed or deployed."
+  },
+  "limits": [
+    "The complete three-minute rounds were advanced with real fixed-step simulation, not a three-minute wall-clock recording.",
+    "Rendering modules are unchanged; their full visual regression remains recorded in validation-v1.4.0.json."
+  ]
+}

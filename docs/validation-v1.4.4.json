@@ -1,0 +1,272 @@
+{
+  "version": "1.4.4",
+  "validatedAt": "2026-11-13T07:22:53.267Z",
+  "artifact": {
+    "file": "dist/index.html",
+    "bytes": 1167372,
+    "sha256": "1cd249ac30dfd9fe4d14b3736fadab5c4961b3466fbd89a678f4adaed296b329"
+  },
+  "nodeTests": {
+    "passed": 101,
+    "failed": 0,
+    "report": "artifacts/v144/node-tests.tap"
+  },
+  "hands": {
+    "report": "artifacts/v144/hand-check.json",
+    "tiers": [
+      {
+        "quality": "high",
+        "poses": 53,
+        "passed": true,
+        "memory": {
+          "before": {
+            "geometries": 96,
+            "textures": 55
+          },
+          "after": {
+            "geometries": 96,
+            "textures": 55
+          }
+        }
+      },
+      {
+        "quality": "low",
+        "poses": 53,
+        "passed": true,
+        "memory": {
+          "before": {
+            "geometries": 95,
+            "textures": 42
+          },
+          "after": {
+            "geometries": 95,
+            "textures": 42
+          }
+        }
+      }
+    ],
+    "errors": [],
+    "warnings": []
+  },
+  "gameFeedback": {
+    "ads": {
+      "ads": 1,
+      "fov": 57.038061989352194,
+      "cross": "none"
+    },
+    "reload": {
+      "mag": 30,
+      "reserve": 60,
+      "reloading": false
+    },
+    "surfaces": [
+      "water",
+      "metal",
+      "wood",
+      "wood",
+      "deck",
+      "deck",
+      "armor",
+      "flesh"
+    ],
+    "weather": {
+      "indoor": {
+        "x": -24,
+        "z": 9.5,
+        "e": 0
+      },
+      "outdoor": {
+        "x": -33,
+        "z": -7,
+        "e": 1
+      },
+      "rainLevel": 0.96
+    },
+    "pools": {
+      "saturated": {
+        "activeShells": 80,
+        "activeDebris": 160,
+        "activeRipples": 48,
+        "activeSparks": 180,
+        "activeDroplets": 160,
+        "particleCount": 1064,
+        "tracerCount": 0,
+        "decalCount": 162,
+        "effectCapacity": {
+          "shells": 80,
+          "debris": 160,
+          "ripples": 48,
+          "sparks": 180,
+          "droplets": 160,
+          "particles": 1800,
+          "tracers": 48
+        }
+      },
+      "cleared": {
+        "activeShells": 0,
+        "activeDebris": 0,
+        "activeRipples": 0,
+        "activeSparks": 0,
+        "activeDroplets": 0,
+        "particleCount": 0,
+        "tracerCount": 0,
+        "decalCount": 0,
+        "effectCapacity": {
+          "shells": 80,
+          "debris": 160,
+          "ripples": 48,
+          "sparks": 180,
+          "droplets": 160,
+          "particles": 1800,
+          "tracers": 48
+        }
+      }
+    },
+    "sniperCase": {
+      "actions": [
+        "awm"
+      ],
+      "ammo": 5,
+      "warnings": []
+    },
+    "errors": []
+  },
+  "visualReview": {
+    "caseCount": 7,
+    "cases": [
+      {
+        "id": "game-m4-hip",
+        "kind": "actual game at default FOV",
+        "screenshot": "game-m4-hip-after.png"
+      },
+      {
+        "id": "m4-hip",
+        "kind": "native laboratory first-person viewpoint",
+        "screenshot": "m4-hip-after.png"
+      },
+      {
+        "id": "m4-ads",
+        "kind": "native laboratory first-person viewpoint",
+        "screenshot": "m4-ads-after.png"
+      },
+      {
+        "id": "m4-reload45",
+        "kind": "native laboratory first-person viewpoint",
+        "screenshot": "m4-reload45-after.png"
+      },
+      {
+        "id": "m4-reload80",
+        "kind": "native laboratory first-person viewpoint",
+        "screenshot": "m4-reload80-after.png"
+      },
+      {
+        "id": "ak-grip-close",
+        "kind": "fixed diagnostic close-up",
+        "screenshot": "ak-grip-close-after.png"
+      },
+      {
+        "id": "deagle-grip-close",
+        "kind": "fixed diagnostic close-up",
+        "screenshot": "deagle-grip-close-after.png"
+      }
+    ],
+    "review": "artifacts/v144/review.html",
+    "sourceSha256": "1cd249ac30dfd9fe4d14b3736fadab5c4961b3466fbd89a678f4adaed296b329",
+    "baseline": "artifacts/v144/before.html",
+    "baselineVersion": "1.4.3",
+    "baselineSha256": "21b987b376611a17f62f173c336f99977520b75001f597efc7f2254b7962b72d",
+    "inspected": true,
+    "errors": []
+  },
+  "motion": {
+    "report": "artifacts/v144/reload-motion-m4a1-after.json",
+    "player": "artifacts/v144/reload-motion-m4a1-after.html",
+    "frames": 33,
+    "simulationSamples": 158,
+    "step": 0.016666666666666666,
+    "summary": {
+      "L": {
+        "haveRuntimeJoints": true,
+        "continuityStepSeconds": 0.016666666666666666,
+        "largestElbowStep": {
+          "mm": 44.461216545357196,
+          "simulationFrame": 271,
+          "progress": 0.9679487179487164
+        },
+        "largestWristStep": {
+          "mm": 30.60319794052901,
+          "simulationFrame": 256,
+          "progress": 0.8717948717948706
+        },
+        "maxHandStepDegrees": 14.929880194826938,
+        "maxForearmStepDegrees": 15.555934181188302,
+        "maxWristStepDegrees": 12.202424706684194,
+        "maxWristBendDegrees": 50.788229825257105,
+        "maxJointRelationErrorDegrees": 0.000004182619578303746,
+        "maxStableContactErrorMm": 1.1103585416259206e-13
+      },
+      "R": {
+        "haveRuntimeJoints": true,
+        "continuityStepSeconds": 0.016666666666666666,
+        "largestElbowStep": {
+          "mm": 11.246134653625997,
+          "simulationFrame": 267,
+          "progress": 0.9423076923076908
+        },
+        "largestWristStep": {
+          "mm": 14.56035930702275,
+          "simulationFrame": 267,
+          "progress": 0.9423076923076908
+        },
+        "maxHandStepDegrees": 3.4451687822518293,
+        "maxForearmStepDegrees": 2.9649802877323577,
+        "maxWristStepDegrees": 3.037258035257128,
+        "maxWristBendDegrees": 27.79145592186509,
+        "maxJointRelationErrorDegrees": 0.000004182619578303746,
+        "maxStableContactErrorMm": 1.152775633689051e-13
+      }
+    },
+    "errors": [],
+    "inspected": true,
+    "playerQA": "artifacts/v144/motion-player-qa.json"
+  },
+  "geometryReview": {
+    "animations": [
+      "m4a1 reload",
+      "ak47 reload",
+      "mp5 reload",
+      "deagle reload",
+      "awm reload",
+      "awm bolt"
+    ],
+    "sampling": "60 Hz full motion; forearm and upper-arm triangle orientation inspected by implementation and test agents",
+    "badFrames": 0
+  },
+  "geometryBudget": {
+    "perHandTriangles": 9302,
+    "perForearmTriangles": 760,
+    "perUpperArmTriangles": 720,
+    "perHandBones": 16,
+    "additionalDrawCallsFromV143": 0,
+    "newTextures": 0
+  },
+  "changes": [
+    "Palm-up shallow cradle under each long-gun handguard, with real palm contact and reduced resting wrist bend.",
+    "Independent forearm and relative wrist frames; explicit grip-specific wrist roll avoids fixed-rest quaternion half-turn branch changes.",
+    "Continuous two-bone elbow solution with a soft wrist-flex preference, stable bone lengths and fixed contacts.",
+    "Straight exposed forearm with one coherent axial roll, compressed hidden wrist bridge and safe cloth elbow section transitions.",
+    "AWM bolt hand follows the handle position but uses gun-relative orientation instead of the mechanical handle rotation."
+  ],
+  "previousHandValidation": "validation-v1.4.3.json",
+  "publication": {
+    "target": "existing owner-private Site",
+    "status": "validated locally; deployment result recorded separately after publication",
+    "result": "artifacts/v144/deployment.json"
+  },
+  "limits": [
+    "Wrist flex is a soft target, not a hard 28 degree cap. Fast free-hand motion can briefly bend farther; the captured M4 sequence peaks near 51 degrees.",
+    "Static scrub uses a fixed initial elbow solution; live motion continues from the previous elbow pose. Compare motion using identical action/step sequences.",
+    "The 33-frame player samples a 60 Hz simulation; it is a motion review, not a frame-rate benchmark.",
+    "Procedural hands and skin remain approximations rather than scanned anatomy."
+  ]
+}

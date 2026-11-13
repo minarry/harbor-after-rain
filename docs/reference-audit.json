@@ -1,0 +1,399 @@
+{
+  "schemaVersion": 1,
+  "auditedAt": "2026-11-13T02:40:44.847Z",
+  "title": "几猫原始九展示入口审计与运输船对应实现",
+  "scope": "非源码摘要。仅记录本地原始 HTML 的可核实能力、运行边界与运输船对应文件；不包含原作代码、截图或素材。",
+  "reference": {
+    "filename": "几猫国产3A大作_V1.html",
+    "bytes": 1425707,
+    "sha256": "9e55b5200b088adaf8e1152da04efc0d3b25e236e6baf2dee96f81e23e084966",
+    "byteForByteUnchanged": true,
+    "registryKeys": [
+      "mats",
+      "level",
+      "backdrop",
+      "ground",
+      "fx",
+      "weapon",
+      "enemies",
+      "props",
+      "render"
+    ],
+    "registryReadableLine": 29568,
+    "lineNumberConvention": "行号对应本地 esbuild 格式化只读副本；不是将原作拆成可独立运行模块。"
+  },
+  "validation": {
+    "browser": "157.0.8103.78",
+    "viewport": {
+      "width": 1440,
+      "height": 900
+    },
+    "quality": "test",
+    "seed": 4207,
+    "offline": true,
+    "defaultEntries": 9,
+    "defaultPassed": 9,
+    "variants": 5,
+    "variantsPassed": 5,
+    "visuallyReviewedScreenshots": 14,
+    "externalRequests": 0,
+    "advancedPipeline": true,
+    "softShadows": true,
+    "variantCases": [
+      {
+        "module": "weapon",
+        "name": "ads",
+        "passed": true
+      },
+      {
+        "module": "weapon",
+        "name": "reload-mag-out",
+        "passed": true
+      },
+      {
+        "module": "weapon",
+        "name": "empty-bolt-back",
+        "passed": true
+      },
+      {
+        "module": "enemies",
+        "name": "fight",
+        "passed": true
+      },
+      {
+        "module": "enemies",
+        "name": "dead",
+        "passed": true
+      }
+    ],
+    "boundaries": [
+      "默认入口截图与短时运行检查，不是完整游戏性能基准或难度平衡验证。",
+      "原作 show 分支使用音频空实现及不会受伤的玩家，不构成音效或伤害测试。",
+      "q=test 降低纹理、阴影与体积采样成本，并关闭运动模糊；短时 fps 不能代表其他机器或档位。",
+      "seed 参数未控制所有 Math.random，动态截图不是逐像素确定性。",
+      "原作模块共用一个打包作用域，摘录不是可独立导入的源模块。"
+    ]
+  },
+  "modules": [
+    {
+      "key": "mats",
+      "name": "程序化材质与贴花",
+      "referenceEvidence": {
+        "readableLines": {
+          "start": 18410,
+          "end": 19553,
+          "factory": 19437,
+          "showcase": 19525
+        },
+        "actualCapability": "GPU MRT 生成 albedo、ORM、height，再从高度生成 normal；按材质配方缓存纹理，支持三平面、湿润、污损与中文贴花图集。",
+        "boundary": "默认展示是样板墙和球，不能证明同一材质在完整关卡中没有重复图案；test 的纹理档位是 256。"
+      },
+      "adaptation": "运输船保留可识别的涂装，按金属、木、橡胶、护甲区分粗糙度；通过相同照明下的样板对比验证。",
+      "projectFiles": [
+        "src/textures.js",
+        "src/surface-materials.js",
+        "src/atmosphere.js",
+        "src/lab/scenes/mats.js"
+      ],
+      "validation": {
+        "passed": true,
+        "advancedPipeline": true,
+        "softShadows": true,
+        "errors": 0,
+        "framesAdvanced": true
+      }
+    },
+    {
+      "key": "level",
+      "name": "关卡与空间组织",
+      "referenceEvidence": {
+        "readableLines": {
+          "start": 21831,
+          "end": 22547,
+          "factory": 22456,
+          "showcase": 22544
+        },
+        "actualCapability": "门区、堆场、仓库、码头分区；三个中继、掩体点、敌人出生、楼梯与箱顶高位；静态几何合批与标签图集。",
+        "boundary": "showcase 仅保留工厂返回值在闭包中，__G.level 仍是 stub；固定入口镜头不等于全图导航和战斗验证。"
+      },
+      "adaptation": "扩建必须同时验证玩家实走、机器人高度路径与中继可达；用分路、室内外过渡和高低位组织空间。",
+      "projectFiles": [
+        "src/map.js",
+        "src/physics.js",
+        "src/objective.js",
+        "src/relay-state.js",
+        "src/lab/scenes/level.js",
+        "tests/map-navigation.test.mjs"
+      ],
+      "validation": {
+        "passed": true,
+        "advancedPipeline": true,
+        "softShadows": true,
+        "errors": 0,
+        "framesAdvanced": true
+      }
+    },
+    {
+      "key": "backdrop",
+      "name": "港区远景与大型道具",
+      "referenceEvidence": {
+        "readableLines": {
+          "start": 22548,
+          "end": 23495,
+          "factory": 23487,
+          "showcase": 23490
+        },
+        "actualCapability": "程序化吊机、货轮、撤离艇、天际线和海鸥；吊具微摆、船体摇动、雷达旋转及灯光合批。",
+        "boundary": "默认镜头朝吊机；构建了其他物件不代表一张截图都能清晰展示。远景规模不能计作可玩面积。"
+      },
+      "adaptation": "围绕运输船提供可信港口尺度与分层轮廓，明确可玩边界；低频动画帮助环境有生命感。",
+      "projectFiles": [
+        "src/env.js",
+        "src/map.js",
+        "src/atmosphere.js",
+        "src/lab/scenes/backdrop.js"
+      ],
+      "validation": {
+        "passed": true,
+        "advancedPipeline": true,
+        "softShadows": true,
+        "errors": 0,
+        "framesAdvanced": true
+      }
+    },
+    {
+      "key": "ground",
+      "name": "湿地面、海水与降雨",
+      "referenceEvidence": {
+        "readableLines": {
+          "start": 23496,
+          "end": 24172,
+          "factory": 24117,
+          "showcase": 24164
+        },
+        "actualCapability": "水洼深度和湿度遮罩、粗糙度差异、平面反射、雨滴与溅水、解析海浪高度及地面标记。",
+        "boundary": "反射为平面近似，非光线追踪；showcase 不加载真实关卡室内盒，不能单靠默认图验证屋顶遮雨。"
+      },
+      "adaptation": "甲板水膜、海水、室内干燥区分开处理；以实际碰撞屋顶遮雨，并将水面弹着高度与海浪采样统一。",
+      "projectFiles": [
+        "src/weather.js",
+        "src/env.js",
+        "src/atmosphere.js",
+        "src/lab/scenes/ground.js"
+      ],
+      "validation": {
+        "passed": true,
+        "advancedPipeline": true,
+        "softShadows": true,
+        "errors": 0,
+        "framesAdvanced": true
+      }
+    },
+    {
+      "key": "fx",
+      "name": "弹着、烟火与弹壳",
+      "referenceEvidence": {
+        "readableLines": {
+          "start": 24173,
+          "end": 25338,
+          "factory": 24906,
+          "showcase": 25290
+        },
+        "actualCapability": "按 metal/concrete/wood/water/rubber/dirt/glass/enemy 分派；有界粒子、曳光、碎屑、弹孔、弹壳和爆炸；软粒子与烟雾近似光照。",
+        "boundary": "默认水击事件可强制把地面命中标成 water，不是独立验证真实海面射线；Math.random 未统一受 seed 参数控制。"
+      },
+      "adaptation": "材质响应必须由真实射线命中驱动；池容量、重开清理、弹壳碰撞时序与水面无弹孔应一起验证。",
+      "projectFiles": [
+        "src/effects.js",
+        "src/impact-pools.js",
+        "src/audio.js",
+        "src/combat-feedback.js",
+        "src/lab/scenes/fx.js"
+      ],
+      "validation": {
+        "passed": true,
+        "advancedPipeline": true,
+        "softShadows": true,
+        "errors": 0,
+        "framesAdvanced": true
+      }
+    },
+    {
+      "key": "weapon",
+      "name": "第一人称武器与双手",
+      "referenceEvidence": {
+        "readableLines": {
+          "start": 27037,
+          "end": 27964,
+          "factory": 27766,
+          "showcase": 27940
+        },
+        "actualCapability": "一把定制步枪的细分零件、双手与手指、瞄具、湿润材质、弹簧后坐力、换弹/检视/冲刺动作；双相机视图层。",
+        "boundary": "默认是静态持枪，不能证明动作切换正确；只有这把步枪，不能推断多枪切换、狙击拉栓或移动端体验。"
+      },
+      "adaptation": "分阶段核对持枪握持、换弹手指接触和抛壳；切枪、暂停与空仓动作要保留正确状态。",
+      "projectFiles": [
+        "src/viewmodel.js",
+        "src/view-hands.js",
+        "src/guns.js",
+        "src/gun-detail.js",
+        "src/weapons.js",
+        "src/lab/scenes/weapon.js"
+      ],
+      "validation": {
+        "passed": true,
+        "advancedPipeline": true,
+        "softShadows": true,
+        "errors": 0,
+        "framesAdvanced": true
+      }
+    },
+    {
+      "key": "enemies",
+      "name": "机械敌人与交战节奏",
+      "referenceEvidence": {
+        "readableLines": {
+          "start": 27965,
+          "end": 28837,
+          "factory": 28597,
+          "showcase": 28816
+        },
+        "actualCapability": "机械鸥、四足猎犬及骨骼动画；视线/视锥/听觉、最后已知位置、搜索状态和攻击令牌；有界敌人/残骸/弹体池。",
+        "boundary": "默认 both 为 passive 巡逻；eshow=fight 才运行主动进攻，且展示玩家的 damage 是空函数，不能当公平难度测试。"
+      },
+      "adaptation": "运输船机器人延续真实视线、掩体和攻击节奏，以实战验证分路、友军阻挡、压制重部署与中继站位。",
+      "projectFiles": [
+        "src/character.js",
+        "src/actor.js",
+        "src/bots.js",
+        "src/tactics.js",
+        "src/lab/tactical-probe.js",
+        "src/lab/scenes/enemies.js"
+      ],
+      "validation": {
+        "passed": true,
+        "advancedPipeline": true,
+        "softShadows": true,
+        "errors": 0,
+        "framesAdvanced": true
+      }
+    },
+    {
+      "key": "props",
+      "name": "港区程序化道具库",
+      "referenceEvidence": {
+        "readableLines": {
+          "start": 19796,
+          "end": 21830,
+          "factory": 19802,
+          "showcase": 19816
+        },
+        "actualCapability": "注册表构造集装箱、护栏、楼梯、叉车、线缆卷、油桶、货盘等道具，包含尺寸、材质、种子变体与碰撞元数据。",
+        "boundary": "默认所有道具按网格排列，低机位会遮挡后排；视觉存在不代表精细碰撞完全匹配。"
+      },
+      "adaptation": "可交互道具共享视觉尺寸和碰撞定义；细节分近中远预算，避免装饰堵住射线和导航。",
+      "projectFiles": [
+        "src/props.js",
+        "src/map.js",
+        "src/surface-materials.js",
+        "src/lab/scenes/props.js"
+      ],
+      "validation": {
+        "passed": true,
+        "advancedPipeline": true,
+        "softShadows": true,
+        "errors": 0,
+        "framesAdvanced": true
+      }
+    },
+    {
+      "key": "render",
+      "name": "渲染与后处理",
+      "referenceEvidence": {
+        "readableLines": {
+          "start": 17379,
+          "end": 18409,
+          "factory": 18109,
+          "showcase": 18362
+        },
+        "actualCapability": "HDR 前向渲染、世界/武器双相机、环境探针、软阴影、半分辨率 AO 和体积散射、Bloom、曝光、调色与 FXAA；有降级回退。",
+        "boundary": "并非完整延迟渲染或路径追踪；show/shot 关闭动态分辨率，test 关闭运动模糊，单次 fps 不可当普适性能成绩。"
+      },
+      "adaptation": "以接触阴影、曝光和反射先建立层次，保留清晰敌人轮廓；展示效果开关并核对主流程未降级。",
+      "projectFiles": [
+        "src/render.js",
+        "src/render-features.js",
+        "src/env.js",
+        "src/contact-ao.js",
+        "src/lab/scenes/render.js"
+      ],
+      "validation": {
+        "passed": true,
+        "advancedPipeline": true,
+        "softShadows": true,
+        "errors": 0,
+        "framesAdvanced": true
+      }
+    }
+  ],
+  "observedCounts": {
+    "materialNames": 48,
+    "propTypes": 36,
+    "levelColliders": 542,
+    "weapon": {
+      "triangles": 53136,
+      "meshes": 13,
+      "weaponsInReference": 1
+    },
+    "enemyTypes": [
+      "gull",
+      "hound"
+    ],
+    "groundReflectionPixels": [
+      720,
+      448
+    ]
+  },
+  "transportBehaviorProbe": {
+    "file": "src/lab/tactical-probe.js",
+    "uses": [
+      "World",
+      "NavGrid",
+      "Bot.update",
+      "Bot.think",
+      "Bot.canSee",
+      "Actor.move"
+    ],
+    "visual": "胶囊与朝向标记表示真实机器人位置；线条区分规划路径与实际轨迹。",
+    "actions": [
+      "route",
+      "sight",
+      "reset"
+    ],
+    "completion": "只有实际抵达目标圈、走出超过直线距离的路线且无障碍重叠，绕障检查才通过。",
+    "boundaries": [
+      "此小场验证绕行和遮挡感知，不代替完整对局战术平衡测试。",
+      "route 和 sight 分别触发并保留结果，reset 清除旧证据；未运行的检查不标记通过。"
+    ],
+    "headlessValidation": {
+      "seeds": [
+        4207,
+        19,
+        9981
+      ],
+      "passed": 3,
+      "seconds": 3.5,
+      "physicsSteps": 210,
+      "travelMeters": 18.394430837947727,
+      "obstacleOverlaps": 0,
+      "emergencyJumps": 0,
+      "wallOccludedVisible": false,
+      "unoccludedVisible": true,
+      "pendingPassValue": null,
+      "evidencePreservedAcrossSubtests": true,
+      "resetClearsEvidence": true,
+      "resetObjectCountStable": true,
+      "disposeRemovesOwnResources": true
+    }
+  }
+}

@@ -1,0 +1,62 @@
+{
+  "version": "1.4.5",
+  "validatedAt": "2026-11-13T08:53:13.727Z",
+  "artifact": {
+    "file": "dist/index.html",
+    "bytes": 1168106,
+    "sha256": "835c557a2722b3929fcdbfe711036925f4cffe3e7c47c488d8da1bb40e372857"
+  },
+  "nodeTests": {
+    "passed": 108,
+    "failed": 0,
+    "report": "artifacts/v145/node-tests.tap"
+  },
+  "reloadRecovery": {
+    "before": {
+      "sequences": 20,
+      "checkpoints": 60,
+      "recovered": 1,
+      "maxFinalPositionMm": 151.17714691309646,
+      "maxFinalRotationDegrees": 27.080641719363772,
+      "maxFinalGeometryMm": 151.17718055964227
+    },
+    "after": {
+      "sequences": 20,
+      "checkpoints": 60,
+      "recovered": 20,
+      "maxFinalPositionMm": 0.026327513392318768,
+      "maxFinalRotationDegrees": 0.0042789418031500695,
+      "maxFinalGeometryMm": 0.026345897744615474
+    },
+    "report": "artifacts/v145/reload-recovery-after.json",
+    "visualReview": "artifacts/v145/reload-recovery-after.html",
+    "comparison": "same simulation time, 60 Hz; 5 weapons, full reload, 45%/80% cancellation and three consecutive reloads; checkpoints at end, +0.2s, +0.6s",
+    "errors": []
+  },
+  "surfaceAudit": {
+    "motions": [
+      "m4a1 reload",
+      "ak47 reload",
+      "mp5 reload",
+      "deagle reload",
+      "awm reload",
+      "awm bolt"
+    ],
+    "step": 0.016666666666666666,
+    "invalidForearmFrames": 0,
+    "invalidUpperArmFrames": 0
+  },
+  "additionalChecks": [
+    "ADS 0.5 and 1 with repeated M4 reloads return to same-time control",
+    "Changing weapon during reload clears old IK state"
+  ],
+  "visualInspection": [
+    "M4 before/after recovery and same-time idle control",
+    "M4 reload endpoint",
+    "AWM after three consecutive reloads"
+  ],
+  "notes": [
+    "Recovery is continuous and begins on return to grip; +0.6 seconds is the strict settled-pose checkpoint.",
+    "Game modes, 180-second matches and weapon timing are unchanged."
+  ]
+}

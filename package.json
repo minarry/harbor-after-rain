@@ -1,0 +1,36 @@
+{
+  "name": "harbor-after-rain",
+  "version": "1.4.7",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs",
+    "start": "node scripts/serve.mjs",
+    "test": "node --test tests/*.test.mjs",
+    "test:browser": "node scripts/browser-check.mjs",
+    "test:feedback": "node scripts/feedback-check.mjs",
+    "test:extended": "node scripts/extended-check.mjs",
+    "test:arena": "node scripts/v3-check.mjs",
+    "test:lab": "node scripts/lab-check.mjs",
+    "audit:reference": "node scripts/reference-audit.mjs",
+    "study:reference": "node scripts/reference-study.mjs",
+    "test:surfaces": "node scripts/surface-check.mjs",
+    "test:post": "node scripts/post-check.mjs",
+    "compare:visual": "node scripts/visual-compare.mjs",
+    "report:visual": "node scripts/visual-report.mjs",
+    "test:menu": "node scripts/menu-match-check.mjs",
+    "test:hands": "node scripts/hand-check.mjs",
+    "test:recovery": "node scripts/reload-recovery.mjs --phase after --out artifacts/v145",
+    "compare:hands": "node scripts/hand-compare.mjs --phase after",
+    "report:hands": "node scripts/hand-review.mjs",
+    "compare:arms": "node scripts/arm-compare.mjs --phase after",
+    "report:arms": "node scripts/arm-review.mjs"
+  },
+  "dependencies": {
+    "esbuild": "^0.28.2",
+    "three": "^0.186.0"
+  },
+  "devDependencies": {
+    "playwright-core": "^1.63.0"
+  }
+}

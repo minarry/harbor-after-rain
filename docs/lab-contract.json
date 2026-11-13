@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 1,
+  "entry": "?lab=render&seed=4207&shot=1&t=2&q=high",
+  "modules": [
+    "render",
+    "mats",
+    "props",
+    "level",
+    "backdrop",
+    "ground",
+    "fx",
+    "weapon",
+    "enemies"
+  ],
+  "readiness": "window.__lab.ready === true",
+  "api": {
+    "snapshot()": "Returns serializable real state, checks, counters, errors, seed, camera and configuration URL.",
+    "control(key, value)": "Validated setting; ranges clamp, invalid types/options throw. Allowed keys are in snapshot.controls. props.geometryDetail reconstructs the document while preserving controls/camera: wait for navigation then readiness again.",
+    "action(id)": "Triggers an actual shared game implementation. In paused mode advances two fixed steps so a visible response can be inspected.",
+    "pause(boolean)": "Stops simulation time; orbit, controls and rendering remain usable.",
+    "step(frames)": "Pauses and advances 1..1800 steps, each exactly 1/60 second, then renders.",
+    "camera(presetId)": "Selects a module's fixed position/target/FOV.",
+    "reset()": "Reloads the current module with the same seed and default parameters. Wait for readiness again.",
+    "select(moduleId)": "Navigates to another isolated module document and disposes the previous context on pagehide. Wait for readiness again."
+  },
+  "reproducibility": {
+    "simulation": "Seeded scoped RNG, fixed simulation step; auto exposure and adaptive resolution disabled in lab.",
+    "controls": "The copied URL preserves controls, seed, quality and exact orbit camera. A paused or shot observation also saves current simulation time, capped at 30 seconds of startup pre-roll. snapshot.urlTimeClamped is true beyond that limit; replay longer action/step sequences explicitly.",
+    "scope": "A snapshot is an observation and configuration, not a complete transient-event replay. To reproduce impacts, deaths or ongoing animation, replay the same action/step sequence after reset.",
+    "imageComparison": "Use the same browser, viewport, deviceScaleFactor and quality. GPU/driver differences can change pixel results; do not require cross-device bit identity.",
+    "audio": "Real Web Audio requires a user gesture. Use OfflineAudioContext signal tests for automated audio assertions; a screenshot cannot verify sound."
+  },
+  "reviewCycle": [
+    "Run npm test",
+    "Build and serve",
+    "Wait for __lab.ready",
+    "Pause, use the same seed/view/time",
+    "Capture baseline",
+    "Change one real parameter",
+    "Capture comparison",
+    "Read checks and resource counters",
+    "Run test:lab",
+    "Run browser gameplay regression"
+  ],
+  "commands": {
+    "build": "npm run build",
+    "serve": "npm start",
+    "lab": "npm run test:lab",
+    "reference": "npm run audit:reference",
+    "game": "npm run test:browser",
+    "surfaces": "npm run test:surfaces",
+    "post": "npm run test:post",
+    "comparison": "npm run compare:visual",
+    "study": "npm run study:reference"
+  },
+  "outputs": {
+    "lab": "artifacts/lab/report.json",
+    "reference": "artifacts/reference-audit/manifest.json",
+    "referencePolicy": "Original HTML, extracted fragments and reference screenshots stay local and untracked.",
+    "surfaces": "artifacts/v14/surface-report.json",
+    "post": "artifacts/v14/post-report.json",
+    "comparison": "artifacts/v14/comparison.json",
+    "study": "artifacts/reference-study/index.json"
+  },
+  "materialChannels": {
+    "shaded": "Full PBR and weather",
+    "color": "Albedo before post",
+    "normal": "Normal RGB",
+    "roughness": "ORM G times material scalar",
+    "metalness": "ORM B times material scalar",
+    "occlusion": "ORM R",
+    "oxide": "ORM A for schema 2; zero otherwise"
+  }
+}

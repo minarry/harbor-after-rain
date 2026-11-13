@@ -1,0 +1,204 @@
+{
+  "version": "1.4.3",
+  "validatedAt": "2026-11-13T06:24:20.771Z",
+  "artifact": {
+    "file": "dist/index.html",
+    "bytes": 1163858,
+    "sha256": "21b987b376611a17f62f173c336f99977520b75001f597efc7f2254b7962b72d"
+  },
+  "nodeTests": {
+    "passed": 94,
+    "failed": 0,
+    "report": "artifacts/v143/node-tests.tap"
+  },
+  "hands": {
+    "report": "artifacts/v143/hand-check.json",
+    "tiers": [
+      {
+        "quality": "high",
+        "poses": 53,
+        "passed": true,
+        "memory": {
+          "before": {
+            "geometries": 96,
+            "textures": 55
+          },
+          "after": {
+            "geometries": 96,
+            "textures": 55
+          }
+        }
+      },
+      {
+        "quality": "low",
+        "poses": 53,
+        "passed": true,
+        "memory": {
+          "before": {
+            "geometries": 95,
+            "textures": 42
+          },
+          "after": {
+            "geometries": 95,
+            "textures": 42
+          }
+        }
+      }
+    ],
+    "errors": [],
+    "warnings": []
+  },
+  "gameFeedback": {
+    "ads": {
+      "ads": 1,
+      "fov": 57.031718324457465,
+      "cross": "none"
+    },
+    "reload": {
+      "mag": 30,
+      "reserve": 60,
+      "reloading": false
+    },
+    "surfaces": [
+      "water",
+      "metal",
+      "wood",
+      "wood",
+      "deck",
+      "deck",
+      "armor",
+      "flesh"
+    ],
+    "weather": {
+      "indoor": {
+        "x": -24,
+        "z": 9.5,
+        "e": 0
+      },
+      "outdoor": {
+        "x": -33,
+        "z": -7,
+        "e": 1
+      },
+      "rainLevel": 0.96
+    },
+    "pools": {
+      "saturated": {
+        "activeShells": 80,
+        "activeDebris": 160,
+        "activeRipples": 48,
+        "activeSparks": 180,
+        "activeDroplets": 160,
+        "particleCount": 1064,
+        "tracerCount": 0,
+        "decalCount": 162,
+        "effectCapacity": {
+          "shells": 80,
+          "debris": 160,
+          "ripples": 48,
+          "sparks": 180,
+          "droplets": 160,
+          "particles": 1800,
+          "tracers": 48
+        }
+      },
+      "cleared": {
+        "activeShells": 0,
+        "activeDebris": 0,
+        "activeRipples": 0,
+        "activeSparks": 0,
+        "activeDroplets": 0,
+        "particleCount": 0,
+        "tracerCount": 0,
+        "decalCount": 0,
+        "effectCapacity": {
+          "shells": 80,
+          "debris": 160,
+          "ripples": 48,
+          "sparks": 180,
+          "droplets": 160,
+          "particles": 1800,
+          "tracers": 48
+        }
+      }
+    },
+    "sniperCase": {
+      "actions": [
+        "awm"
+      ],
+      "ammo": 5,
+      "warnings": []
+    },
+    "errors": []
+  },
+  "visualReview": {
+    "caseCount": 6,
+    "cases": [
+      {
+        "id": "game-m4-hip",
+        "kind": "actual game at default FOV",
+        "screenshot": "game-m4-hip-after.png"
+      },
+      {
+        "id": "m4-hip",
+        "kind": "native laboratory first-person viewpoint",
+        "screenshot": "m4-hip-after.png"
+      },
+      {
+        "id": "m4-reload45",
+        "kind": "native laboratory first-person viewpoint",
+        "screenshot": "m4-reload45-after.png"
+      },
+      {
+        "id": "m4-reload80",
+        "kind": "native laboratory first-person viewpoint",
+        "screenshot": "m4-reload80-after.png"
+      },
+      {
+        "id": "ak-grip-close",
+        "kind": "fixed diagnostic close-up",
+        "screenshot": "ak-grip-close-after.png"
+      },
+      {
+        "id": "deagle-grip-close",
+        "kind": "fixed diagnostic close-up",
+        "screenshot": "deagle-grip-close-after.png"
+      }
+    ],
+    "review": "artifacts/v143/review.html",
+    "sourceSha256": "21b987b376611a17f62f173c336f99977520b75001f597efc7f2254b7962b72d",
+    "baseline": "artifacts/v143/before.html",
+    "baselineVersion": "1.4.2",
+    "baselineSha256": "3cd3b0cf0ad0d42b7420caf890b2d077b1af86c077065e8ebdd00c7a1185aa09",
+    "inspected": true,
+    "errors": []
+  },
+  "geometryBudget": {
+    "perHandTriangles": 9302,
+    "perForearmTriangles": 760,
+    "perUpperArmTriangles": 720,
+    "perHandBones": 16,
+    "forearmMaterialGroups": 2,
+    "additionalDrawCallsFromV142": 2,
+    "newTextures": 0
+  },
+  "changes": [
+    "Exposed anatomical forearms with asymmetric muscle volume and a flat tapered wrist; retained fingerless gloves.",
+    "Continuous transported loft frames avoid 180-degree section flips; shared elbow shading and skin overlap inside thin glove cuffs.",
+    "Elbow IK rotates on the same two-bone circle toward wrist alignment, preserving grip positions and bone lengths.",
+    "M4 stock latch is seated into the stock underside rather than floating above the wrist."
+  ],
+  "previousHandValidation": "validation-v1.4.2.json",
+  "previousMenuAndMatchValidation": "validation-v1.4.1.json",
+  "previousRenderingValidation": "validation-v1.4.0.json",
+  "publication": {
+    "target": "existing owner-private Site",
+    "status": "validated locally; deployment result recorded separately after publication",
+    "result": "artifacts/v143/deployment.json"
+  },
+  "limits": [
+    "Procedural anatomy and skin remain approximations, not scanned assets.",
+    "AK and pistol close-ups are labelled diagnostic views; full-width game capture uses normal camera and lighting.",
+    "Screenshots and resource-stability checks are not a controlled performance benchmark."
+  ]
+}

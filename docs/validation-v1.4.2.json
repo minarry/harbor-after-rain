@@ -1,0 +1,794 @@
+{
+  "version": "1.4.2",
+  "validatedAt": "2026-11-13T04:27:18.061Z",
+  "artifact": {
+    "file": "dist/index.html",
+    "bytes": 1161180,
+    "sha256": "3cd3b0cf0ad0d42b7420caf890b2d077b1af86c077065e8ebdd00c7a1185aa09"
+  },
+  "nodeTests": {
+    "passed": 92,
+    "failed": 0
+  },
+  "hands": {
+    "tiers": [
+      {
+        "quality": "high",
+        "directScrub": {
+          "drawProgress": 1,
+          "reload": 0.45000000000000007
+        },
+        "states": [
+          {
+            "label": "m4a1/hip",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "m4a1/ads",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "m4a1/fire",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "m4a1/inspect",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "m4a1/reload-0.12",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "m4a1/reload-0.3",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "m4a1/reload-0.6",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "m4a1/reload-0.8",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "m4a1/reload-0.9",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "ak47/hip",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "ak47/ads",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "ak47/fire",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "ak47/inspect",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "ak47/reload-0.12",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "ak47/reload-0.3",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "ak47/reload-0.6",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "ak47/reload-0.8",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "ak47/reload-0.9",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "mp5/hip",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "mp5/ads",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "mp5/fire",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "mp5/inspect",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "mp5/reload-0.12",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "mp5/reload-0.3",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "mp5/reload-0.6",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "mp5/reload-0.8",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "mp5/reload-0.9",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "awm/hip",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "awm/ads",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "awm/fire",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "awm/inspect",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "awm/reload-0.12",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "awm/reload-0.3",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "awm/reload-0.6",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "awm/reload-0.8",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "awm/reload-0.9",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "deagle/hip",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "deagle/ads",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "deagle/fire",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "deagle/inspect",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "deagle/reload-0.12",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "deagle/reload-0.3",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "deagle/reload-0.6",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "deagle/reload-0.8",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "deagle/reload-0.9",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "knife/hip",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "knife/ads",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "knife/fire",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "knife/inspect",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "he/hip",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "he/ads",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "he/fire",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "he/inspect",
+            "checks": true,
+            "handPose": true
+          }
+        ],
+        "memory": {
+          "before": {
+            "geometries": 96,
+            "textures": 55
+          },
+          "after": {
+            "geometries": 96,
+            "textures": 55
+          }
+        },
+        "hands": {
+          "R": {
+            "pose": "grenade",
+            "triangles": 9302,
+            "materials": [
+              "view-glove-fabric",
+              "view-hand-skin",
+              "view-hand-nail"
+            ]
+          },
+          "L": {
+            "pose": "grenade",
+            "triangles": 9302,
+            "materials": [
+              "view-glove-fabric",
+              "view-hand-skin",
+              "view-hand-nail"
+            ]
+          }
+        }
+      },
+      {
+        "quality": "low",
+        "directScrub": {
+          "drawProgress": 1,
+          "reload": 0.45000000000000007
+        },
+        "states": [
+          {
+            "label": "m4a1/hip",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "m4a1/ads",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "m4a1/fire",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "m4a1/inspect",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "m4a1/reload-0.12",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "m4a1/reload-0.3",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "m4a1/reload-0.6",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "m4a1/reload-0.8",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "m4a1/reload-0.9",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "ak47/hip",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "ak47/ads",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "ak47/fire",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "ak47/inspect",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "ak47/reload-0.12",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "ak47/reload-0.3",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "ak47/reload-0.6",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "ak47/reload-0.8",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "ak47/reload-0.9",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "mp5/hip",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "mp5/ads",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "mp5/fire",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "mp5/inspect",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "mp5/reload-0.12",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "mp5/reload-0.3",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "mp5/reload-0.6",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "mp5/reload-0.8",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "mp5/reload-0.9",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "awm/hip",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "awm/ads",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "awm/fire",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "awm/inspect",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "awm/reload-0.12",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "awm/reload-0.3",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "awm/reload-0.6",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "awm/reload-0.8",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "awm/reload-0.9",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "deagle/hip",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "deagle/ads",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "deagle/fire",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "deagle/inspect",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "deagle/reload-0.12",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "deagle/reload-0.3",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "deagle/reload-0.6",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "deagle/reload-0.8",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "deagle/reload-0.9",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "knife/hip",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "knife/ads",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "knife/fire",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "knife/inspect",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "he/hip",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "he/ads",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "he/fire",
+            "checks": true,
+            "handPose": true
+          },
+          {
+            "label": "he/inspect",
+            "checks": true,
+            "handPose": true
+          }
+        ],
+        "memory": {
+          "before": {
+            "geometries": 95,
+            "textures": 42
+          },
+          "after": {
+            "geometries": 95,
+            "textures": 42
+          }
+        },
+        "hands": {
+          "R": {
+            "pose": "grenade",
+            "triangles": 9302,
+            "materials": [
+              "view-glove-fabric",
+              "view-hand-skin",
+              "view-hand-nail"
+            ]
+          },
+          "L": {
+            "pose": "grenade",
+            "triangles": 9302,
+            "materials": [
+              "view-glove-fabric",
+              "view-hand-skin",
+              "view-hand-nail"
+            ]
+          }
+        }
+      }
+    ],
+    "errors": [],
+    "warnings": []
+  },
+  "gameFeedback": {
+    "ads": {
+      "ads": 1,
+      "fov": 57.03171832443348,
+      "cross": "none"
+    },
+    "reload": {
+      "mag": 30,
+      "reserve": 60,
+      "reloading": false
+    },
+    "surfaces": [
+      "water",
+      "metal",
+      "wood",
+      "wood",
+      "deck",
+      "deck",
+      "armor",
+      "flesh"
+    ],
+    "weather": {
+      "indoor": {
+        "x": -24,
+        "z": 9.5,
+        "e": 0
+      },
+      "outdoor": {
+        "x": -33,
+        "z": -7,
+        "e": 1
+      },
+      "rainLevel": 0.96
+    },
+    "pools": {
+      "saturated": {
+        "activeShells": 80,
+        "activeDebris": 160,
+        "activeRipples": 48,
+        "activeSparks": 180,
+        "activeDroplets": 160,
+        "particleCount": 1064,
+        "tracerCount": 0,
+        "decalCount": 162,
+        "effectCapacity": {
+          "shells": 80,
+          "debris": 160,
+          "ripples": 48,
+          "sparks": 180,
+          "droplets": 160,
+          "particles": 1800,
+          "tracers": 48
+        }
+      },
+      "cleared": {
+        "activeShells": 0,
+        "activeDebris": 0,
+        "activeRipples": 0,
+        "activeSparks": 0,
+        "activeDroplets": 0,
+        "particleCount": 0,
+        "tracerCount": 0,
+        "decalCount": 0,
+        "effectCapacity": {
+          "shells": 80,
+          "debris": 160,
+          "ripples": 48,
+          "sparks": 180,
+          "droplets": 160,
+          "particles": 1800,
+          "tracers": 48
+        }
+      }
+    },
+    "sniperCase": {
+      "actions": [
+        "awm"
+      ],
+      "ammo": 5,
+      "warnings": []
+    },
+    "errors": []
+  },
+  "visualReview": {
+    "caseCount": 11,
+    "cases": [
+      {
+        "id": "m4-hip",
+        "kind": "native laboratory first-person viewpoint",
+        "screenshot": "m4-hip-after.png"
+      },
+      {
+        "id": "m4-ads",
+        "kind": "native laboratory first-person viewpoint",
+        "screenshot": "m4-ads-after.png"
+      },
+      {
+        "id": "m4-reload45",
+        "kind": "native laboratory first-person viewpoint",
+        "screenshot": "m4-reload45-after.png"
+      },
+      {
+        "id": "m4-reload80",
+        "kind": "native laboratory first-person viewpoint",
+        "screenshot": "m4-reload80-after.png"
+      },
+      {
+        "id": "m4-inspect",
+        "kind": "native laboratory first-person viewpoint",
+        "screenshot": "m4-inspect-after.png"
+      },
+      {
+        "id": "m4-inspect-top",
+        "kind": "native laboratory first-person viewpoint",
+        "screenshot": "m4-inspect-top-after.png"
+      },
+      {
+        "id": "m4-grip-close",
+        "kind": "fixed diagnostic close-up",
+        "screenshot": "m4-grip-close-after.png"
+      },
+      {
+        "id": "ak-grip-close",
+        "kind": "fixed diagnostic close-up",
+        "screenshot": "ak-grip-close-after.png"
+      },
+      {
+        "id": "deagle-grip-close",
+        "kind": "fixed diagnostic close-up",
+        "screenshot": "deagle-grip-close-after.png"
+      },
+      {
+        "id": "hands-open-back",
+        "kind": "isolated open-hand anatomy diagnostic; not a game pose",
+        "screenshot": "hands-open-back-after.png"
+      },
+      {
+        "id": "hands-open-palm",
+        "kind": "isolated open-hand anatomy diagnostic; not a game pose",
+        "screenshot": "hands-open-palm-after.png"
+      }
+    ],
+    "errors": [],
+    "review": "artifacts/v142/review.html",
+    "inspected": true,
+    "baseline": "artifacts/v142/before.html",
+    "baselineCorrection": "Reload poses first complete drawT=1 before scrubbing; old fixed-phase URL setup froze drawT=0 and was discarded as an invalid pose baseline."
+  },
+  "geometryBudget": {
+    "perHandTriangles": 9302,
+    "perSleeveSegmentTriangles": 720,
+    "perHandBones": 16,
+    "perHandMaterialGroups": 3,
+    "additionalHandDraws": 4
+  },
+  "previousMenuAndMatchValidation": "validation-v1.4.1.json",
+  "previousRenderingValidation": "validation-v1.4.0.json",
+  "deployment": {
+    "status": "local-ready",
+    "privateSiteUpdated": false,
+    "reason": "Source credential now returns codex_auth, unsupported by installed Sites 1.1.6 helper. Ordinary Git to the supplied source URL also returns HTTP 400. No source was pushed or deployed."
+  },
+  "limits": [
+    "Procedural skin and anatomy are an approximation, not scanned anatomy or a subsurface-scattering skin renderer.",
+    "Diagnostic close-ups and unfolded-hand views are explicitly separated from native first-person screenshots.",
+    "Tests confirm bounded resources and correct rendering; screenshot FPS values are not a controlled benchmark."
+  ]
+}
