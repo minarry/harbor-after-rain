@@ -601,3 +601,53 @@ button{color:var(--hud)}
   .mode-target{margin-top:12px;margin-bottom:11px;padding-top:10px}
   .briefing-tools{margin-top:13px}.match-rule{margin-top:13px}
 }
+
+/* The first mobile screen offers both matches; configuration follows in the
+   same scroll area. Logical viewport media queries also cover rotated pages. */
+.touch-ui #menu{height:100%;min-height:0;max-height:100%;overflow-x:hidden;overflow-y:auto;touch-action:pan-y}
+.touch-ui #menu.landscape-scroll{touch-action:none}
+.touch-ui #menu .menu-top{display:none}
+.touch-ui #menu .menuBox{display:grid;grid-template-columns:minmax(0,1fr);align-items:start;min-height:0;width:100%;max-width:980px;gap:20px;padding:max(16px,env(safe-area-inset-top)) max(16px,env(safe-area-inset-right)) 24px max(16px,env(safe-area-inset-left))}
+.touch-ui #menu .operation-select{display:flex;flex-direction:column;min-width:0}
+.touch-ui #menu .title{order:0;align-self:stretch;padding:0 0 12px}
+.touch-ui #menu .title .logo,.touch-ui #menu .title p.premise{display:none}
+.touch-ui #menu .brand-line{gap:14px;flex-wrap:nowrap}
+.touch-ui #menu .title h1{font-size:36px;margin:0;line-height:1.05}
+.touch-ui #menu .title .en{font-size:16px;letter-spacing:.18em}
+.touch-ui #menu .mode-grid{order:1;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.touch-ui #menu .mode-card{display:flex;flex-direction:column;padding:12px;gap:0}
+.touch-ui #menu .mode-meta{font-size:8px;letter-spacing:.04em}
+.touch-ui #menu .mode-diagram{width:100%;height:60px;margin:6px 0;align-self:stretch}
+.touch-ui #menu .mode-copy h2{font-size:22px;margin:0 0 6px}
+.touch-ui #menu .mode-copy p{font-size:11px;line-height:1.55;min-height:35px}
+.touch-ui #menu .mode-target{justify-content:space-between;margin:8px 0;padding:6px 0 0;border-top:1px solid rgba(238,232,220,.12);font-size:10px}
+.touch-ui #menu .mode-start{margin-top:auto;min-height:48px;padding:10px;font-size:12px;letter-spacing:.06em}
+.touch-ui #menu #touchNote{order:2;margin:14px 0 0;font-size:11px}
+.touch-ui #menu .match-rule{order:3;margin:12px 0 0}
+.touch-ui #menu .briefing-tools{order:4;gap:20px;margin-top:12px}
+.touch-ui #menu .opts{max-width:none;width:100%;margin:0;padding:18px}
+.touch-ui #menu .menu-bottom{position:relative;left:auto;right:auto;bottom:auto;margin:0 max(16px,env(safe-area-inset-right)) 0 max(16px,env(safe-area-inset-left));padding-bottom:max(16px,env(safe-area-inset-bottom));gap:16px}
+@media(max-height:480px){
+  .touch-ui #menu .menuBox{padding-top:max(12px,env(safe-area-inset-top));gap:16px}
+  .touch-ui #menu .title{padding-bottom:8px}
+  .touch-ui #menu .title h1{font-size:28px}
+  .touch-ui #menu .title .en{font-size:14px}
+  .touch-ui #menu .mode-grid{gap:10px}
+  .touch-ui #menu .mode-card{padding:10px}
+  .touch-ui #menu .mode-meta{font-size:7px}
+  .touch-ui #menu .mode-meta>b{font-size:9px;padding:2px 5px}
+  .touch-ui #menu .mode-diagram{height:40px;margin:4px 0}
+  .touch-ui #menu .mode-copy h2{font-size:18px;margin-bottom:3px}
+  .touch-ui #menu .mode-copy p{min-height:30px;font-size:10px;line-height:1.5}
+  .touch-ui #menu .mode-target{margin:6px 0;padding-top:4px;font-size:9px}
+  .touch-ui #menu .mode-target strong{font-size:13px}
+  .touch-ui #menu .mode-start{min-height:44px;padding:8px 10px}
+}
+@media(max-height:340px){
+  .touch-ui #menu .menuBox{padding-top:max(10px,env(safe-area-inset-top));padding-left:max(12px,env(safe-area-inset-left));padding-right:max(12px,env(safe-area-inset-right))}
+  .touch-ui #menu .title{padding-bottom:6px}
+  .touch-ui #menu .title h1{font-size:26px}
+  .touch-ui #menu .mode-card{padding:8px}
+  .touch-ui #menu .mode-diagram{height:32px}
+  .touch-ui #menu .mode-target{margin:4px 0}
+}

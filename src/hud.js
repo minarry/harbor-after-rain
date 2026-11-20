@@ -1,5 +1,7 @@
 // HUD 与菜单（DOM）
 import { WEAPONS, PRIMARIES } from './weapons.js';
+import { mobileViewport } from './mobile-viewport.js';
+import { bindLandscapeMenuScroll } from './menu-scroll.js';
 
 const TEAM_CN = { BL: '潜伏者', GR: '保卫者' };
 const $ = (s, r = document) => r.querySelector(s);
@@ -58,6 +60,7 @@ export class HUD {
     const touch = matchMedia('(pointer:coarse)').matches || new URLSearchParams(location.search).has('touch');
     this.touchUI = touch;
     this.root.classList.toggle('touch-ui', touch);
+    if (touch) this.menuScroll = bindLandscapeMenuScroll(this.el.menu, mobileViewport);
     this.opts = { mode: 'tdm', team: 'BL', primary: 'm4a1', size: 5, diff: 'normal', goal: 50, tod: 'dusk', quality: touch ? 'low' : 'high', sens: 1.0, touchSens: 1.0, fov: 78, vol: 0.8 };
     try {
       const saved = JSON.parse(localStorage.getItem('harbor_after_rain_opts_v1') || '{}');
@@ -153,6 +156,7 @@ export class HUD {
     }
   }
   show(name) {
+    this.menuScroll?.cancel();
     if (name === 'menu' || name === 'pause') this.syncControls();
     for (const n of ['menu', 'pause', 'end', 'loadout', 'loading']) this.el[n].classList.toggle('hidden', n !== name);
     this.el.hud.classList.toggle('hidden', name === 'menu' || name === 'loading' || name === 'end');

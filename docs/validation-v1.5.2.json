@@ -1,0 +1,163 @@
+{
+  "version": "1.5.2",
+  "validatedAt": "2026-11-20T10:54:22.989Z",
+  "artifact": {
+    "file": "dist/index.html",
+    "bytes": 1197873,
+    "sha256": "bf7c63bb0f3ef629c35c50c7a4e7b0c498bf7a3171d077f0c68f4968f3060a37"
+  },
+  "nodeTests": {
+    "passed": 147,
+    "failed": 0,
+    "report": "artifacts/v152/node-tests.tap"
+  },
+  "mobile": {
+    "report": "artifacts/v152/mobile-controls-report.json",
+    "cases": [
+      {
+        "name": "wide-tdm",
+        "passed": true,
+        "touchCommands": 97
+      },
+      {
+        "name": "wide-relay",
+        "passed": true,
+        "touchCommands": 97
+      },
+      {
+        "name": "compact-tdm",
+        "passed": true,
+        "touchCommands": 15
+      },
+      {
+        "name": "compact-relay",
+        "passed": true,
+        "touchCommands": 15
+      },
+      {
+        "name": "tablet-tdm",
+        "passed": true,
+        "touchCommands": 15
+      },
+      {
+        "name": "tablet-relay",
+        "passed": true,
+        "touchCommands": 15
+      }
+    ],
+    "commands": 254,
+    "errors": []
+  },
+  "input": {
+    "report": "artifacts/v152/mobile-input-report.json",
+    "cases": [
+      {
+        "name": "tap-tdm",
+        "passed": true,
+        "touchCommands": 47
+      },
+      {
+        "name": "tap-relay",
+        "passed": true,
+        "touchCommands": 47
+      },
+      {
+        "name": "touch-sensitivity",
+        "passed": true,
+        "touchCommands": 17
+      },
+      {
+        "name": "compact-settings",
+        "passed": true,
+        "touchCommands": 16
+      },
+      {
+        "name": "portrait-no-gate-tdm",
+        "passed": true,
+        "touchCommands": 8
+      },
+      {
+        "name": "portrait-no-gate-relay",
+        "passed": true,
+        "touchCommands": 8
+      },
+      {
+        "name": "legacy-api-lab",
+        "passed": true,
+        "touchCommands": 2
+      }
+    ],
+    "commands": 145,
+    "errors": []
+  },
+  "landscape": {
+    "report": "artifacts/v152/mobile-landscape-report.json",
+    "cases": [
+      {
+        "name": "portrait-fallback-tdm",
+        "passed": true,
+        "touchCommands": 96
+      },
+      {
+        "name": "portrait-fallback-relay",
+        "passed": true,
+        "touchCommands": 96
+      },
+      {
+        "name": "native-rejected",
+        "passed": true,
+        "touchCommands": 36
+      },
+      {
+        "name": "native-fullscreen-rejected",
+        "passed": true,
+        "touchCommands": 36
+      },
+      {
+        "name": "native-success",
+        "passed": true,
+        "touchCommands": 36
+      },
+      {
+        "name": "offline-portrait",
+        "passed": true,
+        "touchCommands": 96
+      }
+    ],
+    "commands": 396,
+    "errors": []
+  },
+  "tabletLab": {
+    "report": "artifacts/v152/tablet-lab-report.json",
+    "passed": true,
+    "logicalWidth": 1024,
+    "logicalHeight": 768,
+    "sidebarsInteractive": true,
+    "orbitTouchPassed": true
+  },
+  "menuAndMatch": {
+    "report": "artifacts/v152/menu-match-check.json",
+    "rounds": 2,
+    "mobile": {
+      "noOverflow": true,
+      "tdm": true,
+      "relay": true
+    },
+    "offline": {
+      "playing": true,
+      "seconds": 180
+    },
+    "errors": []
+  },
+  "visualInspection": [
+    "Portrait phone fallback: both gameplay modes, two-thumb move/fire and paused settings",
+    "Simulated native landscape: fixed Continue/Exit actions",
+    "Portrait tablet: logical1024×768 lab, interactive sidebars and mapped orbit input"
+  ],
+  "notes": [
+    "Native fullscreen and orientation-lock success/reject/missing are explicit API fixtures, not physical mobile OS verification.",
+    "Chrome CDP trusted touchscreen contacts validate landscape coordinate mapping; physical iOS/Android hardware was not available.",
+    "Landscape fallback rotates the page, not the operating system screen lock. No gyroscope or rotation prompt is restored.",
+    "All browser suites use the exact unchanged HTML SHA256. Current renderer still requires WebGL 2."
+  ]
+}
