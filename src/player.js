@@ -66,18 +66,15 @@ export class Player extends Actor {
   consumePressed(code) { const p = this.pressed.has(code); this.pressed.delete(code); return p; }
   update(dt) {
     const g = this.game, K = this.keys;
-    const mouseSens=inputSensitivity(g.opts.sens),touchSens=inputSensitivity(g.opts.touchSens),gyroSens=inputSensitivity(g.opts.gyroSens);
+    const mouseSens=inputSensitivity(g.opts.sens),touchSens=inputSensitivity(g.opts.touchSens);
     const dx = this.mouse.dx, dy = this.mouse.dy;
     this.mouse.dx = this.mouse.dy = 0;
     const tx=this.touchLook?.x||0,ty=this.touchLook?.y||0;
     if(this.touchLook)this.touchLook.x=this.touchLook.y=0;
-    const gyro=g.gyro?.takeLook()||{yaw:0,pitch:0};
-    const gy=gyro.yaw*gyroSens,gp=gyro.pitch*gyroSens;
-    // Independent inputs are added in angular space. Touch never overwrites
-    // sensor motion and changing mouse sensitivity cannot affect mobile aim.
-    const yawDelta=-(dx*mouseSens+tx*touchSens)*.0022+gy;
-    const pitchDelta=-(dy*mouseSens+ty*touchSens)*.0022+gp;
-    this.lookDX=dx+tx*touchSens-gy/.0022;this.lookDY=dy+ty*touchSens-gp/.0022;
+    // Mouse and touch keep independent sensitivity, including scoped aim.
+    const yawDelta=-(dx*mouseSens+tx*touchSens)*.0022;
+    const pitchDelta=-(dy*mouseSens+ty*touchSens)*.0022;
+    this.lookDX=dx+tx*touchSens;this.lookDY=dy+ty*touchSens;
     const fovK = this.scoped || this.ads > 0.01 ? g.renderer.camera.fov / g.opts.fov : 1;
     if (this.alive) {
       this.yaw += yawDelta * fovK;

@@ -14,6 +14,7 @@ export class TouchControls {
     this.player=null;this.active=false;this.weapon=null;this.altOwned=false;this.buttons=new Map();this.listeners=[];
     this.enabled=matchMedia('(pointer:coarse)').matches||new URLSearchParams(location.search).has('touch');
     if(!this.enabled)return;
+    this.hud=document.getElementById('hud');
     this.root=document.getElementById('touch');if(!this.root){this.enabled=false;return;}
     const create=(tag,className,id)=>{const element=document.createElement(tag);element.className=className;if(id)element.id=id;this.root.appendChild(element);return element;};
     this.moveZone=create('div','touch-zone','touch-move-zone');
@@ -34,13 +35,13 @@ export class TouchControls {
     this.listen(this.root,'lostpointercapture',event=>this.end(event));
     // Prevent compatibility mouse events reaching Player.bind a second time.
     for(const type of ['mousedown','mouseup','mousemove','click','dblclick','contextmenu'])this.listen(this.root,type,event=>this.consume(event));
-    for(const type of ['blur','resize','orientationchange'])this.listen(window,type,()=>{this.reset();this.sync();});
+    for(const type of ['blur','resize'])this.listen(window,type,()=>{this.reset();this.sync();});
     this.listen(document,'visibilitychange',()=>{if(document.hidden){this.reset();this.sync();}});
     this.sync();
   }
   listen(target,type,handler) {target.addEventListener(type,handler,{passive:false});this.listeners.push([target,type,handler]);}
   consume(event) {if(event.cancelable)event.preventDefault();event.stopPropagation();}
-  inMatch() {const g=this.g;return this.enabled&&!g.landscape?.blocked&&g.playing&&!g.ended&&!g.paused&&!g.inLoadout&&g.player&&!document.hidden;}
+  inMatch() {const g=this.g;return this.enabled&&g.playing&&!g.ended&&!g.paused&&!g.inLoadout&&g.player&&!document.hidden;}
   playable() {return this.inMatch()&&this.g.player.alive?this.g.player:null;}
   sync() {
     const next=this.playable();
@@ -49,7 +50,9 @@ export class TouchControls {
     }
     this.active=!!next;
     // Keep pause available during the death camera; gameplay buttons disable.
-    setClass(this.root,'hidden',!this.inMatch());
+    const inMatch=!!this.inMatch();
+    setClass(this.root,'hidden',!inMatch);
+    setClass(this.hud,'touch-active',inMatch);
     setClass(this.root,'is-disabled',!this.active);
     if(next) {
       if(this.weapon!==next.weapon) {
@@ -98,7 +101,7 @@ export class TouchControls {
   end(event) {
     if(!this.state.pointers.has(event.pointerId))return;
     this.consume(event);
-    // Rotation/pause/death may happen before their browser event is delivered.
+    // Pause/death may happen before their browser event is delivered.
     // Verify the current player before allowing a pending tap to shoot.
     if(!this.sync())return;
     const pointer=this.state.end(event.pointerId);if(!pointer)return;
@@ -153,5 +156,5 @@ export class TouchControls {
     this.altOwned=false;this.renderState();
   }
   debugState() {return{...this.state.snapshot(),active:this.active};}
-  dispose() {this.reset();for(const [target,type,handler]of this.listeners)target.removeEventListener(type,handler);this.listeners=[];}
+  dispose() {this.reset();setClass(this.hud,'touch-active',false);for(const [target,type,handler]of this.listeners)target.removeEventListener(type,handler);this.listeners=[];}
 }

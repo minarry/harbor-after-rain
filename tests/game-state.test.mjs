@@ -5,7 +5,7 @@ import { WeaponState } from '../src/weapons.js';
 
 test('clearing input releases mouse edges and held touch controls', () => {
   const g=Object.create(Game.prototype);
-  let resets=0,gyroResets=0;g.touch={reset(){resets++;}};g.gyro={reset(){gyroResets++;}};
+  let resets=0;g.touch={reset(){resets++;}};
   g.player={ keys:new Set(['KeyW']),pressed:new Set(['KeyR']),mouse:{l:true,lp:true,dx:20},touch:{fire:true,firePressed:true,crouch:true,aim:true,mx:1,mz:1},touchLook:{x:10,y:10} };
   g.clearInput();
   assert.equal(g.player.keys.size,0);assert.equal(g.player.pressed.size,0);
@@ -13,24 +13,10 @@ test('clearing input releases mouse edges and held touch controls', () => {
   assert.equal(g.player.touch.mx,0);assert.equal(g.player.touchLook.x,0);
   assert.equal(g.player.touch.firePressed,false);assert.equal(g.player.touch.crouch,false);assert.equal(g.player.touch.aim,false);
   assert.equal(resets,1);
-  assert.equal(gyroResets,1);
 });
 test('pointer ownership is released even between player instances',()=>{
   const g=Object.create(Game.prototype);let resets=0;g.touch={reset(){resets++;}};
   g.clearInput();assert.equal(resets,1);
-});
-test('portrait gate blocks starting, resuming and leaving loadout before state changes',()=>{
-  const g=Object.create(Game.prototype);let checks=0;
-  g.landscape={ensureLandscape(){checks++;return false;},requestPreferred(){}};
-  Object.assign(g,{playing:false,paused:true,inLoadout:true});
-  g.startMatch();g.resume();g.closeLoadout();
-  assert.equal(checks,3);assert.equal(g.playing,false);assert.equal(g.paused,true);assert.equal(g.inLoadout,true);
-});
-test('portrait sync runs before simulation and freezes queued actions immediately',()=>{
-  const {g,calls}=runningMatch('relay',42);let timers=0;
-  g.landscape={sync(){g.paused=true;}};g.timers.push({t:42,fn(){timers++;}});
-  g.simulate(1/60);
-  assert.equal(g.time,42);assert.equal(g.timeLeft,138);assert.equal(timers,0);assert.equal(calls.player,0);
 });
 test('immediate loadout change exits previous sniper scope', () => {
   const g=Object.create(Game.prototype);

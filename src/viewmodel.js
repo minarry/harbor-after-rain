@@ -378,7 +378,7 @@ export class ViewModel {
       this.rightIndex.pole.set(1,0,0).applyQuaternion(this.rightIndexGunQ).applyQuaternion(this.rightIndexInverse);
       right.indexGrip=this.rightIndex;
     }
-    const pistol=id==='deagle',rifle=Object.hasOwn(SUPPORT_OFFSETS,id);
+    const pistol=id==='deagle',rifle=Object.prototype.hasOwnProperty.call(SUPPORT_OFFSETS,id);
     const supportContact=pistol?new THREE.Vector3(0,-.038,-.067):(rifle?SUPPORT_CONTACT:UTILITY_CONTACT).clone();
     const supportOffset=rifle?SUPPORT_OFFSETS[id]:id==='he'?[-.045,-.02,0]:pistol?[.008,-.002,.005]:[0,-.024,0];
     const support=handPose(P.fore||P.grip||this.cur,supportOffset,pistol?PISTOL_SUPPORT:rifle?LEFT_SUPPORT:SIDE_SUPPORT,supportContact,id==='he'?'grenade':pistol?'pistol-support':rifle?'cradle':'support');

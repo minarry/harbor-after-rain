@@ -9,7 +9,7 @@ function metricRows(metrics,prefix=''){
   const rows=[];
   for(const [key,raw] of Object.entries(metrics)){
     const label=prefix+(metricNames[key]||key);
-    if(raw&&typeof raw==='object'&&!Array.isArray(raw)&&!Object.hasOwn(raw,'value'))rows.push(...metricRows(raw,label+' / '));
+    if(raw&&typeof raw==='object'&&!Array.isArray(raw)&&!Object.prototype.hasOwnProperty.call(raw,'value'))rows.push(...metricRows(raw,label+' / '));
     else rows.push({label,...(raw&&typeof raw==='object'&&!Array.isArray(raw)?raw:{value:Array.isArray(raw)?raw.join(' · '):raw})});
   }
   return rows;
@@ -78,7 +78,7 @@ export function renderPanel({catalog=LAB_MODULES,selected=catalog[0]?.id,onSelec
   }
   for(const button of $$('.lab-mobile-toggle'))button.addEventListener('click',()=>{lastDrawerButton=button;const name=root.dataset.drawer===button.dataset.drawerToggle?'':button.dataset.drawerToggle;drawer(name);if(name)(name==='nav'?nav.querySelector('[aria-current="page"]'):$('.lab-tab[aria-selected="true"]'))?.focus();},events);
   for(const button of $$('.lab-close,.lab-scrim'))button.addEventListener('click',()=>drawer('',true),events);
-  const onMedia=()=>drawer(media.matches?'':root.dataset.drawer);media.addEventListener('change',onMedia);
+  const onMedia=()=>drawer(media.matches?'':root.dataset.drawer);if(media.addEventListener)media.addEventListener('change',onMedia);else media.addListener(onMedia);
   root.addEventListener('keydown',event=>{if(event.key==='Escape'&&root.dataset.drawer){event.preventDefault();drawer('',true);}},events);
   function selectTab(name,focus=false){
     if(currentTab!==name)$('.lab-inspector').scrollTop=0;
@@ -111,7 +111,7 @@ export function renderPanel({catalog=LAB_MODULES,selected=catalog[0]?.id,onSelec
     const controls=state.controls||[];
     changed('controlShape',controls.map(({key,label,type,min,max,step,options})=>({key,label,type,min,max,step,options})),()=>{
       controlEvents.abort();controlEvents=new AbortController();
-      fields.clear();controlsHost.replaceChildren();
+      fields.clear();controlsHost.textContent='';
       if(!controls.length){controlsHost.append(node('p','lab-empty','当前模块没有可调参数。可使用场景操作或预设视角。'));return;}
       controls.forEach((control,index)=>{
         const block=node('div',`lab-control${control.type==='toggle'?' lab-control-toggle':''}`),label=node('label');
@@ -143,11 +143,11 @@ export function renderPanel({catalog=LAB_MODULES,selected=catalog[0]?.id,onSelec
   }
   function renderActions(){changed('actions',state.actions||[],()=>{
     actionEvents.abort();actionEvents=new AbortController();
-    actionsHost.replaceChildren();for(const action of state.actions||[]){const button=node('button','lab-action',action.label||action.id);button.type='button';button.dataset.action=action.id;button.disabled=!!action.disabled;button.addEventListener('click',()=>invoke(onAction,[action.id],button),{signal:actionEvents.signal});actionsHost.append(button);}
+    actionsHost.textContent='';for(const action of state.actions||[]){const button=node('button','lab-action',action.label||action.id);button.type='button';button.dataset.action=action.id;button.disabled=!!action.disabled;button.addEventListener('click',()=>invoke(onAction,[action.id],button),{signal:actionEvents.signal});actionsHost.append(button);}
   });}
   function renderCameras(){changed('cameras',state.cameraPresets||[],()=>{
     cameraEvents.abort();cameraEvents=new AbortController();
-    cameraHost.replaceChildren();for(const preset of state.cameraPresets||[]){const button=node('button','lab-camera',preset.label||preset.id);button.type='button';button.dataset.camera=preset.id;button.setAttribute('aria-pressed','false');button.addEventListener('click',()=>invoke(onCamera,[preset.id]),{signal:cameraEvents.signal});cameraHost.append(button);}
+    cameraHost.textContent='';for(const preset of state.cameraPresets||[]){const button=node('button','lab-camera',preset.label||preset.id);button.type='button';button.dataset.camera=preset.id;button.setAttribute('aria-pressed','false');button.addEventListener('click',()=>invoke(onCamera,[preset.id]),{signal:cameraEvents.signal});cameraHost.append(button);}
   });for(const button of cameraHost.children)button.setAttribute('aria-pressed',String(button.dataset.camera===(state.camera||state.cameraPreset)));}
   function renderMetrics(){
     const metrics=state.metrics||{},now=performance.now();
@@ -158,7 +158,7 @@ export function renderPanel({catalog=LAB_MODULES,selected=catalog[0]?.id,onSelec
     text($('[data-stat="fps"]'),value('fps')==null?'—':number(value('fps'),1));
     text($('[data-stat="calls"]'),value('calls')==null&&value('drawCalls')==null?'—':number(value('calls')??value('drawCalls'),1));
     if(now-lastMetrics<200)return;lastMetrics=now;
-    changed('metrics',metrics,()=>{const host=$('.lab-metrics');host.replaceChildren();if(!Object.keys(metrics).length){host.append(node('dt','','等待场景指标'),node('dd','','—'));return;}
+    changed('metrics',metrics,()=>{const host=$('.lab-metrics');host.textContent='';if(!Object.keys(metrics).length){host.append(node('dt','','等待场景指标'),node('dd','','—'));return;}
       for(const object of metricRows(metrics)){const value=typeof object.value==='number'?number(object.value):typeof object.value==='boolean'?(object.value?'是':'否'):String(object.value??'—');host.append(node('dt','',object.label),node('dd','',`${value}${object.unit?' '+object.unit:''}`));}
     });
   }
@@ -167,7 +167,7 @@ export function renderPanel({catalog=LAB_MODULES,selected=catalog[0]?.id,onSelec
     const passed=checks.filter(check=>check.pass===true).length,failed=checks.filter(check=>check.pass===false).length;
     text($('.lab-check-count'),`${passed} / ${checks.length} 通过`);
     const button=moduleButtons.get(state.selected);if(button)button.dataset.status=failed?'fail':passed===checks.length&&passed?'pass':'pending';
-    changed('checks',checks,()=>{const host=$('.lab-checks');host.replaceChildren();
+    changed('checks',checks,()=>{const host=$('.lab-checks');host.textContent='';
       if(!checks.length){host.append(node('li','lab-empty','尚无检查项目。'));return;}
       for(const check of checks){const status=check.pass===true?'pass':check.pass===false?'fail':'pending',item=node('li','lab-check');item.dataset.status=status;const symbol=node('span','lab-check-symbol',status==='pass'?'✓':status==='fail'?'!':'·');symbol.setAttribute('aria-label',status==='pass'?'通过':status==='fail'?'失败':'待验证');item.append(symbol,node('b','',check.name||'未命名检查'));if(check.detail)item.append(node('p','',check.detail));host.append(item);}
     });
@@ -175,15 +175,15 @@ export function renderPanel({catalog=LAB_MODULES,selected=catalog[0]?.id,onSelec
   function renderEvidence(){
     const module=current(),items=evidenceList(state.referenceEvidence??module.referenceEvidence);
     changed('evidence',[items,module.sourceFiles],()=>{
-      const host=$('.lab-evidence-list');host.replaceChildren();
+      const host=$('.lab-evidence-list');host.textContent='';
       if(!items.length)host.append(node('p','lab-empty','此模块尚未提供参考证据。'));
       for(const item of items){const article=node('article','lab-evidence');if(item.name||item.title)article.append(node('h3','',item.name||item.title));article.append(node('p','',item.detail??item.description??item.text??stringify(item)));if(item.source||item.location)article.append(node('code','',item.source||item.location));host.append(article);}
-      const files=$('.lab-sources>div');files.replaceChildren();for(const file of module.sourceFiles||[])files.append(node('code','',file));
+      const files=$('.lab-sources>div');files.textContent='';for(const file of module.sourceFiles||[])files.append(node('code','',file));
     });
   }
   function renderErrors(){
     const errors=[...(Array.isArray(state.errors)?state.errors:state.errors?[state.errors]:[]),...localErrors].map(error=>error?.message||String(error));
-    changed('errors',errors,()=>{const host=$('.lab-errorbox');host.hidden=!errors.length;host.replaceChildren();if(errors.length){host.append(node('strong','',`${errors.length} 条错误记录`));for(const error of errors.slice(-5))host.append(node('p','lab-error',error));}});
+    changed('errors',errors,()=>{const host=$('.lab-errorbox');host.hidden=!errors.length;host.textContent='';if(errors.length){host.append(node('strong','',`${errors.length} 条错误记录`));for(const error of errors.slice(-5))host.append(node('p','lab-error',error));}});
   }
   function update(patch={}){
     if(disposed)return;
@@ -199,5 +199,5 @@ export function renderPanel({catalog=LAB_MODULES,selected=catalog[0]?.id,onSelec
     renderControls();renderActions();renderCameras();renderMetrics();renderChecks();renderEvidence();renderErrors();
   }
   selectTab(currentTab);drawer('');update(state);
-  return {viewport,element:root,update,dispose(){if(disposed)return;disposed=true;eventController.abort();controlEvents.abort();actionEvents.abort();cameraEvents.abort();media.removeEventListener('change',onMedia);clearTimeout(toastTimer);root.remove();if(!previousBodyClass)document.body.classList.remove('lab-mode');}};
+  return {viewport,element:root,update,dispose(){if(disposed)return;disposed=true;eventController.abort();controlEvents.abort();actionEvents.abort();cameraEvents.abort();if(media.removeEventListener)media.removeEventListener('change',onMedia);else media.removeListener(onMedia);clearTimeout(toastTimer);root.remove();if(!previousBodyClass)document.body.classList.remove('lab-mode');}};
 }

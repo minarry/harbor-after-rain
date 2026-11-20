@@ -58,21 +58,25 @@ export class HUD {
     const touch = matchMedia('(pointer:coarse)').matches || new URLSearchParams(location.search).has('touch');
     this.touchUI = touch;
     this.root.classList.toggle('touch-ui', touch);
-    this.opts = { mode: 'tdm', team: 'BL', primary: 'm4a1', size: 5, diff: 'normal', goal: 50, tod: 'dusk', quality: touch ? 'low' : 'high', sens: 1.0, touchSens: 1.0, gyroSens: 1.0, fov: 78, vol: 0.8 };
+    this.opts = { mode: 'tdm', team: 'BL', primary: 'm4a1', size: 5, diff: 'normal', goal: 50, tod: 'dusk', quality: touch ? 'low' : 'high', sens: 1.0, touchSens: 1.0, fov: 78, vol: 0.8 };
     try {
       const saved = JSON.parse(localStorage.getItem('harbor_after_rain_opts_v1') || '{}');
-      Object.assign(this.opts, saved);
+      // Import only supported options, dropping retired settings from old saves.
+      if (saved && typeof saved === 'object' && !Array.isArray(saved)) {
+        for (const key of Object.keys(this.opts)) {
+          if (Object.prototype.hasOwnProperty.call(saved, key)) this.opts[key] = saved[key];
+        }
+      }
       // Older mobile saves used the mouse sensitivity for sliding as well.
       // Migrate only once; an explicitly saved touch value stays independent.
       if (saved && !Object.prototype.hasOwnProperty.call(saved, 'touchSens') && typeof saved.sens === 'number' && Number.isFinite(saved.sens)) {
         this.opts.touchSens = Math.max(.2, Math.min(3, saved.sens));
       }
     } catch (e) { /* 忽略 */ }
-    for (const key of ['touchSens', 'gyroSens']) {
-      const value = Number(this.opts[key]);
-      this.opts[key] = Number.isFinite(value) ? Math.max(.2, Math.min(3, value)) : 1;
-    }
+    const touchSensitivity = Number(this.opts.touchSens);
+    this.opts.touchSens = Number.isFinite(touchSensitivity) ? Math.max(.2, Math.min(3, touchSensitivity)) : 1;
     if (!['tdm', 'relay'].includes(this.opts.mode)) this.opts.mode = 'tdm';
+    this.saveOpts();
     this.buildMenu();
   }
   saveOpts() { try { localStorage.setItem('harbor_after_rain_opts_v1', JSON.stringify(this.opts)); } catch (e) { /* 忽略 */ } }
@@ -123,13 +127,6 @@ export class HUD {
       });
     }
     bindModalButton($('#btnLoadClose'), () => this.g.closeLoadout());
-    for (const button of this.root.querySelectorAll('[data-gyro-toggle]')) bindModalButton(button, () => {
-      const gyro = this.g.gyro;
-      if (!gyro) return;
-      if (this.gyroState?.enabled) gyro.disable(); else void gyro.enable();
-    });
-    for (const button of this.root.querySelectorAll('[data-gyro-recenter]')) bindModalButton(button, () => this.g.gyro?.recenter());
-    this.updateGyro({ enabled: false, pending: false, supported: true, canRecenter: false, status: 'off', message: '陀螺仪未开启；滑动与陀螺仪可同时使用。' });
     if (this.touchUI) for (const note of this.root.querySelectorAll('.touch-instructions')) note.classList.remove('hidden');
     for (const a of this.root.querySelectorAll('#clinks a, .mlinks a'))
       a.addEventListener('touchstart', (e) => e.stopPropagation(), { passive: true });
@@ -137,23 +134,6 @@ export class HUD {
   setIcons(icons) {
     this.icons = icons;
     for (const c of this.root.querySelectorAll('#loadCards .card')) c.querySelector('img').src = icons[c.dataset.w] || '';
-  }
-  updateGyro(state) {
-    // Permission and enabled state stay in memory, separate from saved options.
-    this.gyroState = { ...this.gyroState, ...state };
-    const { enabled, pending, supported, canRecenter, status, message } = this.gyroState;
-    const label = pending ? '正在请求…' : supported === false ? '陀螺仪不可用' : enabled ? '关闭陀螺仪' : '开启陀螺仪';
-    for (const button of this.root.querySelectorAll('[data-gyro-toggle]')) {
-      button.textContent = label;
-      button.disabled = !!pending || supported === false;
-      button.classList.toggle('is-active', !!enabled);
-      button.setAttribute('aria-pressed', String(!!enabled));
-    }
-    for (const button of this.root.querySelectorAll('[data-gyro-recenter]')) button.disabled = !enabled || !!pending || !canRecenter;
-    for (const element of this.root.querySelectorAll('[data-gyro-status]')) {
-      element.textContent = message || '';
-      element.dataset.status = status || (enabled ? 'ready' : 'off');
-    }
   }
   syncMode() {
     const goal = Number(this.opts.goal) || 50;
@@ -438,34 +418,13 @@ const PRIM_CARDS = PRIMARIES.map((id) => {
 }).join('');
 
 const MOBILE_SETTINGS = `
-<section class="mobile-settings" aria-label="触控与陀螺仪设置">
-  <div class="mobile-settings-heading"><b>触控与陀螺仪</b><span>可同时使用</span></div>
+<section class="mobile-settings" aria-label="触控设置">
+  <div class="mobile-settings-heading"><b>触控设置</b><span>双手操作</span></div>
   <div class="opt"><div class="lab">滑动灵敏度</div><div class="slider" data-k="touchSens"><input aria-label="滑动灵敏度" type="range" min="0.2" max="3" step="0.05"><span></span></div></div>
-  <div class="gyro-actions"><button type="button" data-gyro-toggle aria-pressed="false">开启陀螺仪</button><button type="button" data-gyro-recenter disabled>重新校准</button></div>
-  <p data-gyro-status role="status" aria-live="polite">陀螺仪未开启；滑动与陀螺仪可同时使用。</p>
-  <div class="opt"><div class="lab">陀螺仪灵敏度</div><div class="slider" data-k="gyroSens"><input aria-label="陀螺仪灵敏度" type="range" min="0.2" max="3" step="0.05"><span></span></div></div>
-  <p class="mobile-settings-note">横放并握稳手机后重新校准。是否可用取决于设备与浏览器；关闭陀螺仪仍可滑动瞄准。</p>
+  <p class="mobile-settings-note">左侧移动，右侧拖动瞄准。轻点右侧空白处开火，按住开火键连续射击。</p>
 </section>`;
 
 const TEMPLATE = `
-<div id="landscapeGate" class="hidden" hidden role="dialog" aria-modal="true" aria-labelledby="landscapeTitle" aria-describedby="landscapeCopy landscapeHint">
-  <div class="landscape-panel">
-    <div class="dialog-eyebrow">HARBOR / AFTER RAIN</div>
-    <svg class="landscape-phone" viewBox="0 0 200 124" aria-hidden="true" focusable="false">
-      <rect class="phone-portrait" x="73" y="9" width="54" height="98" rx="9"/>
-      <path class="phone-turn" d="M137 19A55 55 0 0 1 164 58M155 51L164 58 171 49"/>
-      <rect class="phone-landscape" x="32" y="37" width="136" height="74" rx="11"/>
-      <path class="phone-speaker" d="M44 63V85"/>
-      <circle class="phone-stick" cx="70" cy="83" r="10"/>
-      <circle class="phone-stick" cx="137" cy="77" r="10"/>
-      <path class="phone-cross" d="M100 65V79M93 72H107"/>
-    </svg>
-    <h2 id="landscapeTitle">横屏游玩</h2>
-    <p id="landscapeCopy">移动端仅支持横屏。请将手机横放后开始行动。</p>
-    <button type="button" class="go" id="btnLandscape">进入横屏</button>
-    <p id="landscapeHint" aria-live="polite">浏览器未自动旋转时，请手动横放手机。对局中转回横屏后，点击「继续」。</p>
-  </div>
-</div>
 <div id="hud" class="hidden">
   <div id="score">
     <div class="team bl" id="tBL"><span class="nm">潜伏者</span><span class="pts" id="sBL">0</span></div>

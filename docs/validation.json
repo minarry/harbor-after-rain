@@ -1,250 +1,97 @@
 {
-  "version": "1.5.0",
-  "validatedAt": "2026-11-13T11:20:39.357Z",
+  "version": "1.5.1",
+  "validatedAt": "2026-11-20T10:28:25.472Z",
   "artifact": {
     "file": "dist/index.html",
-    "bytes": 1207894,
-    "sha256": "2abbef673d100f2ca0782c2da45cd4412f11b74ec48fab29cbfd25393394eaa3"
+    "bytes": 1189801,
+    "sha256": "8db887e6d61584e57ac63b4879e63c7be46c1f02c68c8340f10a48c41b9c1711"
   },
   "nodeTests": {
-    "passed": 163,
+    "passed": 133,
     "failed": 0,
-    "report": "artifacts/v150/node-tests.tap"
+    "report": "artifacts/v151/node-tests.tap"
   },
   "mobile": {
-    "report": "artifacts/v150/mobile-controls-report.json",
-    "transport": "Chrome CDP Input.dispatchTouchEvent",
-    "commands": 258,
+    "report": "artifacts/v151/mobile-controls-report.json",
     "cases": [
       {
         "name": "wide-tdm",
-        "viewport": [
-          844,
-          390
-        ],
-        "mode": "tdm",
-        "touchCommands": 99,
         "passed": true,
-        "ammoBefore": 29,
-        "ammoAfter": 25,
-        "lookChangeRadians": 0.32384,
-        "layoutsChecked": true,
-        "deepLifecycleChecked": true
+        "touchCommands": 97
       },
       {
         "name": "wide-relay",
-        "viewport": [
-          844,
-          390
-        ],
-        "mode": "relay",
-        "touchCommands": 99,
         "passed": true,
-        "ammoBefore": 29,
-        "ammoAfter": 25,
-        "lookChangeRadians": 0.32384,
-        "layoutsChecked": true,
-        "deepLifecycleChecked": true
+        "touchCommands": 97
       },
       {
         "name": "compact-tdm",
-        "viewport": [
-          667,
-          375
-        ],
-        "mode": "tdm",
-        "touchCommands": 15,
         "passed": true,
-        "ammoBefore": 29,
-        "ammoAfter": 25,
-        "lookChangeRadians": 0.32384,
-        "layoutsChecked": true,
-        "deepLifecycleChecked": false
+        "touchCommands": 15
       },
       {
         "name": "compact-relay",
-        "viewport": [
-          667,
-          375
-        ],
-        "mode": "relay",
-        "touchCommands": 15,
         "passed": true,
-        "ammoBefore": 29,
-        "ammoAfter": 25,
-        "lookChangeRadians": 0.32384,
-        "layoutsChecked": true,
-        "deepLifecycleChecked": false
+        "touchCommands": 15
       },
       {
         "name": "tablet-tdm",
-        "viewport": [
-          1024,
-          768
-        ],
-        "mode": "tdm",
-        "touchCommands": 15,
         "passed": true,
-        "ammoBefore": 29,
-        "ammoAfter": 25,
-        "lookChangeRadians": 0.32384,
-        "layoutsChecked": true,
-        "deepLifecycleChecked": false
+        "touchCommands": 15
       },
       {
         "name": "tablet-relay",
-        "viewport": [
-          1024,
-          768
-        ],
-        "mode": "relay",
-        "touchCommands": 15,
         "passed": true,
-        "ammoBefore": 29,
-        "ammoAfter": 25,
-        "lookChangeRadians": 0.32384,
-        "layoutsChecked": true,
-        "deepLifecycleChecked": false
+        "touchCommands": 15
       }
     ],
-    "checks": [
-      "simultaneous movement, held-fire drag aiming and actual ammo use",
-      "independent fire contacts and release orders",
-      "look ownership handoff without camera jumps",
-      "floating joystick dead zone and no initial motion",
-      "pointer cancellation and drag outside buttons",
-      "pause menu secondary touch, drag-off cancellation and resume with old fingers still down",
-      "death/respawn, orientation resize and trusted browser blur release stale gestures",
-      "all visible controls at least 44px, dynamic stick separate from action buttons",
-      "touch weapon cycling to secondary and knife"
-    ],
+    "commands": 254,
     "errors": []
   },
-  "gyro": {
-    "report": "artifacts/v150/mobile-gyro-report.json",
-    "physicalSensorVerified": false,
-    "sensorTransport": "explicit-dom-deviceorientation-fallback",
-    "sensorNotice": "Simulated orientation samples; native phone permission, sensor calibration and mounting are not verified.",
-    "touchTransport": "Chrome CDP Input.dispatchTouchEvent",
-    "commands": 174,
+  "input": {
+    "report": "artifacts/v151/mobile-input-report.json",
     "cases": [
       {
         "name": "tap-tdm",
         "passed": true,
-        "permissionFixture": "native",
-        "touchCommands": 49
+        "touchCommands": 47
       },
       {
         "name": "tap-relay",
         "passed": true,
-        "permissionFixture": "native",
-        "touchCommands": 49
+        "touchCommands": 47
       },
       {
-        "name": "gyro-axes-mix-recovery",
+        "name": "touch-sensitivity",
         "passed": true,
-        "permissionFixture": "granted",
-        "touchCommands": 42
-      },
-      {
-        "name": "gyro-denied",
-        "passed": true,
-        "permissionFixture": "denied",
-        "touchCommands": 6
-      },
-      {
-        "name": "gyro-missing",
-        "passed": true,
-        "permissionFixture": "missing",
-        "touchCommands": 4
-      },
-      {
-        "name": "gyro-no-data",
-        "passed": true,
-        "permissionFixture": "no-data",
-        "touchCommands": 6
+        "touchCommands": 17
       },
       {
         "name": "compact-settings",
         "passed": true,
-        "permissionFixture": "native",
-        "touchCommands": 18
+        "touchCommands": 16
+      },
+      {
+        "name": "portrait-no-gate-tdm",
+        "passed": true,
+        "touchCommands": 8
+      },
+      {
+        "name": "portrait-no-gate-relay",
+        "passed": true,
+        "touchCommands": 8
+      },
+      {
+        "name": "legacy-api-lab",
+        "passed": true,
+        "touchCommands": 2
       }
     ],
-    "axes": [
-      {
-        "landscapeAngle": 90,
-        "leftYaw": 0.0342999619388198,
-        "upPitch": 0.034299922719398204
-      },
-      {
-        "landscapeAngle": 270,
-        "leftYaw": 0.03429970881021949,
-        "upPitch": 0.034299929789172554
-      }
-    ],
-    "checks": [
-      "one blank-area tap consumes one round, no fire on pointerdown or held automatic fire",
-      "small jitter can tap; drag, out-and-back, hold, cancellation and action buttons do not fire",
-      "left-thumb movement and right blank-area tap coexist",
-      "stale contacts cannot fire after pause, rotation or respawn",
-      "two landscape directions map left/up correctly without cross-axis leakage",
-      "real Player update adds touch and sensor in one frame",
-      "touch and sensor sensitivities are independent of mouse sensitivity",
-      "permission denied, missing API and no-data preserve touch gameplay",
-      "compact settings migrate legacy sensitivity, persist separate values and keep Continue reachable"
-    ],
-    "errors": []
-  },
-  "landscape": {
-    "report": "artifacts/v150/mobile-landscape-report.json",
-    "nativeOrientationLockVerified": false,
-    "apiTests": "explicitly mocked call routing and failure handling",
-    "cases": [
-      {
-        "name": "manual-tdm",
-        "apiSimulation": "missing",
-        "passed": true,
-        "touchCommands": 31
-      },
-      {
-        "name": "manual-relay",
-        "apiSimulation": "missing",
-        "passed": true,
-        "touchCommands": 31
-      },
-      {
-        "name": "api-reject",
-        "apiSimulation": "reject",
-        "passed": true,
-        "touchCommands": 6
-      },
-      {
-        "name": "api-resolve",
-        "apiSimulation": "resolve",
-        "passed": true,
-        "touchCommands": 6
-      },
-      {
-        "name": "desktop-portrait",
-        "apiSimulation": "resolve",
-        "passed": true,
-        "touchCommands": 0
-      }
-    ],
-    "checks": [
-      "portrait gate intercepts menu and guards programmatic start",
-      "real two-thumb contacts are cleared on portrait rotation",
-      "match clock and ammo freeze while portrait",
-      "landscape retains pause until explicit Continue",
-      "old fingers remain disarmed; fresh input works",
-      "missing, rejected and resolved orientation APIs are explicitly simulated",
-      "desktop narrow portrait window has no gate or fullscreen/lock requests"
-    ],
+    "commands": 145,
     "errors": []
   },
   "menuAndMatch": {
-    "report": "artifacts/v150/menu-match-check.json",
+    "report": "artifacts/v151/menu-match-check.json",
     "rounds": 2,
     "mobile": {
       "noOverflow": true,
@@ -257,16 +104,22 @@
     },
     "errors": []
   },
+  "removedFeatureChecks": {
+    "sensorAndOrientationAPIAccesses": 0,
+    "objectHasOwnCallsInBundle": 0,
+    "cssHasSelectorsInBundle": 0,
+    "gyroAndOrientationUIElements": 0
+  },
   "visualInspection": [
-    "844×390 gyro settings with fixed pause actions",
-    "667×375 pause before and after scrolling to the last setting",
-    "both modes with trusted two-thumb movement and tap shooting",
-    "three landscape sizes from mobile-controls"
+    "844×390 two-thumb move/fire layout",
+    "667×375 pause with fixed Continue/Exit actions",
+    "module lab metrics with Object.hasOwn removed"
   ],
   "notes": [
-    "Chrome device emulation and trusted CDP touch contacts were used; physical iOS/Android hardware was not available.",
-    "Chrome CDP orientation override did not produce samples in this environment. The sensor scenario explicitly fell back to synthetic DeviceOrientationEvent samples; this validates the production listener, mapping and Player integration, not native phone sensor delivery.",
-    "Fullscreen/orientation-lock outcomes are explicitly mocked in the landscape suite.",
-    "All three browser reports bind to the exact final HTML hash. Menu, three-minute matches and offline launch ran against the same unchanged build."
+    "Chrome CDP trusted multi-touch regression; not physical iOS/Android verification.",
+    "All input cases run with Object.hasOwn removed and traps on sensor/orientation/fullscreen APIs.",
+    "The JavaScript bundle targets ES2020 and Safari 15. This does not certify Safari 13.4: the Three.js renderer requires WebGL 2.",
+    "Landscape controls remain the preferred layout. No forced rotation, orientation prompt, portrait gate or sensor access remains.",
+    "Browser reports and offline artifact use the same unchanged HTML SHA256."
   ]
 }

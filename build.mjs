@@ -9,12 +9,16 @@ const res = await esbuild.build({
   format: 'iife',
   minify: !dev,
   sourcemap: false,
-  target: ['es2020'],
+  // Syntax target only; runtime rendering still requires WebGL 2.
+  target: ['es2020', 'safari15'],
   write: false,
   legalComments: 'none',
   define: { 'process.env.NODE_ENV': '"production"' },
 });
 const js = res.outputFiles[0].text;
+// esbuild lowers syntax, not newer built-in APIs. Guard the reported failure
+// in the complete bundle, including dependencies, before producing a release.
+if (/\bObject\s*\.\s*hasOwn\s*\(/.test(js)) throw new Error('Bundle must use Object.prototype.hasOwnProperty.call instead of Object.hasOwn');
 const tpl = fs.readFileSync('src/index.html', 'utf8');
 const css = fs.readFileSync('src/style.css', 'utf8')+'\n'+fs.readFileSync('src/lab/lab.css','utf8');
 const license = fs.readFileSync('node_modules/three/LICENSE', 'utf8');
