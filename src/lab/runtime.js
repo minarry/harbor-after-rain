@@ -1,7 +1,8 @@
 // One scene per document: selection/reset reloads the document, releasing its GL
 // context, pooled resources and listeners as a unit. No accumulating hidden games.
 import * as THREE from 'three';
-import {OrbitControls} from 'three/addons/controls/OrbitControls.js';
+import {createLandscapeOrbit} from './landscape-orbit.js';
+import {mobileViewport} from '../mobile-viewport.js';
 import {Renderer} from '../render.js';
 import {Environment} from '../env.js';
 import {Effects} from '../effects.js';
@@ -57,8 +58,8 @@ export async function startLab(){
   ctx.fx.onShellImpact=(p,surface,energy)=>audio.playShellDrop(p,{surface,energy});
   r.setFeatures({autoExposure:false});
   ctx.env.atmosphere.setWeather({rain:['ground','backdrop','level'].includes(config.id)?.85:0,wetness:.85,immediate:true});
-  orbit=new OrbitControls(r.camera,canvas);orbit.enableDamping=false;orbit.minDistance=.5;orbit.maxDistance=400;orbit.enabled=!definition.lockCamera;
-  const resize=()=>{const b=panel.viewport.getBoundingClientRect();r.resize(b.width,b.height);if(ready)renderFrame();};
+  orbit=createLandscapeOrbit(r.camera,canvas,mobileViewport);orbit.enableDamping=false;orbit.minDistance=.5;orbit.maxDistance=400;orbit.enabled=!definition.lockCamera;
+  const resize=()=>{r.resize(panel.viewport.clientWidth,panel.viewport.clientHeight);if(ready)renderFrame();};
   const observer=new ResizeObserver(resize);observer.observe(panel.viewport);resize();
   function setCamera(id){
     const preset=definition.cameras.find(c=>c.id===id)||definition.cameras[0];currentCamera=preset.id;r.camera.position.set(...preset.pos);orbit.target.set(...preset.target);r.camera.fov=config.id==='weapon'?78:60;r.camera.updateProjectionMatrix();orbit.update();ctx.orbitPosition=r.camera.position.clone();ctx.orbitQuaternion=r.camera.quaternion.clone();definition.onCamera?.(preset.id);
@@ -84,7 +85,7 @@ export async function startLab(){
     action(id){if(!(definition.actions||[]).some(a=>a.id===id))throw new RangeError('未知动作');seeded(()=>definition.action?.(id));if(paused){stepOne();stepOne();}renderFrame();updatePanel();return this.snapshot();},
     camera(id){if(!definition.cameras.some(c=>c.id===id))throw new RangeError('未知视角');setCamera(id);renderFrame();updatePanel();return r.camera.position.toArray();},
     step(frames=1){if(!Number.isInteger(frames)||frames<1||frames>1800)throw new RangeError('步数应为 1–1800');paused=true;for(let i=0;i<frames;i++)stepOne();renderFrame();updatePanel();return this.snapshot();},
-    snapshot(){return {schemaVersion:1,build:'1.5.1',module:config.id,seed:config.seed,time,frame,paused,quality:config.quality,controls:{...values},camera:{preset:currentCamera,position:r.camera.position.toArray(),target:orbit.target.toArray(),fov:r.camera.fov},renderer:r.getFeatures(),weather:ctx.env.atmosphere.getWeather(),metrics:metrics(),checks:definition.checks?.()||[],errors:[...errors],details:definition.report?.()||{},url:url().href,urlTimeClamped:time>30};},
+    snapshot(){return {schemaVersion:1,build:'1.5.2',module:config.id,seed:config.seed,time,frame,paused,quality:config.quality,controls:{...values},camera:{preset:currentCamera,position:r.camera.position.toArray(),target:orbit.target.toArray(),fov:r.camera.fov},renderer:r.getFeatures(),weather:ctx.env.atmosphere.getWeather(),metrics:metrics(),checks:definition.checks?.()||[],errors:[...errors],details:definition.report?.()||{},url:url().href,urlTimeClamped:time>30};},
     debug:ctx,
   };
   for(const d of definition.controls)api.control(d.key,d.value);

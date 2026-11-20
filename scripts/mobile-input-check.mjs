@@ -1,5 +1,6 @@
 // Trusted CDP contacts exercise the real touch handlers and player simulation.
-// Removed APIs are trapped: gameplay must never inspect sensors or screen locks.
+// Sensor APIs remain forbidden; native screen locking is unavailable here to
+// exercise silent landscape fallback independently of the landscape suite.
 // This is Chromium feature-removal regression, not physical iOS device QA.
 import {chromium} from 'playwright-core';
 import {mkdir,writeFile} from 'node:fs/promises';
@@ -8,7 +9,7 @@ import {createHash} from 'node:crypto';
 import assert from 'node:assert/strict';
 
 const args=process.argv.slice(2),arg=(key,fallback)=>args.includes(key)?args[args.indexOf(key)+1]:fallback;
-const out=resolve(arg('--out','artifacts/v151')),base=arg('--url','http://127.0.0.1:4173/'),only=arg('--only','');
+const out=resolve(arg('--out','artifacts/v152')),base=arg('--url','http://127.0.0.1:4173/'),only=arg('--only','');
 await mkdir(out,{recursive:true});
 const report={version:2,physicalIOSVerified:false,touchTransport:'Chrome CDP Input.dispatchTouchEvent',cases:[],errors:[],failures:[]};
 const browser=await chromium.launch({executablePath:'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',headless:true});
@@ -168,7 +169,7 @@ async function assertRemoved(page){
   assert.deepEqual(state.unhandled,[],'no rejected feature-detection promise escapes');
   assert.ok(state.hasOwnAbsent,'the regression runs without Object.hasOwn');
   assert.equal(state.controller,false,'no sensor controller is constructed');
-  assert.equal(state.screenController,false,'no screen-orientation controller is constructed');
+  assert.equal(state.screenController,false,'the old blocking screen-orientation controller is absent');
   return state;
 }
 async function portraitFlow(page,f,result,mode){
@@ -207,7 +208,7 @@ async function labFlow(page,f,result){
 
 async function runCase(name,task,options={}){
   if(only&&!name.includes(only))return;
-  const result={name,removedAPIsTrapped:true,objectHasOwnRemoved:true};report.cases.push(result);
+  const result={name,sensorAPIsTrapped:true,nativeLandscapeAPIs:'missing',objectHasOwnRemoved:true};report.cases.push(result);
   const context=await browser.newContext({viewport:options.viewport||{width:844,height:390},isMobile:true,hasTouch:true,deviceScaleFactor:1});
   const page=await context.newPage(),cdp=await context.newCDPSession(page),f=new Fingers(page,cdp);
   page.on('pageerror',e=>report.errors.push({case:name,error:e.stack||e.message}));
@@ -222,12 +223,12 @@ async function runCase(name,task,options={}){
     window.__inputRemovedCalls=[];window.__inputUnhandled=[];window.__inputTouches=[];
     const fail=name=>{__inputRemovedCalls.push(name);throw new Error(`Removed mobile API accessed: ${name}`);};
     const trap=(object,key,label)=>Object.defineProperty(object,key,{configurable:true,get(){return fail(label||key);}});
-    for(const key of['DeviceOrientationEvent','DeviceMotionEvent','Gyroscope','AbsoluteOrientationSensor','RelativeOrientationSensor','orientation','ondeviceorientation','ondevicemotion','onorientationchange'])trap(window,key);
-    trap(screen,'orientation','screen.orientation');
-    for(const key of['requestFullscreen','webkitRequestFullscreen','webkitRequestFullScreen'])trap(Element.prototype,key);
+    for(const key of['DeviceOrientationEvent','DeviceMotionEvent','Gyroscope','AbsoluteOrientationSensor','RelativeOrientationSensor','ondeviceorientation','ondevicemotion'])trap(window,key);
+    Object.defineProperty(screen,'orientation',{configurable:true,value:undefined});
+    for(const key of['requestFullscreen','webkitRequestFullscreen','webkitRequestFullScreen'])Object.defineProperty(Element.prototype,key,{configurable:true,value:undefined});
     const add=EventTarget.prototype.addEventListener;
     EventTarget.prototype.addEventListener=function(type,...args){
-      if(['deviceorientation','deviceorientationabsolute','devicemotion','orientationchange'].includes(type))return fail(`listen:${type}`);
+      if(['deviceorientation','deviceorientationabsolute','devicemotion'].includes(type))return fail(`listen:${type}`);
       return add.call(this,type,...args);
     };
     if(navigator.permissions){const query=navigator.permissions.query.bind(navigator.permissions);navigator.permissions.query=function(descriptor){if(['gyroscope','accelerometer','magnetometer'].includes(descriptor?.name))return fail(`permission:${descriptor.name}`);return query(descriptor);};}

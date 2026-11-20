@@ -2,6 +2,7 @@
 import * as THREE from 'three';
 import { Actor } from './actor.js';
 import { DamageResponse } from './combat-feedback.js';
+import { mobileViewport } from './mobile-viewport.js';
 
 const inputSensitivity = value => Number.isFinite(value) ? THREE.MathUtils.clamp(value, .2, 3) : 1;
 
@@ -59,7 +60,8 @@ export class Player extends Actor {
       const p = P(); if (!p || !g.locked || g.paused || g.inLoadout || (g.dragMode && !e.buttons)) return;
       // 过滤浏览器偶发的异常大位移
       if (Math.abs(e.movementX) > 400 || Math.abs(e.movementY) > 400) return;
-      p.mouse.dx += e.movementX; p.mouse.dy += e.movementY;
+      p.mouse.dx += mobileViewport.rotated ? e.movementY : e.movementX;
+      p.mouse.dy += mobileViewport.rotated ? -e.movementX : e.movementY;
     });
     window.addEventListener('wheel', (e) => { const p = P(); if (p && g.locked) p.mouse.wheel += Math.sign(e.deltaY); }, { passive: true });
   }

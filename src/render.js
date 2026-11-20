@@ -9,6 +9,7 @@ import { ContactAOPass } from './contact-ao.js';
 import { RenderFeatures } from './render-features.js';
 import { FinalFinishPass } from './final-finish.js';
 import { StableBloomPass } from './stable-bloom.js';
+import { mobileViewport } from './mobile-viewport.js';
 
 const VERT = 'varying vec2 vUv; void main(){ vUv=uv; gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0); }';
 
@@ -243,7 +244,7 @@ export class Renderer {
     this.finish = new FinalFinishPass(this.quality);this.composer.addPass(this.finish);
     this.setFeatures({});
     this.resize();
-    this._onResize = () => this.resize();window.addEventListener('resize', this._onResize);
+    this._onResize = () => this.resize();window.addEventListener('gameviewportresize', this._onResize);
   }
   setFeatures(patch) {
     const f = this.features.set(patch);
@@ -284,7 +285,7 @@ export class Renderer {
   }
   resize(width, height) {
     if (Number.isFinite(width) && Number.isFinite(height)) this.fixedSize = { width: Math.max(1,width), height: Math.max(1,height) };
-    const w = this.fixedSize?.width || Math.max(1, window.innerWidth), h = this.fixedSize?.height || Math.max(1, window.innerHeight);
+    const w = this.fixedSize?.width || Math.max(1, mobileViewport.width), h = this.fixedSize?.height || Math.max(1, mobileViewport.height);
     const maxPixels = this.quality === 'high' ? 2300000 : this.quality === 'medium' ? 1400000 : 950000;
     const ratio = Math.min(this.basePixelRatio * (this.adaptive ? this.scale : 1), Math.sqrt(maxPixels / (w * h)));
     this.renderer.setPixelRatio(ratio);
@@ -321,7 +322,7 @@ export class Renderer {
   }
   dispose() {
     if(this.disposed)return;this.disposed=true;
-    window.removeEventListener('resize',this._onResize);
+    window.removeEventListener('gameviewportresize',this._onResize);
     for(const pass of this.composer.passes)pass.dispose?.();
     this.composer.dispose();this.renderer.dispose();
   }

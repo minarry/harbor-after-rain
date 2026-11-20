@@ -14,6 +14,7 @@ import { buildGunMerged } from './guns.js';
 import { Player } from './player.js';
 import { Bot, BOT_NAMES } from './bots.js';
 import { TouchControls } from './touch.js';
+import { mobileViewport } from './mobile-viewport.js';
 import { RelayObjective } from './objective.js';
 import { lowHealthAmount } from './combat-feedback.js';
 
@@ -151,6 +152,7 @@ export class Game {
 
   // ================= 流程 =================
   startMatch() {
+    void mobileViewport.requestLock();
     const o = this.opts;
     audio.init(); audio.setVolumes({ master: o.vol }); audio.startAmbient(); audio.playUI('start');
     this.clearMatchObjects();
@@ -311,6 +313,7 @@ export class Game {
     if (document.pointerLockElement) document.exitPointerLock();
   }
   resume(fromLock) {
+    if (!fromLock) void mobileViewport.requestLock();
     this.clearInput();
     this.paused = false; this.hud.show(null);
     this.touch?.sync();
@@ -850,7 +853,7 @@ export class Game {
     let spreadPx = 0;
     if (w && w.def.spread) {
       const sp = Math.min(0.12, w.spreadAcc + w.def.spread.base * 2 + (p.speed > 0.6 ? w.def.spread.move * Math.min(1, p.speed / 5.7) : 0) + (p.onGround ? 0 : w.def.spread.air * 0.5)) * (p.crouch ? 0.7 : 1);
-      spreadPx = Math.tan(sp) / Math.tan(THREE.MathUtils.degToRad(cam.fov / 2)) * window.innerHeight / 2;
+      spreadPx = Math.tan(sp) / Math.tan(THREE.MathUtils.degToRad(cam.fov / 2)) * mobileViewport.height / 2;
     }
     // 准星下的角色名
     let aimName = '', aimTeam = '';

@@ -20,7 +20,11 @@ const js = res.outputFiles[0].text;
 // in the complete bundle, including dependencies, before producing a release.
 if (/\bObject\s*\.\s*hasOwn\s*\(/.test(js)) throw new Error('Bundle must use Object.prototype.hasOwnProperty.call instead of Object.hasOwn');
 const tpl = fs.readFileSync('src/index.html', 'utf8');
-const css = fs.readFileSync('src/style.css', 'utf8')+'\n'+fs.readFileSync('src/lab/lab.css','utf8');
+// Use the logical game viewport even when a browser cannot rotate its screen.
+// Native landscape and desktop retain their ordinary viewport dimensions.
+const css = (fs.readFileSync('src/style.css', 'utf8')+'\n'+fs.readFileSync('src/lab/lab.css','utf8'))
+  .replace(/(-?(?:\d*\.)?\d+)(dvh|svh|lvh|vmin|vmax|vw|vh)\b/g, (_,value,unit) => `calc(${value} * var(--game-${/^[dsl]vh$/.test(unit)?'vh':unit}, 1${unit}))`)
+  .replace(/env\(safe-area-inset-(top|right|bottom|left)\)/g, (_,side) => `var(--game-safe-${side}, env(safe-area-inset-${side}))`);
 const license = fs.readFileSync('node_modules/three/LICENSE', 'utf8');
 const html = tpl.replace('<head>', () => '<head>\n<!-- Three.js license\n' + license.replace(/-->/g, '-- >') + '\n-->')
   .replace('/*__CSS__*/', () => css).replace('/*__JS__*/', () => js.replace(/<\/script>/g, '<\\/script>'));

@@ -1,4 +1,5 @@
 import { LAB_MODULES, LAB_ITERATION_CONTRACT } from './catalog.js';
+import { mobileViewport } from '../mobile-viewport.js';
 
 let serial=0;
 const text=(element,value)=>{const next=String(value??'');if(element.textContent!==next)element.textContent=next;};
@@ -54,7 +55,7 @@ export function renderPanel({catalog=LAB_MODULES,selected=catalog[0]?.id,onSelec
   const viewport=$('#lab-stage'),nav=$('.lab-modules'),controlsHost=$('#lab-controls'),actionsHost=$('.lab-actions'),cameraHost=$('.lab-camera-strip');
   const fields=new Map(),moduleButtons=new Map(),cache={},localErrors=[];let state={selected,controls:[],actions:[],metrics:{},checks:[],cameraPresets:[],paused:false,time:0,errors:[]};
   let disposed=false,toastTimer=null,lastMetrics=-Infinity,currentTab='controls',lastDrawerButton=null;
-  const media=window.matchMedia('(max-width:920px)');
+  const media=mobileViewport.matchMedia('(max-width:920px)');
   const eventController=new AbortController(),events={signal:eventController.signal};
   let controlEvents=new AbortController(),actionEvents=new AbortController(),cameraEvents=new AbortController();
   $('.lab-nav').id=`${uid}-navigation`;$('.lab-inspector').id=`${uid}-inspector`;

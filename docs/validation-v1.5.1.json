@@ -1,0 +1,125 @@
+{
+  "version": "1.5.1",
+  "validatedAt": "2026-11-20T10:28:25.472Z",
+  "artifact": {
+    "file": "dist/index.html",
+    "bytes": 1189801,
+    "sha256": "8db887e6d61584e57ac63b4879e63c7be46c1f02c68c8340f10a48c41b9c1711"
+  },
+  "nodeTests": {
+    "passed": 133,
+    "failed": 0,
+    "report": "artifacts/v151/node-tests.tap"
+  },
+  "mobile": {
+    "report": "artifacts/v151/mobile-controls-report.json",
+    "cases": [
+      {
+        "name": "wide-tdm",
+        "passed": true,
+        "touchCommands": 97
+      },
+      {
+        "name": "wide-relay",
+        "passed": true,
+        "touchCommands": 97
+      },
+      {
+        "name": "compact-tdm",
+        "passed": true,
+        "touchCommands": 15
+      },
+      {
+        "name": "compact-relay",
+        "passed": true,
+        "touchCommands": 15
+      },
+      {
+        "name": "tablet-tdm",
+        "passed": true,
+        "touchCommands": 15
+      },
+      {
+        "name": "tablet-relay",
+        "passed": true,
+        "touchCommands": 15
+      }
+    ],
+    "commands": 254,
+    "errors": []
+  },
+  "input": {
+    "report": "artifacts/v151/mobile-input-report.json",
+    "cases": [
+      {
+        "name": "tap-tdm",
+        "passed": true,
+        "touchCommands": 47
+      },
+      {
+        "name": "tap-relay",
+        "passed": true,
+        "touchCommands": 47
+      },
+      {
+        "name": "touch-sensitivity",
+        "passed": true,
+        "touchCommands": 17
+      },
+      {
+        "name": "compact-settings",
+        "passed": true,
+        "touchCommands": 16
+      },
+      {
+        "name": "portrait-no-gate-tdm",
+        "passed": true,
+        "touchCommands": 8
+      },
+      {
+        "name": "portrait-no-gate-relay",
+        "passed": true,
+        "touchCommands": 8
+      },
+      {
+        "name": "legacy-api-lab",
+        "passed": true,
+        "touchCommands": 2
+      }
+    ],
+    "commands": 145,
+    "errors": []
+  },
+  "menuAndMatch": {
+    "report": "artifacts/v151/menu-match-check.json",
+    "rounds": 2,
+    "mobile": {
+      "noOverflow": true,
+      "tdm": true,
+      "relay": true
+    },
+    "offline": {
+      "playing": true,
+      "seconds": 180
+    },
+    "errors": []
+  },
+  "removedFeatureChecks": {
+    "sensorAndOrientationAPIAccesses": 0,
+    "objectHasOwnCallsInBundle": 0,
+    "cssHasSelectorsInBundle": 0,
+    "gyroAndOrientationUIElements": 0
+  },
+  "visualInspection": [
+    "844×390 two-thumb move/fire layout",
+    "667×375 pause with fixed Continue/Exit actions",
+    "module lab metrics with Object.hasOwn removed"
+  ],
+  "notes": [
+    "Chrome CDP trusted multi-touch regression; not physical iOS/Android verification.",
+    "All input cases run with Object.hasOwn removed and traps on sensor/orientation/fullscreen APIs.",
+    "The JavaScript bundle targets ES2020 and Safari 15. This does not certify Safari 13.4: the Three.js renderer requires WebGL 2.",
+    "Landscape controls remain the preferred layout. No forced rotation, orientation prompt, portrait gate or sensor access remains.",
+    "Browser reports and offline artifact use the same unchanged HTML SHA256."
+  ]
+}

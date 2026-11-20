@@ -1,7 +1,10 @@
 // 入口
 import { Game } from './game.js';
 import { startLab } from './lab/runtime.js';
+import { mobileViewport } from './mobile-viewport.js';
 
+mobileViewport.init();
+window.__mobileViewport = mobileViewport;
 const query=new URLSearchParams(location.search);
 const task=query.has('lab')||query.has('show')?startLab():new Game().init();
 task.catch((e) => {

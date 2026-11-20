@@ -1,6 +1,7 @@
 // 特效：粒子、贴花、曳光、枪口火焰、爆炸、烟囱排烟、海鸥
 import * as THREE from 'three';
 import { BallisticPool, RipplePool } from './impact-pools.js';
+import { mobileViewport } from './mobile-viewport.js';
 
 class Particles {
   constructor(scene, tex, additive, max) {
@@ -322,7 +323,7 @@ export class Effects {
   update(dt, t, camera, shipSpeed) {
     this.add.update(dt); this.smoke.update(dt);
     this.sparks.update(dt); this.droplets.update(dt); this.fragments.update(dt); this.shells.update(dt); this.ripples.update(dt);
-    const h = window.innerHeight * Math.min(window.devicePixelRatio, 2);
+    const h = mobileViewport.height * Math.min(window.devicePixelRatio, 2);
     const sc = h / (2 * Math.tan(THREE.MathUtils.degToRad(camera.fov) / 2));
     this.add.mat.uniforms.scale.value = sc; this.smoke.mat.uniforms.scale.value = sc;
     // 曳光

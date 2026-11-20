@@ -7,7 +7,7 @@ import {createHash} from 'node:crypto';
 import assert from 'node:assert/strict';
 
 const args=process.argv.slice(2),arg=(key,fallback)=>args.includes(key)?args[args.indexOf(key)+1]:fallback;
-const out=resolve(arg('--out','artifacts/v151'));
+const out=resolve(arg('--out','artifacts/v152'));
 const base=arg('--url','http://127.0.0.1:4173/');
 const only=arg('--only','');
 await mkdir(out,{recursive:true});
@@ -88,7 +88,7 @@ async function layout(page){
   }
   assert.ok(data.scrollWidth<=data.width+1,'game does not horizontally overflow');
   for(const action of['fire','jump','crouch','reload','switch','aim','pause'])assert.ok(data.buttons.some(b=>b.action===action),`${action} is visible`);
-  assert.equal(data.buttons.some(b=>b.action==='fire-left'),data.width>=data.height,'auxiliary fire appears in landscape and yields the left thumb area in portrait');
+  assert.ok(data.buttons.some(b=>b.action==='fire-left'),'default landscape presentation includes auxiliary left fire');
   return data;
 }
 async function refill(page){await page.evaluate(()=>{__game.player.weapon.refill();});await wait(page,120);}
@@ -221,6 +221,9 @@ try{
     page.on('pageerror',e=>report.errors.push({case:name,error:e.stack||e.message}));
     page.on('console',m=>{if(m.type()==='error')report.errors.push({case:name,error:m.text()});});
     await page.addInitScript(()=>{
+      // Keep this suite deterministic while the landscape suite covers native locks.
+      Object.defineProperty(screen,'orientation',{configurable:true,value:undefined});
+      for(const key of['requestFullscreen','webkitRequestFullscreen','webkitRequestFullScreen'])Object.defineProperty(Element.prototype,key,{configurable:true,value:undefined});
       window.__mobileTrace=[];
       for(const type of['pointerdown','pointermove','pointerup','pointercancel','blur','focus'])window.addEventListener(type,e=>{
         if(__mobileTrace.length>=1600)__mobileTrace.shift();

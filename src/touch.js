@@ -1,5 +1,6 @@
 // Two-thumb controls: each pointer keeps the role chosen at pointerdown.
 import { TouchInputState, nextTouchSlot, isLookTap } from './touch-state.js';
+import { mobileViewport } from './mobile-viewport.js';
 
 const BUTTONS=[['fire','开火'],['fire-left','开火'],['jump','跳'],['crouch','蹲'],['reload','换弹'],['switch','切枪'],['aim','瞄准'],['pause','暂停']];
 const clamp=(value,min,max)=>max>=min?Math.max(min,Math.min(max,value)):(min+max)/2;
@@ -35,7 +36,7 @@ export class TouchControls {
     this.listen(this.root,'lostpointercapture',event=>this.end(event));
     // Prevent compatibility mouse events reaching Player.bind a second time.
     for(const type of ['mousedown','mouseup','mousemove','click','dblclick','contextmenu'])this.listen(this.root,type,event=>this.consume(event));
-    for(const type of ['blur','resize'])this.listen(window,type,()=>{this.reset();this.sync();});
+    for(const type of ['blur','resize','gameviewportresize'])this.listen(window,type,()=>{this.reset();this.sync();});
     this.listen(document,'visibilitychange',()=>{if(document.hidden){this.reset();this.sync();}});
     this.sync();
   }
@@ -68,14 +69,15 @@ export class TouchControls {
     this.consume(event);this.sync();
     if(action==='pause'&&this.inMatch()){this.g.pause();this.sync();return;}
     if(!this.active)return;
-    const p=this.player,radius=Math.max(1,(this.pad.getBoundingClientRect().width||120)/2);
-    if(!this.state.start(event.pointerId,action,event.clientX,event.clientY,{radius,time:event.timeStamp}))return;
+    const point=mobileViewport.clientToLocal(event.clientX,event.clientY);
+    const p=this.player,radius=Math.max(1,(this.pad.offsetWidth||120)/2);
+    if(!this.state.start(event.pointerId,action,point.x,point.y,{radius,time:event.timeStamp}))return;
     const target=event.currentTarget;this.captures.set(event.pointerId,target);
     try{target.setPointerCapture?.(event.pointerId);}catch{/* Window events remain a fallback. */}
     if(action==='move') {
-      const rect=this.moveZone.getBoundingClientRect(),root=this.root.getBoundingClientRect();
-      this.padX=clamp(event.clientX,rect.left+radius,rect.right-radius)-root.left;
-      this.padY=clamp(event.clientY,rect.top+radius,rect.bottom-radius)-root.top;
+      const rect=mobileViewport.rectToLocal(this.moveZone.getBoundingClientRect()),root=mobileViewport.rectToLocal(this.root.getBoundingClientRect());
+      this.padX=clamp(point.x,rect.left+radius,rect.right-radius)-root.left;
+      this.padY=clamp(point.y,rect.top+radius,rect.bottom-radius)-root.top;
     }else if(action==='fire'||action==='fire-left')p.touch.firePressed=true;
     else if(action==='jump')p.touch.jump=true;
     else if(action==='crouch')p.touch.crouch=!p.touch.crouch;
@@ -93,7 +95,8 @@ export class TouchControls {
   move(event) {
     if(!this.state.pointers.has(event.pointerId))return;
     this.consume(event);if(!this.sync())return;
-    if(!this.state.move(event.pointerId,event.clientX,event.clientY))return;
+    const point=mobileViewport.clientToLocal(event.clientX,event.clientY);
+    if(!this.state.move(event.pointerId,point.x,point.y))return;
     const p=this.player,look=this.state.takeLook();
     p.touchLook||={x:0,y:0};p.touchLook.x+=look.x;p.touchLook.y+=look.y;
     this.applyHeld(p);this.renderState();
@@ -110,7 +113,8 @@ export class TouchControls {
     try{if(target?.hasPointerCapture?.(event.pointerId))target.releasePointerCapture(event.pointerId);}catch{}
     if(this.player) {
       this.applyHeld(this.player);
-      if(event.type==='pointerup'&&isLookTap(pointer,event.clientX,event.clientY,event.timeStamp)) {
+      const point=mobileViewport.clientToLocal(event.clientX,event.clientY);
+      if(event.type==='pointerup'&&isLookTap(pointer,point.x,point.y,event.timeStamp)) {
         const hit=document.elementFromPoint?.(event.clientX,event.clientY);
         if(!document.elementFromPoint||hit===this.lookZone)this.player.touch.firePressed=true;
       }
