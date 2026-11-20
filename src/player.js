@@ -3,6 +3,7 @@ import * as THREE from 'three';
 import { Actor } from './actor.js';
 import { DamageResponse } from './combat-feedback.js';
 import { mobileViewport } from './mobile-viewport.js';
+import { touchAimScale } from './touch-look.js';
 
 const inputSensitivity = value => Number.isFinite(value) ? THREE.MathUtils.clamp(value, .2, 3) : 1;
 
@@ -73,14 +74,16 @@ export class Player extends Actor {
     this.mouse.dx = this.mouse.dy = 0;
     const tx=this.touchLook?.x||0,ty=this.touchLook?.y||0;
     if(this.touchLook)this.touchLook.x=this.touchLook.y=0;
-    // Mouse and touch keep independent sensitivity, including scoped aim.
-    const yawDelta=-(dx*mouseSens+tx*touchSens)*.0022;
-    const pitchDelta=-(dy*mouseSens+ty*touchSens)*.0022;
-    this.lookDX=dx+tx*touchSens;this.lookDY=dy+ty*touchSens;
+    // Preserve the desktop response. Touch follows optical magnification and
+    // its own aim setting, while hip-fire keeps the regular touch sensitivity.
     const fovK = this.scoped || this.ads > 0.01 ? g.renderer.camera.fov / g.opts.fov : 1;
+    const touchFovK=touchAimScale(g.renderer.camera.fov,g.opts.fov,this.scoped?1:this.ads,g.opts.touchAimSens);
+    const yawDelta=-(dx*mouseSens*fovK+tx*touchSens*touchFovK)*.0022;
+    const pitchDelta=-(dy*mouseSens*fovK+ty*touchSens*touchFovK)*.0022;
+    this.lookDX=dx+tx*touchSens;this.lookDY=dy+ty*touchSens;
     if (this.alive) {
-      this.yaw += yawDelta * fovK;
-      this.pitch = THREE.MathUtils.clamp(this.pitch + pitchDelta * fovK, -1.5, 1.5);
+      this.yaw += yawDelta;
+      this.pitch = THREE.MathUtils.clamp(this.pitch + pitchDelta, -1.5, 1.5);
       // 移动
       let f = 0, s = 0;
       if (K.has('KeyW') || K.has('ArrowUp')) f += 1;

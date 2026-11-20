@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { TouchInputState, nextTouchSlot, isLookTap } from '../src/touch-state.js';
+import { TouchInputState, nextTouchSlot, isLookTap, isUtilityTap } from '../src/touch-state.js';
 import { TouchControls } from '../src/touch.js';
 
 test('floating movement begins at zero, ignores jitter and clamps diagonal speed',()=>{
@@ -69,7 +69,8 @@ class FakeElement extends EventTarget {
     return{left:0,top:0,right:800,bottom:500,width:800,height:500};
   }
 }
-function pointer(type,id,x=0,y=0){const event=new Event(type,{bubbles:true,cancelable:true});Object.assign(event,{pointerId:id,pointerType:'touch',button:0,clientX:x,clientY:y});return event;}
+let pointerClock=0;
+function pointer(type,id,x=0,y=0){const event=new Event(type,{bubbles:true,cancelable:true});Object.assign(event,{pointerId:id,pointerType:'touch',button:0,clientX:x,clientY:y});Object.defineProperty(event,'timeStamp',{value:pointerClock+=16});return event;}
 function player(){return{alive:true,touch:{mx:0,mz:0,fire:false,firePressed:false,jump:false,crouch:false,aim:false},touchLook:{x:0,y:0},pressed:new Set(),mouse:{r:false,rp:false},weapon:{def:{type:'rifle'}},slot:0,inv:[{def:{type:'rifle'}},{def:{type:'pistol'}},{def:{type:'melee'}},{def:{type:'grenade'},mag:1}]};}
 function fixture({enabled=true}={}) {
   const names=['window','document','location','matchMedia'],previous=new Map(names.map(name=>[name,Object.getOwnPropertyDescriptor(globalThis,name)]));
@@ -78,7 +79,7 @@ function fixture({enabled=true}={}) {
   Object.assign(globalThis,{window,document,location:{search:''},matchMedia:()=>({matches:enabled})});
   const game={playing:true,paused:false,ended:false,inLoadout:false,player:player(),pause(){this.paused=true;this.touch.reset();}};
   const controls=new TouchControls(game);game.touch=controls;
-  return{game,controls,root,window,document,down(action,id,x=700,y=300){const element=action==='move'?controls.moveZone:action==='look'?controls.lookZone:controls.buttons.get(action);const event=pointer('pointerdown',id,x,y);element.dispatchEvent(event);return event;},move(id,x,y){window.dispatchEvent(pointer('pointermove',id,x,y));},up(id){window.dispatchEvent(pointer('pointerup',id));},cancel(id){window.dispatchEvent(pointer('pointercancel',id));},dispose(){controls.dispose();for(const [name,descriptor]of previous)descriptor?Object.defineProperty(globalThis,name,descriptor):delete globalThis[name];}};
+  return{game,controls,root,window,document,down(action,id,x=700,y=300){const element=action==='move'?controls.moveZone:action==='look'?controls.lookZone:controls.buttons.get(action);const event=pointer('pointerdown',id,x,y);element.dispatchEvent(event);return event;},move(id,x,y){window.dispatchEvent(pointer('pointermove',id,x,y));},up(id){const p=controls.state.pointers.get(id);window.dispatchEvent(pointer('pointerup',id,p?.x||0,p?.y||0));},cancel(id){window.dispatchEvent(pointer('pointercancel',id));},dispose(){controls.dispose();for(const [name,descriptor]of previous)descriptor?Object.defineProperty(globalThis,name,descriptor):delete globalThis[name];}};
 }
 
 test('adapter supports two thumbs, multi-finger firing and moving outside a button',()=>{
@@ -88,7 +89,7 @@ test('adapter supports two thumbs, multi-finger firing and moving outside a butt
     f.move(1,17,483);assert.equal(p.touch.mx,0);assert.equal(p.touch.mz,0);
     f.move(1,53,447);f.down('fire',2);f.move(2,500,250);
     assert.ok(p.touch.mx>0&&p.touch.mz>0);assert.equal(p.touch.fire,true);assert.equal(p.touch.firePressed,true);
-    assert.deepEqual(p.touchLook,{x:-320,y:-80});
+    assert.deepEqual(p.touchLook,{x:-416,y:-104},'fast fire drag uses bounded turning gain');
     f.down('fire-left',3,210,200);f.up(2);assert.equal(p.touch.fire,true);
     f.up(3);assert.equal(p.touch.fire,false);assert.ok(p.touch.mx>0);f.up(1);assert.equal(p.touch.mx,0);
   }finally{f.dispose();}
@@ -98,8 +99,10 @@ test('adapter does not steal a look finger and promotion uses the waiting fire f
   const f=fixture();try{
     f.down('look',1,450,150);f.down('fire',2,720,300);f.move(2,650,250);
     assert.deepEqual(f.game.player.touchLook,{x:0,y:0});f.move(1,460,155);
-    assert.deepEqual(f.game.player.touchLook,{x:16,y:8});f.up(1);f.move(2,651,250);
-    assert.deepEqual(f.game.player.touchLook,{x:17.6,y:8});
+    assert.ok(f.game.player.touchLook.x>=11.52&&f.game.player.touchLook.x<16,'a slow owned drag retains precision gain');
+    assert.equal(f.game.player.touchLook.x,2*f.game.player.touchLook.y);
+    const before={...f.game.player.touchLook};f.up(1);f.move(2,651,250);
+    assert.ok(Math.abs(f.game.player.touchLook.x-before.x-1.152)<1e-10);assert.equal(f.game.player.touchLook.y,before.y);
     f.down('reload',3);f.move(3,400,100);assert.equal(f.controls.debugState().lookId,2);
   }finally{f.dispose();}
 });
@@ -139,7 +142,7 @@ test('pause, death, replacement and resize discard old contacts while death keep
     assert.equal(f.controls.buttons.get('fire').disabled,true);assert.equal(f.controls.buttons.get('pause').disabled,false);
     f.down('pause',5);assert.equal(f.game.paused,true);
     f.game.paused=false;f.game.player=player();f.controls.sync();f.move(4,600,100);assert.equal(f.game.player.touch.fire,false);
-    f.down('fire',6);f.down('switch',7);assert.ok(f.game.player.pressed.has('Digit2'));
+    f.down('fire',6);f.down('switch',7);assert.equal(f.game.player.pressed.has('Digit2'),false);f.up(7);assert.ok(f.game.player.pressed.has('Digit2'));
     f.window.dispatchEvent(new Event('resize'));assert.equal(f.game.player.touch.fire,false);assert.equal(f.game.player.pressed.size,0);
     f.move(6,400,100);assert.deepEqual(f.game.player.touchLook,{x:0,y:0});
   }finally{f.dispose();}
@@ -150,7 +153,7 @@ test('aim preserves rifle toggle, sniper edge and counted melee hold semantics',
     const p=f.game.player;f.down('aim',1);f.up(1);assert.equal(p.touch.aim,true);f.down('aim',2);f.up(2);assert.equal(p.touch.aim,false);
     p.weapon={def:{type:'sniper'}};f.controls.sync();f.down('aim',3);assert.equal(p.mouse.rp,true);f.cancel(3);assert.equal(p.mouse.rp,false);
     p.weapon={def:{type:'melee'}};f.controls.sync();f.down('aim',4);f.down('aim',5);assert.equal(p.mouse.r,true);f.up(4);assert.equal(p.mouse.r,true);f.up(5);assert.equal(p.mouse.r,false);
-    f.down('switch',6);assert.ok(p.pressed.has('Digit2'));assert.equal(p.pressed.has('KeyQ'),false);
+    f.down('switch',6);assert.equal(p.pressed.has('Digit2'),false);f.up(6);assert.ok(p.pressed.has('Digit2'));assert.equal(p.pressed.has('KeyQ'),false);
   }finally{f.dispose();}
 });
 
@@ -166,5 +169,52 @@ test('unchanged sync does not rewrite button attributes or joystick styles',()=>
 test('reset and sync are safe when touch controls are disabled',()=>{
   const f=fixture({enabled:false});try{
     assert.equal(f.controls.enabled,false);f.controls.reset();assert.equal(f.controls.sync(),false);f.controls.reset();
+  }finally{f.dispose();}
+});
+
+test('utility taps confirm on release; six-pixel jitter works but cancellation and release outside do not',()=>{
+  const f=fixture();try{
+    const p=f.game.player;
+    f.down('reload',1,600,100);assert.equal(p.pressed.has('KeyR'),false);f.move(1,606,100);f.up(1);assert.equal(p.pressed.has('KeyR'),true);
+    p.pressed.clear();f.down('switch',2,650,100);f.up(2);assert.equal(p.pressed.has('Digit2'),true);
+    p.pressed.clear();f.down('reload',3,600,100);f.cancel(3);assert.equal(p.pressed.size,0);
+    f.down('reload',4,600,100);f.document.elementFromPoint=()=>f.controls.lookZone;f.up(4);assert.equal(p.pressed.size,0);
+    delete f.document.elementFromPoint;
+    f.down('switch',5,650,100);f.window.dispatchEvent(new Event('resize'));f.up(5);assert.equal(p.pressed.size,0);
+    assert.equal(p.touch.firePressed,false);
+  }finally{f.dispose();}
+});
+
+test('dragging from utility buttons becomes aim without accidental command or tap-fire',()=>{
+  const f=fixture();try{
+    const p=f.game.player;
+    for(const [id,action]of [[1,'reload'],[2,'switch']]){
+      f.down(action,id,600,100);f.move(id,625,105);
+      assert.equal(f.controls.debugState().lookId,id);assert.ok(p.touchLook.x>0);
+      f.move(id,600,100);f.up(id);
+      assert.equal(p.pressed.size,0);assert.equal(p.touch.firePressed,false);assert.equal(p.touch.fire,false);
+      p.touchLook.x=p.touchLook.y=0;
+    }
+    const state=new TouchInputState();state.start(3,'reload',0,0);
+    assert.equal(isUtilityTap(state.end(3),9,0),false,'release distance protects against a missing final move event');
+  }finally{f.dispose();}
+});
+
+test('utility drag does not steal another look finger; handoff starts from the waiting position',()=>{
+  const f=fixture();try{
+    const p=f.game.player;f.down('look',1,450,150);f.down('reload',2,600,100);f.move(2,650,110);
+    assert.equal(f.controls.debugState().lookId,1);assert.deepEqual(p.touchLook,{x:0,y:0});
+    f.up(1);assert.equal(f.controls.debugState().lookId,2);p.touch.firePressed=false;
+    f.move(2,651,110);assert.ok(p.touchLook.x>0&&p.touchLook.x<3);assert.equal(p.touchLook.y,0);
+    f.up(2);assert.equal(p.pressed.size,0);assert.equal(p.touch.firePressed,false);
+  }finally{f.dispose();}
+});
+
+test('aim button supports dragging and keeps existing look ownership',()=>{
+  const f=fixture();try{
+    const p=f.game.player;f.down('aim',1,700,300);assert.equal(p.touch.aim,true);f.move(1,715,295);
+    assert.equal(f.controls.debugState().lookId,1);assert.ok(p.touchLook.x>0&&p.touchLook.y<0);f.up(1);assert.equal(p.touch.firePressed,false);
+    p.touchLook.x=p.touchLook.y=0;f.down('look',2,450,150);f.down('aim',3,700,300);f.move(3,750,300);
+    assert.equal(f.controls.debugState().lookId,2);assert.deepEqual(p.touchLook,{x:0,y:0});
   }finally{f.dispose();}
 });

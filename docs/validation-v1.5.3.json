@@ -1,0 +1,185 @@
+{
+  "version": "1.5.3",
+  "validatedAt": "2026-11-20T11:12:21.042Z",
+  "artifact": {
+    "file": "dist/index.html",
+    "bytes": 1205129,
+    "sha256": "7b0dee25290412e1e27b76022fa149d27ec4cddfbaf151293b88750340d639bf"
+  },
+  "nodeTests": {
+    "passed": 158,
+    "failed": 0,
+    "report": "artifacts/v153/node-tests.tap"
+  },
+  "mobileMenu": {
+    "report": "artifacts/v153/after/mobile-menu-report.json",
+    "comparison": "artifacts/v153/mobile-menu-comparison.json",
+    "transport": "Chrome CDP Input.dispatchTouchEvent",
+    "programmaticNavigation": false,
+    "cases": [
+      {
+        "name": "wide-native",
+        "width": 844,
+        "height": 390,
+        "offline": false,
+        "passed": true,
+        "touchCommands": 105,
+        "firstScreenEntriesVisible": true,
+        "buttonHeight": 44,
+        "sliderBefore": 1,
+        "sliderAfter": 2.4,
+        "roundTrips": [
+          "tdm",
+          "relay"
+        ]
+      },
+      {
+        "name": "wide-rotated",
+        "width": 390,
+        "height": 844,
+        "offline": false,
+        "passed": true,
+        "touchCommands": 83,
+        "firstScreenEntriesVisible": true,
+        "buttonHeight": 44,
+        "sliderBefore": 1,
+        "sliderAfter": 2.4,
+        "roundTrips": [
+          "tdm",
+          "relay"
+        ]
+      },
+      {
+        "name": "small-native",
+        "width": 568,
+        "height": 320,
+        "offline": false,
+        "passed": true,
+        "touchCommands": 127,
+        "firstScreenEntriesVisible": true,
+        "buttonHeight": 44,
+        "sliderBefore": 1,
+        "sliderAfter": 2.4,
+        "roundTrips": [
+          "tdm",
+          "relay"
+        ]
+      },
+      {
+        "name": "small-rotated",
+        "width": 320,
+        "height": 568,
+        "offline": false,
+        "passed": true,
+        "touchCommands": 105,
+        "firstScreenEntriesVisible": true,
+        "buttonHeight": 44,
+        "sliderBefore": 1,
+        "sliderAfter": 2.4,
+        "roundTrips": [
+          "tdm",
+          "relay"
+        ]
+      },
+      {
+        "name": "short-native",
+        "width": 640,
+        "height": 300,
+        "offline": false,
+        "passed": true,
+        "touchCommands": 127,
+        "firstScreenEntriesVisible": true,
+        "buttonHeight": 44,
+        "sliderBefore": 1,
+        "sliderAfter": 2.4,
+        "roundTrips": [
+          "tdm",
+          "relay"
+        ]
+      },
+      {
+        "name": "short-rotated",
+        "width": 300,
+        "height": 640,
+        "offline": false,
+        "passed": true,
+        "touchCommands": 105,
+        "firstScreenEntriesVisible": true,
+        "buttonHeight": 44,
+        "sliderBefore": 1,
+        "sliderAfter": 2.4,
+        "roundTrips": [
+          "tdm",
+          "relay"
+        ]
+      },
+      {
+        "name": "offline-rotated",
+        "width": 320,
+        "height": 568,
+        "offline": true,
+        "passed": true,
+        "touchCommands": 105,
+        "firstScreenEntriesVisible": true,
+        "buttonHeight": 44,
+        "sliderBefore": 1,
+        "sliderAfter": 2.4,
+        "roundTrips": [
+          "tdm",
+          "relay"
+        ]
+      }
+    ],
+    "commands": 757,
+    "errors": []
+  },
+  "landscapeGameplay": {
+    "report": "artifacts/v153/landscape/mobile-landscape-report.json",
+    "cases": [
+      {
+        "name": "portrait-fallback-tdm",
+        "passed": true,
+        "touchCommands": 96
+      }
+    ],
+    "errors": []
+  },
+  "menuAndMatch": {
+    "report": "artifacts/v153/menu-match-check.json",
+    "rounds": 2,
+    "desktop": {
+      "sideBySide": true,
+      "inView": true,
+      "diagrams": 2,
+      "noDropdown": true,
+      "noOverflow": true,
+      "labLink": true
+    },
+    "mobile": {
+      "noOverflow": true,
+      "tdm": true,
+      "relay": true
+    },
+    "offline": {
+      "playing": true,
+      "seconds": 180
+    },
+    "errors": []
+  },
+  "baseline": {
+    "version": "1.5.2",
+    "htmlSHA256": "bf7c63bb0f3ef629c35c50c7a4e7b0c498bf7a3171d077f0c68f4968f3060a37",
+    "rotatedMenuScrollStuck": true,
+    "entryButtonsOutsideFirstScreen": true
+  },
+  "visualInspection": [
+    "Both entry cards visible at logical 844×390, 568×320 and 640×300, native and rotated views",
+    "Settings accessible by actual swipes, with no automatic scroll-to-element assistance"
+  ],
+  "notes": [
+    "Touch validation uses Chrome CDP trusted touchscreen contacts, not physical iOS or Android hardware.",
+    "The dedicated mobile-menu suite forbids automatic scrollIntoView and DOM clicks; its gestures reach settings and return to both entries.",
+    "Only the portrait-fallback-tdm gameplay case was rerun for this patch; earlier broader 1.5.2 results remain archived separately.",
+    "All current browser checks ran against the unchanged final HTML. The menu-and-match suite additionally uses explicit simulation fast-forward to verify both 180-second rounds."
+  ]
+}

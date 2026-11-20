@@ -1,185 +1,271 @@
 {
-  "version": "1.5.3",
-  "validatedAt": "2026-11-20T11:12:21.042Z",
+  "version": "1.5.4",
+  "validatedAt": "2026-11-20T11:30:22.355Z",
   "artifact": {
     "file": "dist/index.html",
-    "bytes": 1205129,
-    "sha256": "7b0dee25290412e1e27b76022fa149d27ec4cddfbaf151293b88750340d639bf"
+    "bytes": 1207799,
+    "sha256": "0615fa5a8639be94eda0319917fa99aeba284cd85876510367d6450fbeddacfd"
   },
   "nodeTests": {
-    "passed": 158,
+    "passed": 168,
     "failed": 0,
-    "report": "artifacts/v153/node-tests.tap"
+    "report": "artifacts/v154/node-tests.tap"
   },
-  "mobileMenu": {
-    "report": "artifacts/v153/after/mobile-menu-report.json",
-    "comparison": "artifacts/v153/mobile-menu-comparison.json",
-    "transport": "Chrome CDP Input.dispatchTouchEvent",
-    "programmaticNavigation": false,
+  "mobileAim": {
+    "report": "artifacts/v154/after/mobile-aim-report.json",
     "cases": [
       {
-        "name": "wide-native",
+        "name": "wide-native-tdm",
         "width": 844,
         "height": 390,
+        "mode": "tdm",
         "offline": false,
         "passed": true,
-        "touchCommands": 105,
-        "firstScreenEntriesVisible": true,
-        "buttonHeight": 44,
-        "sliderBefore": 1,
-        "sliderAfter": 2.4,
-        "roundTrips": [
-          "tdm",
-          "relay"
-        ]
+        "touchCommands": 221
       },
       {
-        "name": "wide-rotated",
+        "name": "wide-rotated-relay",
         "width": 390,
         "height": 844,
+        "mode": "relay",
         "offline": false,
         "passed": true,
-        "touchCommands": 83,
-        "firstScreenEntriesVisible": true,
-        "buttonHeight": 44,
-        "sliderBefore": 1,
-        "sliderAfter": 2.4,
-        "roundTrips": [
-          "tdm",
-          "relay"
-        ]
+        "touchCommands": 246
       },
       {
         "name": "small-native",
         "width": 568,
         "height": 320,
+        "mode": "tdm",
         "offline": false,
         "passed": true,
-        "touchCommands": 127,
-        "firstScreenEntriesVisible": true,
-        "buttonHeight": 44,
-        "sliderBefore": 1,
-        "sliderAfter": 2.4,
-        "roundTrips": [
-          "tdm",
-          "relay"
-        ]
+        "touchCommands": 140
       },
+      {
+        "name": "small-rotated",
+        "width": 320,
+        "height": 568,
+        "mode": "relay",
+        "offline": false,
+        "passed": true,
+        "touchCommands": 140
+      },
+      {
+        "name": "short-native",
+        "width": 640,
+        "height": 300,
+        "mode": "tdm",
+        "offline": false,
+        "passed": true,
+        "touchCommands": 140
+      },
+      {
+        "name": "tablet",
+        "width": 1024,
+        "height": 768,
+        "mode": "relay",
+        "offline": false,
+        "passed": true,
+        "touchCommands": 140
+      },
+      {
+        "name": "offline-rotated",
+        "width": 320,
+        "height": 568,
+        "mode": "tdm",
+        "offline": true,
+        "passed": true,
+        "touchCommands": 140
+      }
+    ],
+    "commands": 1167,
+    "errors": []
+  },
+  "mobile": {
+    "report": "artifacts/v154/mobile/mobile-controls-report.json",
+    "cases": [
+      {
+        "name": "wide-tdm",
+        "width": 844,
+        "height": 390,
+        "mode": "tdm",
+        "offline": false,
+        "passed": true,
+        "touchCommands": 97
+      },
+      {
+        "name": "wide-relay",
+        "width": 844,
+        "height": 390,
+        "mode": "relay",
+        "offline": false,
+        "passed": true,
+        "touchCommands": 97
+      },
+      {
+        "name": "compact-tdm",
+        "width": 667,
+        "height": 375,
+        "mode": "tdm",
+        "offline": false,
+        "passed": true,
+        "touchCommands": 15
+      },
+      {
+        "name": "compact-relay",
+        "width": 667,
+        "height": 375,
+        "mode": "relay",
+        "offline": false,
+        "passed": true,
+        "touchCommands": 15
+      },
+      {
+        "name": "tablet-tdm",
+        "width": 1024,
+        "height": 768,
+        "mode": "tdm",
+        "offline": false,
+        "passed": true,
+        "touchCommands": 15
+      },
+      {
+        "name": "tablet-relay",
+        "width": 1024,
+        "height": 768,
+        "mode": "relay",
+        "offline": false,
+        "passed": true,
+        "touchCommands": 15
+      }
+    ],
+    "commands": 254,
+    "errors": []
+  },
+  "mobileMenu": {
+    "report": "artifacts/v154/menu/mobile-menu-report.json",
+    "cases": [
       {
         "name": "small-rotated",
         "width": 320,
         "height": 568,
         "offline": false,
         "passed": true,
-        "touchCommands": 105,
-        "firstScreenEntriesVisible": true,
-        "buttonHeight": 44,
-        "sliderBefore": 1,
-        "sliderAfter": 2.4,
-        "roundTrips": [
-          "tdm",
-          "relay"
-        ]
-      },
-      {
-        "name": "short-native",
-        "width": 640,
-        "height": 300,
-        "offline": false,
-        "passed": true,
-        "touchCommands": 127,
-        "firstScreenEntriesVisible": true,
-        "buttonHeight": 44,
-        "sliderBefore": 1,
-        "sliderAfter": 2.4,
-        "roundTrips": [
-          "tdm",
-          "relay"
-        ]
-      },
-      {
-        "name": "short-rotated",
-        "width": 300,
-        "height": 640,
-        "offline": false,
-        "passed": true,
-        "touchCommands": 105,
-        "firstScreenEntriesVisible": true,
-        "buttonHeight": 44,
-        "sliderBefore": 1,
-        "sliderAfter": 2.4,
-        "roundTrips": [
-          "tdm",
-          "relay"
-        ]
-      },
-      {
-        "name": "offline-rotated",
-        "width": 320,
-        "height": 568,
-        "offline": true,
-        "passed": true,
-        "touchCommands": 105,
-        "firstScreenEntriesVisible": true,
-        "buttonHeight": 44,
-        "sliderBefore": 1,
-        "sliderAfter": 2.4,
-        "roundTrips": [
-          "tdm",
-          "relay"
-        ]
+        "touchCommands": 105
       }
     ],
-    "commands": 757,
+    "commands": 105,
     "errors": []
   },
-  "landscapeGameplay": {
-    "report": "artifacts/v153/landscape/mobile-landscape-report.json",
-    "cases": [
-      {
-        "name": "portrait-fallback-tdm",
-        "passed": true,
-        "touchCommands": 96
+  "aimMeasurements": [
+    {
+      "name": "wide-native-tdm",
+      "slowYaw": -0.10137599999999997,
+      "fastYaw": -0.1305459238677694,
+      "fastToSlow": 1.287739937142612,
+      "slowActualMs": 953.5999999940395,
+      "fastActualMs": 88.70000000298023,
+      "centralClearBefore": 0.9261261261261261,
+      "centralClearAfter": 0.972972972972973,
+      "thumbBandBefore": 0.9035087719298246,
+      "thumbBandAfter": 0.949874686716792
+    },
+    {
+      "name": "wide-rotated-relay",
+      "slowYaw": -0.10137599999999997,
+      "fastYaw": -0.1324471373092515,
+      "fastToSlow": 1.3064940154400602,
+      "slowActualMs": 959.5,
+      "fastActualMs": 86.59999999403954,
+      "centralClearBefore": 0.9261261261261261,
+      "centralClearAfter": 0.972972972972973,
+      "thumbBandBefore": 0.9035087719298246,
+      "thumbBandAfter": 0.949874686716792,
+      "settings": {
+        "before": {
+          "sens": 1,
+          "touchSens": 1,
+          "touchAimSens": 0.75
+        },
+        "after": {
+          "sens": 1,
+          "touchSens": 1,
+          "touchAimSens": 1.45
+        },
+        "saved": 1.45
       }
-    ],
-    "errors": []
-  },
-  "menuAndMatch": {
-    "report": "artifacts/v153/menu-match-check.json",
-    "rounds": 2,
-    "desktop": {
-      "sideBySide": true,
-      "inView": true,
-      "diagrams": 2,
-      "noDropdown": true,
-      "noOverflow": true,
-      "labLink": true
     },
-    "mobile": {
-      "noOverflow": true,
-      "tdm": true,
-      "relay": true
+    {
+      "name": "small-native",
+      "slowYaw": -0.10137604108886719,
+      "fastYaw": -0.1279397101363461,
+      "fastToSlow": 1.262031035757186,
+      "slowActualMs": 966.3000000119209,
+      "fastActualMs": 91.79999999701977,
+      "centralClearBefore": 0.7666666666666667,
+      "centralClearAfter": 0.8933333333333333,
+      "thumbBandBefore": 0.7857142857142857,
+      "thumbBandAfter": 0.90625
     },
-    "offline": {
-      "playing": true,
-      "seconds": 180
+    {
+      "name": "small-rotated",
+      "slowYaw": -0.10137604108886719,
+      "fastYaw": -0.12746151960185648,
+      "fastToSlow": 1.2573140382363375,
+      "slowActualMs": 976.2999999970198,
+      "fastActualMs": 92.40000000596046,
+      "centralClearBefore": 0.77,
+      "centralClearAfter": 0.8933333333333333,
+      "thumbBandBefore": 0.7924107142857143,
+      "thumbBandAfter": 0.90625
     },
-    "errors": []
-  },
-  "baseline": {
-    "version": "1.5.2",
-    "htmlSHA256": "bf7c63bb0f3ef629c35c50c7a4e7b0c498bf7a3171d077f0c68f4968f3060a37",
-    "rotatedMenuScrollStuck": true,
-    "entryButtonsOutsideFirstScreen": true
-  },
+    {
+      "name": "short-native",
+      "slowYaw": -0.10137608507812497,
+      "fastYaw": -0.1281820089621698,
+      "fastToSlow": 1.2644205866046907,
+      "slowActualMs": 961.5999999940395,
+      "fastActualMs": 91.5,
+      "centralClearBefore": 0.788961038961039,
+      "centralClearAfter": 0.9155844155844156,
+      "thumbBandBefore": 0.7979166666666667,
+      "thumbBandAfter": 0.9083333333333333
+    },
+    {
+      "name": "tablet",
+      "slowYaw": -0.10137599395751953,
+      "fastYaw": -0.12722541431743664,
+      "fastToSlow": 1.2549856169178377,
+      "slowActualMs": 898.6000000089407,
+      "fastActualMs": 92.70000000298023,
+      "centralClearBefore": 1,
+      "centralClearAfter": 1,
+      "thumbBandBefore": 0.9917440660474717,
+      "thumbBandAfter": 0.9927760577915377
+    },
+    {
+      "name": "offline-rotated",
+      "slowYaw": -0.10137604108886719,
+      "fastYaw": -0.12859027913469792,
+      "fastToSlow": 1.2684484198980948,
+      "slowActualMs": 972.2000000029802,
+      "fastActualMs": 91,
+      "centralClearBefore": 0.77,
+      "centralClearAfter": 0.8933333333333333,
+      "thumbBandBefore": 0.7924107142857143,
+      "thumbBandAfter": 0.90625
+    }
+  ],
   "visualInspection": [
-    "Both entry cards visible at logical 844×390, 568×320 and 640×300, native and rotated views",
-    "Settings accessible by actual swipes, with no automatic scroll-to-element assistance"
+    "Native 844×390 and 667×375 in-game control layouts; secondary actions at the bottom, clear right-middle aim area",
+    "Trusted native and rotated contacts cross actual action-button centers without losing look ownership",
+    "Rotated pause menu scrolls and changes scoped sensitivity through a real slider drag"
   ],
   "notes": [
-    "Touch validation uses Chrome CDP trusted touchscreen contacts, not physical iOS or Android hardware.",
-    "The dedicated mobile-menu suite forbids automatic scrollIntoView and DOM clicks; its gestures reach settings and return to both entries.",
-    "Only the portrait-fallback-tdm gameplay case was rerun for this patch; earlier broader 1.5.2 results remain archived separately.",
-    "All current browser checks ran against the unchanged final HTML. The menu-and-match suite additionally uses explicit simulation fast-forward to verify both 180-second rounds."
+    "Chrome CDP trusted touchscreen contacts; no physical iOS/Android device verification.",
+    "Speed-response measurements use actual pointer event timestamps, rather than assuming requested test delays were delivered exactly.",
+    "The new mobile-aim suite forbids automatic scrollIntoView and DOM clicks for navigation. Setup fixtures disable bot movement and protect the player to isolate input.",
+    "All current browser checks used the exact final HTML SHA256. The existing three-minute match rules were unchanged and were not simulated in full again for this input patch.",
+    "Previous validation and failed diagnostic runs remain separate; only final passing after reports are included here."
   ]
 }

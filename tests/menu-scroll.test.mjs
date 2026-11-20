@@ -216,3 +216,14 @@ test('scroll boundaries clamp and momentum stops at the boundary', () => {
   f.send('pointerdown'); f.send('pointermove', 120, 1000); assert.equal(f.element.scrollTop, 0);
   f.binding.dispose();
 });
+
+test('nested pause content ignores gestures and stops momentum when its parent is hidden', () => {
+  const f = fixture(); let hidden = true;
+  f.element.closest = selector => selector === '.hidden' && hidden ? {} : null;
+  f.send('pointerdown'); f.send('pointermove', 120, 150); f.send('pointerup', 120, 150);
+  assert.equal(f.element.scrollTop, 0); assert.equal(f.frames.size, 0);
+  hidden = false; f.send('pointerdown'); f.send('pointermove', 120, 200); f.send('pointerup', 120, 200);
+  assert.equal(f.frames.size, 1); const before = f.element.scrollTop;
+  hidden = true; f.tick(); assert.equal(f.element.scrollTop, before); assert.equal(f.frames.size, 0);
+  f.binding.dispose();
+});

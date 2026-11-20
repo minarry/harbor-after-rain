@@ -23,12 +23,25 @@ test('touch and mouse sensitivities are independent',()=>{
   close(run({touchSens:2})-baseline,-20*.0022);
   close(run({sens:2})-baseline,-10*.0022);
 });
-test('scoping scales both aim sources together and dead players never rotate',()=>{
+test('touch aim follows optical magnification while mouse keeps its prior response',()=>{
   const f=fixture();f.p.ads=1;f.g.renderer.camera.fov=39;
   f.p.touchLook={x:20,y:-10};f.p.mouse.dx=5;f.p.mouse.dy=3;f.tick();
-  close(f.p.yaw,-25*.0022*.5);close(f.p.pitch,7*.0022*.5);
+  const optical=Math.tan(39*Math.PI/360)/Math.tan(78*Math.PI/360)*.75;
+  close(f.p.yaw,-(5*.5+20*optical)*.0022);close(f.p.pitch,(-3*.5+10*optical)*.0022);
   const before={yaw:f.p.yaw,pitch:f.p.pitch};f.p.alive=false;f.p.mouse.dx=20;f.p.touchLook.x=100;f.tick();
   close(f.p.yaw,before.yaw);close(f.p.pitch,before.pitch);
+});
+test('touch aim sensitivity affects only touch during ADS and both sniper zoom levels',()=>{
+  const run=(aim,fov,touchAimSens,mouse=false)=>{
+    const f=fixture({touchAimSens});f.p.ads=aim==='ads'?1:0;f.p.scoped=typeof aim==='number'?aim:0;f.g.renderer.camera.fov=fov;
+    if(mouse)f.p.mouse.dx=20;else f.p.touchLook.x=20;f.tick();return f.p.yaw;
+  };
+  close(run('hip',78,.5),run('hip',78,1.5));
+  for(const [aim,fov]of [['ads',57],[1,25],[2,12]]){
+    close(run(aim,fov,.5)*2,run(aim,fov,1));
+    close(run(aim,fov,.5,true),run(aim,fov,1.5,true));
+    assert.ok(Math.abs(run(aim,fov,1))<Math.abs(run('hip',78,1)));
+  }
 });
 test('tap fire survives until the update, drives automatic fire once, and never becomes held fire',()=>{
   const f=fixture();f.p.touch.firePressed=true;f.tick();

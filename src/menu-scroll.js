@@ -4,7 +4,7 @@
 export function bindLandscapeMenuScroll(element, viewport, host = window) {
   let gesture = null, frame = 0, suppressed = null;
   const interactive = target => target?.closest?.('input,select,textarea,[contenteditable="true"]');
-  const enabled = () => viewport.enabled && viewport.rotated && !element.classList.contains('hidden');
+  const enabled = () => viewport.enabled && viewport.rotated && !element.classList.contains('hidden') && !element.closest?.('.hidden');
   const stop = () => { if (frame) host.cancelAnimationFrame(frame); frame = 0; };
   const release = (id, target = element) => { try { if (target.hasPointerCapture?.(id)) target.releasePointerCapture(id); } catch {} };
   const cancel = () => { stop(); const old = gesture; gesture = null; if (old) release(old.id, old.range || element); };

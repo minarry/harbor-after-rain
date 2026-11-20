@@ -60,8 +60,11 @@ export class HUD {
     const touch = matchMedia('(pointer:coarse)').matches || new URLSearchParams(location.search).has('touch');
     this.touchUI = touch;
     this.root.classList.toggle('touch-ui', touch);
-    if (touch) this.menuScroll = bindLandscapeMenuScroll(this.el.menu, mobileViewport);
-    this.opts = { mode: 'tdm', team: 'BL', primary: 'm4a1', size: 5, diff: 'normal', goal: 50, tod: 'dusk', quality: touch ? 'low' : 'high', sens: 1.0, touchSens: 1.0, fov: 78, vol: 0.8 };
+    if (touch) {
+      this.menuScroll = bindLandscapeMenuScroll(this.el.menu, mobileViewport);
+      this.pauseScroll = bindLandscapeMenuScroll(this.el.pause.querySelector('.pause-content'), mobileViewport);
+    }
+    this.opts = { mode: 'tdm', team: 'BL', primary: 'm4a1', size: 5, diff: 'normal', goal: 50, tod: 'dusk', quality: touch ? 'low' : 'high', sens: 1.0, touchSens: 1.0, touchAimSens: 0.75, fov: 78, vol: 0.8 };
     try {
       const saved = JSON.parse(localStorage.getItem('harbor_after_rain_opts_v1') || '{}');
       // Import only supported options, dropping retired settings from old saves.
@@ -78,6 +81,8 @@ export class HUD {
     } catch (e) { /* 忽略 */ }
     const touchSensitivity = Number(this.opts.touchSens);
     this.opts.touchSens = Number.isFinite(touchSensitivity) ? Math.max(.2, Math.min(3, touchSensitivity)) : 1;
+    const touchAimSensitivity = Number(this.opts.touchAimSens);
+    this.opts.touchAimSens = Number.isFinite(touchAimSensitivity) ? Math.max(.2, Math.min(2, touchAimSensitivity)) : .75;
     if (!['tdm', 'relay'].includes(this.opts.mode)) this.opts.mode = 'tdm';
     this.saveOpts();
     this.buildMenu();
@@ -157,6 +162,7 @@ export class HUD {
   }
   show(name) {
     this.menuScroll?.cancel();
+    this.pauseScroll?.cancel();
     if (name === 'menu' || name === 'pause') this.syncControls();
     for (const n of ['menu', 'pause', 'end', 'loadout', 'loading']) this.el[n].classList.toggle('hidden', n !== name);
     this.el.hud.classList.toggle('hidden', name === 'menu' || name === 'loading' || name === 'end');
@@ -425,7 +431,8 @@ const MOBILE_SETTINGS = `
 <section class="mobile-settings" aria-label="触控设置">
   <div class="mobile-settings-heading"><b>触控设置</b><span>双手操作</span></div>
   <div class="opt"><div class="lab">滑动灵敏度</div><div class="slider" data-k="touchSens"><input aria-label="滑动灵敏度" type="range" min="0.2" max="3" step="0.05"><span></span></div></div>
-  <p class="mobile-settings-note">左侧移动，右侧拖动瞄准。轻点右侧空白处开火，按住开火键连续射击。</p>
+  <div class="opt"><div class="lab">开镜灵敏度倍率</div><div class="slider" data-k="touchAimSens"><input aria-label="开镜灵敏度倍率" type="range" min="0.2" max="2" step="0.05"><span></span></div></div>
+  <p class="mobile-settings-note">慢拖微调，快划转身。开镜倍率越低越便于精瞄；按住开火或瞄准键也可拖动转向。底边换弹、切枪轻点确认，拖动不触发。</p>
 </section>`;
 
 const TEMPLATE = `

@@ -1,6 +1,7 @@
 // Two-thumb controls: each pointer keeps the role chosen at pointerdown.
-import { TouchInputState, nextTouchSlot, isLookTap } from './touch-state.js';
+import { TouchInputState, nextTouchSlot, isLookTap, isUtilityTap } from './touch-state.js';
 import { mobileViewport } from './mobile-viewport.js';
+import { shapeTouchLook, TOUCH_LOOK_REFERENCE_HEIGHT } from './touch-look.js';
 
 const BUTTONS=[['fire','开火'],['fire-left','开火'],['jump','跳'],['crouch','蹲'],['reload','换弹'],['switch','切枪'],['aim','瞄准'],['pause','暂停']];
 const clamp=(value,min,max)=>max>=min?Math.max(min,Math.min(max,value)):(min+max)/2;
@@ -11,7 +12,7 @@ const setPixel=(element,key,value)=>{const pixel=`${Math.round(value*100)/100}px
 
 export class TouchControls {
   constructor(game) {
-    this.g=game;this.state=new TouchInputState();this.captures=new Map();this.meleeIds=new Set();
+    this.g=game;this.state=new TouchInputState({lookResponse:(dx,dy,time)=>shapeTouchLook(dx,dy,time,mobileViewport.initialized?mobileViewport.height:TOUCH_LOOK_REFERENCE_HEIGHT)});this.captures=new Map();this.meleeIds=new Set();
     this.player=null;this.active=false;this.weapon=null;this.altOwned=false;this.buttons=new Map();this.listeners=[];
     this.enabled=matchMedia('(pointer:coarse)').matches||new URLSearchParams(location.search).has('touch');
     if(!this.enabled)return;
@@ -26,7 +27,7 @@ export class TouchControls {
     this.listen(this.lookZone,'pointerdown',event=>this.start(event,'look'));
     for(const [action,label]of BUTTONS) {
       const button=create('button','btn');button.type='button';button.textContent=label;button.dataset.touchAction=action;
-      button.setAttribute('aria-label',action==='fire'?'开火，按住拖动转向':label);button.setAttribute('aria-pressed','false');
+      button.setAttribute('aria-label',action==='fire'?'开火，按住拖动转向':action==='aim'?'瞄准，可按住拖动转向':label);button.setAttribute('aria-pressed','false');
       this.buttons.set(action,button);this.listen(button,'pointerdown',event=>this.start(event,action));
     }
     // Window listeners also cover a browser declining pointer capture.
@@ -81,10 +82,6 @@ export class TouchControls {
     }else if(action==='fire'||action==='fire-left')p.touch.firePressed=true;
     else if(action==='jump')p.touch.jump=true;
     else if(action==='crouch')p.touch.crouch=!p.touch.crouch;
-    else if(action==='reload')p.pressed.add('KeyR');
-    else if(action==='switch') {
-      const slot=nextTouchSlot(p.inv,p.slot);if(slot!==null)p.pressed.add('Digit'+(slot+1));
-    }
     else if(action==='aim') {
       if(p.weapon?.def.type==='sniper')p.mouse.rp=true;
       else if(p.weapon?.def.type==='melee'){this.meleeIds.add(event.pointerId);this.altOwned=true;}
@@ -96,7 +93,7 @@ export class TouchControls {
     if(!this.state.pointers.has(event.pointerId))return;
     this.consume(event);if(!this.sync())return;
     const point=mobileViewport.clientToLocal(event.clientX,event.clientY);
-    if(!this.state.move(event.pointerId,point.x,point.y))return;
+    if(!this.state.move(event.pointerId,point.x,point.y,event.timeStamp))return;
     const p=this.player,look=this.state.takeLook();
     p.touchLook||={x:0,y:0};p.touchLook.x+=look.x;p.touchLook.y+=look.y;
     this.applyHeld(p);this.renderState();
@@ -114,6 +111,13 @@ export class TouchControls {
     if(this.player) {
       this.applyHeld(this.player);
       const point=mobileViewport.clientToLocal(event.clientX,event.clientY);
+      if(event.type==='pointerup'&&isUtilityTap(pointer,point.x,point.y)) {
+        const button=this.buttons.get(pointer.action),hit=document.elementFromPoint?.(event.clientX,event.clientY);
+        if(!document.elementFromPoint||hit===button||button?.contains?.(hit)) {
+          if(pointer.action==='reload')this.player.pressed.add('KeyR');
+          else {const slot=nextTouchSlot(this.player.inv,this.player.slot);if(slot!==null)this.player.pressed.add('Digit'+(slot+1));}
+        }
+      }
       if(event.type==='pointerup'&&isLookTap(pointer,point.x,point.y,event.timeStamp)) {
         const hit=document.elementFromPoint?.(event.clientX,event.clientY);
         if(!document.elementFromPoint||hit===this.lookZone)this.player.touch.firePressed=true;

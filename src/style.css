@@ -452,6 +452,7 @@ button{color:var(--hud)}
 .touch-ui .go,.touch-ui .mode-start{min-height:48px}
 .touch-ui .pauseBox{display:flex;flex-direction:column;padding:22px;max-height:calc(100vh - max(24px,env(safe-area-inset-top)) - max(24px,env(safe-area-inset-bottom)));max-height:calc(100dvh - max(24px,env(safe-area-inset-top)) - max(24px,env(safe-area-inset-bottom)));overflow:hidden;overscroll-behavior:contain;touch-action:pan-y}
 .touch-ui .pause-content{min-height:0;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;scroll-padding-bottom:12px;padding-bottom:2px}
+.touch-ui .pause-content.landscape-scroll{touch-action:none}
 .touch-ui .pause-actions{position:sticky;bottom:0;z-index:1;flex:none;display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:10px;margin-top:14px;padding-top:14px;border-top:1px solid var(--line);background:var(--panel2)}
 .touch-ui .pause-actions #btnQuit{margin-top:0}
 .touch-ui .pauseBox h2{margin-bottom:14px}
@@ -467,13 +468,16 @@ button{color:var(--hud)}
 #touch .btn:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
 #touch .btn:disabled{opacity:.32;box-shadow:none}
 #touch .btn.is-active,#touch .btn[aria-pressed=true]{background:rgba(230,172,102,.3);border-color:#f4c995;color:#ffe0b6;box-shadow:inset 0 0 0 1px rgba(244,201,149,.3)}
-#touch [data-touch-action=fire]{right:var(--touch-right);bottom:calc(var(--touch-bottom) + 116px);width:76px;height:76px;border:2px solid rgba(244,201,149,.8);background:rgba(94,63,36,.38);font-size:15px;font-weight:600;letter-spacing:.07em}
+#touch [data-touch-action=fire]{right:var(--touch-right);bottom:calc(var(--touch-bottom) + 116px);width:72px;height:72px;border:2px solid rgba(244,201,149,.8);background:rgba(94,63,36,.38);font-size:15px;font-weight:600;letter-spacing:.07em}
 #touch [data-touch-action=fire].is-active{background:rgba(230,172,102,.48);border-color:#ffe0b6}
-#touch [data-touch-action=aim]{right:calc(var(--touch-right) + 5px);bottom:calc(var(--touch-bottom) + 24px);width:64px;height:64px;font-size:13px}
-#touch [data-touch-action=jump]{right:calc(var(--touch-right) + 94px);bottom:calc(var(--touch-bottom) + 28px);width:52px;height:52px}
-#touch [data-touch-action=crouch]{right:calc(var(--touch-right) + 158px);bottom:calc(var(--touch-bottom) + 28px)}
-#touch [data-touch-action=reload]{right:calc(var(--touch-right) + 96px);bottom:calc(var(--touch-bottom) + 110px)}
-#touch [data-touch-action=switch]{right:calc(var(--touch-right) + 158px);bottom:calc(var(--touch-bottom) + 108px)}
+/* Secondary actions share a bottom row so the right middle stays available
+   for uninterrupted aim gestures. Their centers align with the larger aim button. */
+#touch [data-touch-action=aim]{right:calc(var(--touch-right) + 6px);bottom:var(--touch-bottom);width:60px;height:60px;font-size:13px}
+#touch [data-touch-action=jump],#touch [data-touch-action=crouch],#touch [data-touch-action=reload],#touch [data-touch-action=switch]{bottom:calc(var(--touch-bottom) + 6px);width:48px;height:48px}
+#touch [data-touch-action=jump]{right:calc(var(--touch-right) + 78px)}
+#touch [data-touch-action=crouch]{right:calc(var(--touch-right) + 134px)}
+#touch [data-touch-action=reload]{right:calc(var(--touch-right) + 190px)}
+#touch [data-touch-action=switch]{right:calc(var(--touch-right) + 246px)}
 #touch [data-touch-action=fire-left]{left:calc(var(--touch-left) + 110px);top:max(var(--touch-top),calc(32% - 56px));bottom:auto;font-size:11px;background:rgba(12,23,28,.22)}
 #touch [data-touch-action=pause]{right:var(--touch-right);top:var(--touch-top);width:48px;height:48px;border-radius:13px;font-size:10px;background:rgba(12,23,28,.6)}
 #hud.touch-active #clinks,#hud.touch-active #slots{display:none}
@@ -496,7 +500,7 @@ button{color:var(--hud)}
 #hud.touch-active #feed{right:max(12px,env(safe-area-inset-right));top:calc(max(12px,env(safe-area-inset-top)) + 60px);width:auto;max-width:min(180px,calc((100vw - 270px)/2 - 24px));max-height:65px;overflow:hidden}
 #hud.touch-active .kf{font-size:9px;gap:5px;padding:4px 6px}
 #hud.touch-active .kf img{height:12px}
-#hud.touch-active #ammo{bottom:max(12px,env(safe-area-inset-bottom));right:50%;transform:translateX(50%);text-align:center}
+#hud.touch-active #ammo{bottom:calc(max(12px,env(safe-area-inset-bottom)) + 76px);right:50%;transform:translateX(50%);text-align:center}
 #hud.touch-active #ammo .wname{font-size:8px}
 #hud.touch-active #ammo .row{justify-content:center;gap:6px}
 #hud.touch-active #ammo .wicon{display:none}
@@ -511,11 +515,16 @@ button{color:var(--hud)}
 @media(max-height:560px){
   #touch .touch-pad{width:112px;height:112px}
   #touch .touch-pad,#touch .touch-knob{top:calc(100% - 88px - env(safe-area-inset-bottom))}
-  #touch [data-touch-action=fire]{width:72px;height:72px;bottom:calc(var(--touch-bottom) + 96px)}
-  #touch [data-touch-action=aim]{width:60px;height:60px;bottom:calc(var(--touch-bottom) + 16px)}
-  #touch [data-touch-action=jump],#touch [data-touch-action=crouch]{bottom:calc(var(--touch-bottom) + 20px)}
-  #touch [data-touch-action=reload],#touch [data-touch-action=switch]{bottom:calc(var(--touch-bottom) + 96px)}
+  #touch [data-touch-action=fire]{bottom:calc(var(--touch-bottom) + 96px)}
   #hud.touch-active #badge{top:61%}
+}
+@media(max-width:600px){
+  /* Keep all actions to the right of the movement zone on compact phones,
+     including a 44px display cutout, without shrinking below a 44px target. */
+  #touch [data-touch-action=jump],#touch [data-touch-action=crouch],#touch [data-touch-action=reload],#touch [data-touch-action=switch]{width:44px;height:44px;bottom:calc(var(--touch-bottom) + 8px)}
+  #touch [data-touch-action=crouch]{right:calc(var(--touch-right) + 126px)}
+  #touch [data-touch-action=reload]{right:calc(var(--touch-right) + 174px)}
+  #touch [data-touch-action=switch]{right:calc(var(--touch-right) + 222px)}
 }
 /* Two direct operation entries share one deployment panel. */
 #menu .menuBox{max-width:1440px;margin:0 auto;grid-template-columns:minmax(0,1fr) 318px;gap:38px;padding:96px max(4.5vw,30px) 82px;align-items:center}

@@ -1,6 +1,6 @@
 {
   "name": "harbor-after-rain",
-  "version": "1.5.3",
+  "version": "1.5.4",
   "private": true,
   "type": "module",
   "scripts": {
@@ -28,7 +28,8 @@
     "test:mobile": "node scripts/mobile-controls-check.mjs",
     "test:input": "node scripts/mobile-input-check.mjs",
     "test:landscape": "node scripts/mobile-landscape-check.mjs",
-    "test:mobile-menu": "node scripts/mobile-menu-check.mjs"
+    "test:mobile-menu": "node scripts/mobile-menu-check.mjs",
+    "test:mobile-aim": "node scripts/mobile-aim-check.mjs"
   },
   "dependencies": {
     "esbuild": "^0.28.2",
